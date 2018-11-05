@@ -1,0 +1,6 @@
+data models:
+
+http://www.dataversity.net/data-models-many-benefits-10/
+https://datafloq.com/read/6-benefits-data-modeling-in-the-age-of-big-data/1479
+https://www.quora.com/What-is-the-importance-of-data-modeling
+
