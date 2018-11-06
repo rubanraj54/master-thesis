@@ -1,0 +1,12 @@
+Author [reference] proposed an active mediator architecture to gather information from different knowledge base and combine them to a single response. AMOS architecture uses Object-Oriented approach to define declarative queries. This distributed architecture involves multiple meidator modules to work collabratively to collect the required piece of information and produce final result. Primary components of AMOS architercure are,
+
+Integrator - Gather data from multiple data sources that have different data representations.
+Monitor - Monitor service always watch for any data changes and notifies the mediators. This is helpful in the case where system needs an active updates to change its current task.
+Domain models represents the models related to application which helps to acccess data easier from any database through a query language.
+Locators helps to locate mediators in the network.
+
+Integrator module is built with two internal components called IAMOS and TAMOS. 
+First Integration AMOS parse the query and send individual requests to Translational AMOS modules which are responsible for heterogeneous data source.
+Then,all TAMOS modules return the individual results to IAMOS for integrating all the results. To query multi databases from IAMOS, IAMOS servers are mapped with TAMOS servers with the help of Object-Oriented query language.
+
+ 
