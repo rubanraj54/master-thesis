@@ -1,0 +1,4 @@
+author[10] developed a heterogeneous multidatabase system called Pegasus that supports multiple heterogeneous database systems with various data bases models, query languages and services. Pegasus pre-defines its domain data models based on object oriented approach and also supports programming capabilities. These objects are created and mapped with the types and functions with the help of HOSQL statements. HOSQL is a declartive object oriented query language which is used by Pegasus to manipulate data from multiple data sources.
+
+
+Pegasus system supports two types of data sources, local and native data sources. Whenever a new data source joins Pegasus system, schema integrater module imports schema from data source and update its root schema with the new schema types. The final integrated shemea shows the complete blueprint of the different datasources participates in the data integration.
