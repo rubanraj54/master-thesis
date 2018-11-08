@@ -1,0 +1,8 @@
+author [22] proposes a Mediator Specification Language that helps the mediator to understand the schema and integrates the data from unstructured or semistructured source. MSL overcomes the major problems in existing mediator systems for example,
+Schema domain mismatch 
+Schematic discrepancy
+Schematic evoluation
+Structure irregularities.
+
+During translation of original information from different sources to a single object it should be important that, all data sources should have the required attribute and the name of the attribut should be same. Otherwise, mediator system will not be able to process the information to a single answer.  External predicates and Creation of the Virtual Objects in MSL sloves the problems mentioned above.
+
