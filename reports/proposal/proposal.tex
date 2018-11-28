@@ -90,6 +90,14 @@ As mentioned in these papers \cite{ahmed1991pegasus,fahl1993amos,arens1996query,
 
 \section{State of the art analysis}
 
+\subsection{Semantic Data model}
+\citet{su2014connecting} highlights the interoperability issues in IoT sensor data and also says that these data should be useful for multiple applications rather than dependent on specific domain. To make the machines interpret the meaning of sensor data, author suggested to use Semantic Web technologies such as Resource Description Framework (RDF). Even though SenML is an evolving technique to model to sensor data, but it is lacking reasoning capabilities and interoperability with other devices. To overcome the issues in SenML generic model, author proposes a technique to represent IoT sensors as a Knowledge Based Systems by transforming SenML to Resource Description Framework. 
+
+As an advantage, the transformed data can be analyzed and helpful to take more meaningful actions. 
+
+SenML is specially designed for resource constrained devices, hence additional information to contextually understand the data has be not excluded intentionally. Each entry of SenML data should have the sensor parameter name and other attributes such as time, value, etc. Also it supports custom attribute called Resource Type (rt) to let the users add their own attributes and this allow users to include contextual information.
+
+\subsection{Mediator architectures}
 \citet{fahl1993amos} proposed an active mediator architecture to gather in
 formation from different knowledge base and combine them to a single response. AMOS\footnote{\label{amos}Active Mediators Object System} architecture uses Object-Oriented approach to define declarative queries. This distributed architecture involves multiple mediator modules to work collaboratively to collect the required piece of information and produce final result. Primary components of AMOS architecture are,
 \begin{itemize}
