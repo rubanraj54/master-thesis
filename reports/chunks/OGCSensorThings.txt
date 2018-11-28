@@ -1,0 +1,13 @@
+OGC SensorThings API offers a unique way to connect sensors in IoT platform and an entity based relationship model to handle data from heterogeneous sensors. It has two major components, one for sensing part and other for tasking part. For our research work, we are not going to review Tasking part, since our focus is towards finding a better context based data model for robotic applications.
+
+Sensing part follows the Observation and Measurement model from "OGC 10-004r3 and ISO 19156:2011". There are eight entities defined by SensorThings API.
+
+Thing - It represents the physical things in the world or a virtual system that can be communicated via network. Things have its own properties such as name, decription and properties. A single thing can have many optional locations, historical locations and datastreams. The constraint is, a thing should be mapped to a single location at a given point of time.
+
+Location - It shows the coordinates of the real location and each location may locates multiple things. Each location should be provided with its encoding type.
+
+HistoricalLocation - It shows the thing to be in the location or vice versa, at a given timestamp.
+
+Datastream - It stores the list of observations for a specific thing and a sensor. Each datastream should have atleast one sensor and thing entity relationship. For example, a gateway (Thing) with a temperature sensor (Sensor) generates a list of temperature observations under Temperature Datastream.
+
+ 
