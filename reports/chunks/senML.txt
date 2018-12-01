@@ -30,7 +30,23 @@ ut - Update time.
  
 t - Time.
 
-{"m":[{ "n": "", "v":23.5, "u":"degC" }]}
+ [
+     {"n":"Voltage sensor","u":"Volt","v":9.78}
+ ]
+This is the possible basic example of SenML strucuture to represent a sensor generated data. 
+
+[
+     {"bn":"urn:ropod:testlab","bt":1.123450099001e+08,
+      "bu":"RH","bver":4,
+      "n":"voltage","u":"V","v":160.4},
+     {"n":"humidity","t":-5,"v":13.9},
+     {"n":"humidity","t":-4,"v":12},
+     {"n":"humidity","t":-3,"v":12.5},
+     {"n":"humidity","t":-2,"v":14.3},
+     {"n":"humidity","t":-1,"v":14.4}
+ ]
+
+This is a complex group of measurements which includes values from voltage and humidity sensors. While retrieving these measurements, base name will be prepended with names and base unit 'RH' will also be added to all measurement execpt for those measurements that have unit. For instance, in the above example voltage measurement have its unit 'V' attached to it already. So in this case, base unit will not be added to this measurement.  
 
 To process or semantically query complex sensor data, measurements should have additional context about the data. But it is not achievable directly with SenML, instead as expained in this article \cite{su2014connecting} with the help of transformation from SenML to RDF one can explicitly specify the context of each measurement.
 
