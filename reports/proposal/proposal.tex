@@ -56,10 +56,10 @@
 			colorlinks=true,
 			urlcolor=blue,
 			citecolor=red}
-\renewcommand{\baselinestretch}{1.2}
+\renewcommand{\baselinestretch}{1.1}
 
 \begin{document}
-\title{\Large A mediator system for robotic applications\\
+\title{\Large A mediator system for querying heterogeneous data in robotic applications\\
 [6mm]
 \Large Rubanraj Ravichandran\\
 [12mm]
@@ -71,6 +71,7 @@ University of Applied Sciences Bonn-Rhein-Sieg\\
 [12mm]
 \Large Supervisors:\\
 Prof. Dr. Erwin Prassler\\
+Prof. Dr Manfred Kaul\\
 \Large Advisors:\\
 Nico Huebel\\
 Sebastian Blumenthal
@@ -94,12 +95,11 @@ As mentioned in these papers \cite{ahmed1991pegasus,fahl1993amos,arens1996query,
 \citet{su2014connecting} highlights the interoperability issues in IoT sensor data and also says that these data should be useful for multiple applications rather than dependent on specific domain. To make the machines interpret the meaning of sensor data, author suggested to use Semantic Web technologies such as Resource Description Framework (RDF). Even though SenML is an evolving technique to model to sensor data, but it is lacking reasoning capabilities and interoperability with other devices. To overcome the issues in SenML generic model, author proposes a technique to represent IoT sensors as a Knowledge Based Systems by transforming SenML to Resource Description Framework. 
 
 As an advantage, the transformed data can be analyzed and helpful to take more meaningful actions. 
-
 SenML is specially designed for resource constrained devices, hence additional information to contextually understand the data has be not excluded intentionally. Each entry of SenML data should have the sensor parameter name and other attributes such as time, value, etc. Also it supports custom attribute called Resource Type (rt) to let the users add their own attributes and this allow users to include contextual information.
 
-With the help of transformation we could adopt RDF structure to model robot generated sensor data, But \citet{charpenay2018towards} points out that RDF data structure is not suitable for resource constrained devices like microcontrollers and also analyzed the issues in RDF such as verbosity and complexity in processing knowledge. To overcome this issues, author carried out an extensive analyis between RDF and JSON-LD structures. JSON-LD was pulished by W3C, and it serves as an alternative for RDF. Using JSON-LD one can represent the context for the data which is more important in robotics field such that other robots can understand the data based on context.
+With the help of transformation we could adopt RDF structure to model robot generated sensor data, But \citet{charpenay2018towards} points out that RDF data structure is not suitable for resource constrained devices like micro-controllers and also analyzed the issues in RDF such as verbosity and complexity in processing knowledge. To overcome this issues, author carried out an extensive analysis between RDF and JSON-LD structures. JSON-LD was published by W3C, and it serves as an alternative for RDF. Using JSON-LD one can represent the context for the data which is more important in robotics field such that other robots can understand the data based on context.
 
-Results shows that JSON-LD compaction coupled with EXI4-JSON or CBOR outperforms state-of-the-art (HDT) with 50 - 60 \% compaction ratios.
+Results shows that JSON-LD compaction coupled with EXI4-JSON or CBOR outperforms state-of-the-art (HDT) with \textbf{50 - 60 \% }compaction ratios.
 
 \subsection{Mediator architectures}
 \citet{fahl1993amos} proposed an active mediator architecture to gather in
@@ -117,7 +117,7 @@ First Integration AMOS parse the query and send individual requests to Translati
 Then,all TAMOS modules return the individual results to IAMOS for integrating all the results. To query multi databases from IAMOS, IAMOS servers are mapped with TAMOS servers with the help of Object-Oriented query language.
 
 
-\citet{ahmed1991pegasus} developed a heterogeneous multi-database system called Pegasus that supports multiple heterogeneous database systems with various data bases models, query languages and services. Pegasus predefines its domain data models based on object oriented approach and also supports programming capabilities. These objects are created and mapped with the types and functions with the help of HOSQL\footnote{\label{myfootnote}Heterogeneous Object Structured Query Language} statements. HOSQL is a declarative object oriented query language which is used by Pegasus to manipulate data from multiple data sources.
+\citet{ahmed1991pegasus} developed a heterogeneous multi-database system called Pegasus that supports multiple heterogeneous database systems with various data bases models, query languages and services. Pegasus predefines its domain data models based on sobject oriented approach and also supports programming capabilities. These objects are created and mapped with the types and functions with the help of HOSQL\footnote{\label{myfootnote}Heterogeneous Object Structured Query Language} statements. HOSQL is a declarative object oriented query language which is used by Pegasus to manipulate data from multiple data sources.
 
 
 
