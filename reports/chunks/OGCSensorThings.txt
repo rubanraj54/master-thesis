@@ -1,0 +1,226 @@
+http://docs.opengeospatial.org/is/15-078r6/15-078r6.html
+
+
+
+OGC SensorThings API offers a unique way to connect sensors in IoT platform and an entity based relationship model to handle data from heterogeneous sensors. It has two major components, one for sensing part and other for tasking part. For our research work, we are not going to review Tasking part, since our focus is towards finding a better context based data model for robotic applications.
+
+Sensing part follows the Observation and Measurement model from "OGC 10-004r3 and ISO 19156:2011". There are eight entities defined by SensorThings API.
+
+Thing - It represents the physical things in the world or a virtual system that can be communicated via network. Things have its own properties such as name, decription and properties. A single thing can have many optional locations, historical locations and datastreams. The constraint is, a thing should be mapped to a single location at a given point of time.
+
+ {
+    "@iot.id": 4,
+    "@iot.selfLink":
+  "http://example.org/v1.0/Things(4)",
+   
+  "Locations@iot.navigationLink":
+  "Things(4)/Locations",
+   
+  "Datastreams@iot.navigationLink":
+  "Things(4)/Datastreams",
+   
+  "HistoricalLocations@iot.navigationLink":
+  "Things(4)/HistoricalLocations",
+    "name": "Production line",
+
+    "description": "This thing is a production line.",
+    "properties": {
+      "Manufactured by": "Hundai",
+      "Weight": "1000"
+    }
+  }
+
+Location - It shows the coordinates of the real location and each location may locates multiple things. Each location should be provided with its encoding type.
+
+
+  {
+    "@iot.id": 5,
+    "@iot.selfLink":
+  "http://example.org/v1.0/Locations(5)",
+   
+  "Things@iot.navigationLink":
+  "Locations(5)/Things",
+   
+  "HistoricalLocations@iot.navigationLink":
+  "Locations(5)/HistoricalLocations",
+    "encodingType":
+  "application/vnd.geo+json",
+
+    "name": "HBRS",
+
+    "description": "Hochschule Bonn Rhein Sieg university of applied science",
+    "location": {
+      "type":
+  "Feature",
+      "geometry":{
+        "type": "Point",
+        "coordinates": [88.06,-95.05]
+      }
+    }
+  }
+
+HistoricalLocation - It shows the thing to be in the location or vice versa, at a given timestamp.
+
+
+  {
+   
+  "value": [
+      {
+       
+  "@iot.id": 2,
+       
+  "@iot.selfLink":
+  "http://example.org/v1.0/HistoricalLocations(2)",
+       
+  "Locations@iot.navigationLink":
+  "HistoricalLocations(2)/Locations",
+       
+  "Thing@iot.navigationLink": "HistoricalLocations(2)/Thing",
+       
+  "time": "2019-02-17T12:00:00-07:00"
+      },
+      {
+       
+  "@iot.id": 3,
+       
+  "@iot.selfLink":
+  "http://example.org/v1.0/HistoricalLocations(3)",
+       
+  "Locations@iot.navigationLink":
+  "HistoricalLocations(3)/Locations",
+        "Thing@iot.navigationLink":
+  "HistoricalLocations(3)/Thing",
+       
+  "time": "2019-02-18T14:00:00-07:00"
+      }
+    ],
+    "@iot.nextLink":"http://example.org/v1.0/Things(4)/HistoricalLocations?$skip=2&$top=2"
+  }
+
+
+Datastream - It stores the list of observations for a specific thing and a sensor. Each datastream should have atleast one sensor and thing entity relationship. For example, a gateway (Thing) with a temperature sensor (Sensor) generates a list of temperature observations under Temperature Datastream.
+
+
+  {
+    "@iot.id": 10,
+    "@iot.selfLink":
+  "http://example.org/v1.0/Datastreams(10)",
+    "Thing@iot.navigationLink":
+  "HistoricalLocations(1)/Thing",
+    "Sensor@iot.navigationLink":
+  "Datastreams(10)/Sensor",
+    "ObservedProperty@iot.navigationLink":
+  "Datastreams(10)/ObservedProperty",
+    "Observations@iot.navigationLink":
+  "Datastreams(10)/Observations",
+    "name": "production line temperature",
+    "description": "This is a datastream of temerature measured in production line",
+    "unitOfMeasurement":
+  {
+      "name":
+  "degree Celsius",
+      "symbol":
+  "°C",
+      "definition":
+  "http://unitsofmeasure.org/ucum.html#para-30"
+    },
+    "observationType":
+  "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+    "observedArea": {
+      "type":
+  "Polygon",
+      "coordinates":
+  [[[100,0],[101,0],[101,1],[100,1],[100,0]]]
+    },
+    "phenomenonTime":
+  "2019-08-01T13:00:00Z/2019-08-11T16:30:00Z",
+    "resultTime":
+  "2019-09-01T13:00:00Z/2019-09-11T16:30:00Z"
+  }
+
+Sensor - Sensor entity represents the physical sensing device which generates the values. Each sensor should have atleast one datastream entity relation. Each sensor is represented along with its encodingTypa and a optional metadata field.
+
+{
+    "@iot.id": 11,
+    "@iot.selfLink":
+  "http://example.org/v1.0/Sensors(11)",
+   
+  "Datastreams@iot.navigationLink":
+  "Sensors(11)/Datastreams",
+    "name": "TMP36",
+
+    "description": "TMP36
+  - Analog Temperature sensor",
+    "encodingType": "application/pdf",
+    "metadata":
+  "http://example.org/TMP35_36_37.pdf"
+  }
+
+
+
+ObservedProperty - It shows what phenomenon is being observed by Observation entity. And it should have a datastream entity referenced to it.
+
+{
+    "@iot.id": 12,
+    "@iot.selfLink":
+  "http://example.org/v1.0/ObservedProperties(12)",
+   
+  "Datastreams@iot.navigationLink":
+  "ObservedProperties(12)/Datastreams",
+    "description":
+  "Property of the temperature sensor limits the DewPoint.",
+    "name":
+  "DewPoint Temperature",
+    "definition":
+  "http://dbpedia.org/page/Dew_point"
+  }
+
+Observation - Observation is the real measurement measured by the sensor. Each observation is provided with phenomenonTime, resultTime, value and the resultQuality to interpret the generated value.
+
+ {
+   
+  "@iot.id": 11,
+   
+  "@iot.selfLink":
+  "http://example.org/v1.0/Observations(11)",
+   
+  "FeatureOfInterest@iot.navigationLink":
+  "Observations(1)/FeatureOfInterest",
+   
+  "Datastream@iot.navigationLink":"Observations(11)/Datastream",
+   
+  "phenomenonTime": "2019-11-31T11:59:59.00+08:00",
+   
+  "resultTime": "2019-11-31T11:59:59.00+08:00",
+   
+  "result": 9.2
+  }
+
+
+FeatureOfInterest - Each observation value represents property of a feature and with the help of FeatureOfInterest entity one can filter the observations easily. For example, FeatureOfInterest of a GPS sensor is location since it generates the coordinates of its current location.
+
+{
+   
+  "@iot.id": 1,
+   
+  "@iot.selfLink":
+  "http://example.org/v1.0/FeaturesOfInterest(1)",
+   
+  "Observations@iot.navigationLink":
+  "FeaturesOfInterest(1)/Observations",
+    "name":
+  "ROPOD lab at HBRS",
+   
+  "description": "Production line setup in ROPOD lab",
+   
+  "encodingType": "application/vnd.geo+json",
+   
+  "feature": {
+      "type":
+  "Feature",
+      "geometry":{
+        "type": "Point",
+        "coordinates": [-124.06,121.05]
+      }
+    }
+  }
