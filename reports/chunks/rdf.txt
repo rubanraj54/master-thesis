@@ -1,0 +1,39 @@
+http://www.linkeddatatools.com/semantic-web-basics
+
+https://www.scss.tcd.ie/Owen.Conlan/CS7063/06%20Introduction%20to%20OWL%20(1%20Lecture).ppt.pdf
+
+Resource Description Framework (RDF) is a well known unique model to represent any resources in the universe with subject, predicate and object pattern like how humans communicate each other.
+
+For example consider a simple scenario where person one says to person two that "Christopher is a magician". In this statement 'christoper' is subject, 'is a' is predicate (relation) and 'magician' is an object. In simple case, person two understands the statement if person two knows only one christoper in his/her life. But if person two have a reference of multiple christoper's, then it is unclear that which christoper he/she is refering to? Then person two asks another question, which christoper and where he is from? So now person one makes a new statement, "Christopher is from Bonn". In this statement, "Christopher" is the same subject, 'is from' a new predicate and "Bonn" is a new Object of type city. Now person two enough information to infer which christopher  person one is taking about. 
+
+Communication is way more easiler between humans since they have a common language model. But What about machines? How they can communicate in a meaningful way? or What if a person want to communicate with a machine in the same way he/she communicates everyday. This is where RDF plays a major role in representing the data that machine generates in a triples format aka Subject-Predicate-Object. 
+
+Components of RDF:
+
+Document - Document is the root container to have more than one RDF statements.
+
+<?xml version="1.0"?>
+
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<!-- RDF statement will go here -->
+</rdf:RDF>
+
+'xmlns:rdf' attribute represents the namespace of the current RDF document which gives a hint to the machines about how they can parse and understand this document. 
+
+Statement - Statement is a individual building block to represent a single triple.
+
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:foaf="http://www.schema.org/foaf#">
+
+	<rdf:Description rdf:about="http://www.schema.org/persons#Christoper">
+		<foaf:is-a rdf:resource="http://www.schema.org/Profession#Magician"/>
+
+</rdf:RDF>  
+
+In the above example, RDF statement starts with subject description about Christoper and in the next level it have a predicate of 'is-a' pointing towards another resource 'Magician' which is an object in this statement. 
+
+The major advanatage of adding semantics to the data is interoperability and easy to query them for a meaningful answer. Let's see an example in the context of robotic applications.
+
+In multi robot scenarios, more than one robot might work cooperatively to complete a single task. Let say, each robot is manufactured by different vendors and the sensors generate values in different units or context. Robot one want to share its current location information which is encoded by 'latitude and longitude' type to robot 2, and robot 2 sensor generates location information with 'geohash' encoding type. So whenever these robots share location values between them, it is not possible to consume it without the context of the values being encoded. If they share values along with encoding type as a context, then each robot can transform the values to the encoding type which is currently being used for the calcualtion.
