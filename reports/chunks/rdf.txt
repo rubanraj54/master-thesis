@@ -25,14 +25,19 @@ Statement - Statement is a individual building block to represent a single tripl
 
 <rdf:RDF
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:foaf="http://www.schema.org/foaf#">
+	xmlns:foaf="http://www.schema.org/foaf#"
+	xmlns:place="http://www.schema.org/place#"
+	xmlns:person="http://www.schema.org/person#">
 
 	<rdf:Description rdf:about="http://www.schema.org/persons#Christoper">
 		<foaf:is-a rdf:resource="http://www.schema.org/Profession#Magician"/>
+		<place:is-from rdf:resource="http://www.schema.org/Profession#Bonn"/>
+		<person:age>26</age>
+	</rdf:Description>
 
 </rdf:RDF>  
 
-In the above example, RDF statement starts with subject description about Christoper and in the next level it have a predicate of 'is-a' pointing towards another resource 'Magician' which is an object in this statement. 
+In the above example, RDF statement starts with subject description about Christoper and in the next level it have a predicate of 'is-a' pointing towards another resource 'Magician' which is an object in this statement. Each statement can have either a reference to other RDF statement or a value. 'Magician' and 'Bonn' statements in the example pointing to other RDF object via 'resource' attribute, and 'age' statement have a single value of '26' represents the age of the 'Christoper'.
 
 The major advanatage of adding semantics to the data is interoperability and easy to query them for a meaningful answer. Let's see an example in the context of robotic applications.
 
