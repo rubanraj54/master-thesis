@@ -1,0 +1,197 @@
+Why JSON -LD instead of JSON?
+
+Json is widely used format to exchange data between systems and storing persistently in databases. Also there are many popular documet based databases(e.g mongoDB, couchDB, etc.) evolved which supports handling JSON objects. Any system can easily parse JSON objects, but JSON object itself is meaningless. The context of each keys can be shared manually with any form of documentation, but it is not easily accessible every time. 
+
+For example, a developer worked on a system and named the keys by his own interest. Now if a new developer wants to understand what a specific key means, then he/she needs to check the document or contact other developers. It is even more difficult for machines, to interpret what each key means in a JSON object. JSON-LD solves this problem by encoding IRI's in the JSON object to uniquely identify each keys.
+
+
+JSON-LD
+
+Json LD is an approach to structure the linked data and adding semantic contexts to data in the form of IRI (Internationalized Resource Identifier). An IRI is an unique and globally accessible links via web like URI and the format is jointly defined by World Wide Web Consortium and Internet Engineering Task Force. [ref: https://www.w3.org/TR/ld-glossary/#internationalized-resource-identifier]
+
+Let's try to understand how JSON-LD solves interoperability issues with a toy example. Consider we have two robots developed by different developers and each publishing ROS Twist messsages at a certain rate.
+
+Developers of first robot decided to publish the twist messages with following format.
+
+{
+linear: {
+	x: 2,
+	y: 3,
+	z: 23.2
+},
+angular: {
+	x: 23,
+	y: 33,
+	z: 0.5
+}
+}
+
+Developers of second robot decided to publish the twist messages with following format.
+
+{
+linear_velocity: {
+	x: 2,
+	y: 3,
+	z: 23.2
+},
+angular_velocity: {
+	x: 23,
+	y: 33,
+	z: 0.5
+}
+}
+
+We can see from both the format, underlying data is same but the representation is different. In first robot, the linear and angular velocity has been identified with the keys "linear" and "angular", and in second robot, the same data will be identified with the keys "linear_velocity" and "angular_velocity". In multi robot environment, if all the robots know what data they are exchanging and how it has been encoded then there is no issues. But what if two stranger robots want to communicate or transfer data with each other? For example robot one wants to navigate from one location to other without colliding with other robots in the environment. With the above mentioned formats, robot one cannot understand what robot two is saying, because they dont talk in the same language.  
+
+This is where Json-LD plays major role to solve this interoperability issue. Let solve the issue discussed above with the help of Json-LD. 
+
+{
+"@context": "http://example.com/",
+"linear": {
+	"x": 2,
+	"y": 3,
+	"z": 23.2
+},
+"angular": {
+	"x": 23,
+	"y": 33,
+	"z": 0.5
+}
+}
+
+What has been changed in the first robot twist message? We have added a "@context" keyword to the existing message. This means that, whoever consumes this message, they have to understand the complete message in the context of "http://example.com/". 
+
+Now we tranform the second robot message format like this.
+
+{
+ "@context": {
+    "@vocab": "http://example.com/",
+    "linear_velocity": "linear",
+    "angular_velocity": "angular"
+  },
+"linear_velocity": {
+	"x": 2,
+	"y": 3,
+	"z": 23.2
+},
+"angular_velocity": {
+	"x": 23,
+	"y": 33,
+	"z": 0.5
+}
+}
+
+In the new transformation, we added one more attribute called "@vocab" which means that apply the "http://example.com/" IRI to all keys with the specific key mapping. Now you may think that, how this solves the interoperability issue? still both messages looks exactly different with few extra @context and @vocab information.
+
+Json-LD doesn't offers only the semantic representation, but also offers two other improtant features called Expansion and Compaction algorithm.
+
+Lets see the result after applying expansion algorithm on both the messages above.
+
+Message from first robot:
+
+[
+  {
+    "http://example.com/angular": [
+      {
+        "http://example.com/x": [
+          {
+            "@value": 23
+          }
+        ],
+        "http://example.com/y": [
+          {
+            "@value": 33
+          }
+        ],
+        "http://example.com/z": [
+          {
+            "@value": 0.5
+          }
+        ]
+      }
+    ],
+    "http://example.com/linear": [
+      {
+        "http://example.com/x": [
+          {
+            "@value": 2
+          }
+        ],
+        "http://example.com/y": [
+          {
+            "@value": 3
+          }
+        ],
+        "http://example.com/z": [
+          {
+            "@value": 23.2
+          }
+        ]
+      }
+    ]
+  }
+]
+
+Message from second robot:
+
+[
+  {
+    "http://example.com/angular": [
+      {
+        "http://example.com/x": [
+          {
+            "@value": 23
+          }
+        ],
+        "http://example.com/y": [
+          {
+            "@value": 33
+          }
+        ],
+        "http://example.com/z": [
+          {
+            "@value": 0.5
+          }
+        ]
+      }
+    ],
+    "http://example.com/linear": [
+      {
+        "http://example.com/x": [
+          {
+            "@value": 2
+          }
+        ],
+        "http://example.com/y": [
+          {
+            "@value": 3
+          }
+        ],
+        "http://example.com/z": [
+          {
+            "@value": 23.2
+          }
+        ]
+      }
+    ]
+  }
+]
+
+Now both the messages look exactly the same without any difference in keys and values. This is the power of Json-LD expansion algorithm. You can probably think now, who creates the common vocabualry list which can be understandable by all the robots. So far, there are many vocabulary list has been created for common things in the universe but ain't one for robots ecosystem. 
+
+For example, 
+
+https://schema.org/
+http://thingschema.org/
+https://iot.schema.org/
+https://wiki.dbpedia.org/
+
+schema.org have a huge collection of most common definable things in the universe.
+thingsschema.org is just initiated a motivation to define things (smart things) in the environment.
+iot.schema.org defines the vocabualry list and relationships for IoT devices.
+dbpedia.org have a collection of person record to uniquely identify each person information in the world.
+
+
+As part of this reserach work, we are taking an initiative to prepare a set of vocabs for robots, sensors and its working environment. Then, we use the vocabularies to represent robot generated messages with more precise context so that any other robots in the world can understand each other eventhough they are being manufactured by different vendors.
+
+
