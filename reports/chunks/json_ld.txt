@@ -85,6 +85,7 @@ In the new transformation, we added one more attribute called "@vocab" which mea
 
 Json-LD doesn't offers only the semantic representation, but also offers two other improtant features called Expansion and Compaction algorithm.
 
+Expansion algorithm: 
 Lets see the result after applying expansion algorithm on both the messages above.
 
 Message from first robot:
@@ -194,4 +195,54 @@ dbpedia.org have a collection of person record to uniquely identify each person 
 
 As part of this reserach work, we are taking an initiative to prepare a set of vocabs for robots, sensors and its working environment. Then, we use the vocabularies to represent robot generated messages with more precise context so that any other robots in the world can understand each other eventhough they are being manufactured by different vendors.
 
+Compaction algorithm:
 
+Compaction algorithm takes two inputs, one is the real data object and the second is object which have only context information, and generates a human readable final result which includes both data and context injected in to it. 
+
+Example:
+
+Input one:
+{
+ "@context": "http://example.com/",
+"linear_velocity": {
+	"x": 2,
+	"y": 3,
+	"z": 23.2
+},
+"angular_velocity": {
+	"x": 23,
+	"y": 33,
+	"z": 0.5
+}
+}
+
+Input two:
+{
+ "@context": {
+    "@vocab": "http://example.com/",
+    "linear_velocity": "linear",
+    "angular_velocity": "angular"
+  }
+}
+
+Result:
+
+{
+ "@context": {
+    "@vocab": "http://example.com/",
+    "linear_velocity": "linear",
+    "angular_velocity": "angular"
+  },
+"linear_velocity": {
+	"x": 2,
+	"y": 3,
+	"z": 23.2
+},
+"angular_velocity": {
+	"x": 23,
+	"y": 33,
+	"z": 0.5
+}
+}
+
+As I said before context is injected in to the real data object. Now the result object can syntatically understandable by other robots.
