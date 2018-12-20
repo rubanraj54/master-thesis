@@ -14,31 +14,31 @@ Let's try to understand how JSON-LD solves interoperability issues with a toy ex
 Developers of first robot decided to publish the twist messages with following format.
 
 {
-linear: {
-	x: 2,
-	y: 3,
-	z: 23.2
-},
-angular: {
-	x: 23,
-	y: 33,
-	z: 0.5
-}
+    "linear": {
+        "x": 2,
+        "y": 3,
+        "z": 23.2
+    },
+    "angular": {
+        "x": 23,
+        "y": 33,
+        "z": 0.5
+    }
 }
 
 Developers of second robot decided to publish the twist messages with following format.
 
 {
-linear_velocity: {
-	x: 2,
-	y: 3,
-	z: 23.2
-},
-angular_velocity: {
-	x: 23,
-	y: 33,
-	z: 0.5
-}
+    "linear_velocity": {
+        "x": 2,
+        "y": 3,
+        "z": 23.2
+    },
+    "angular_velocity": {
+        "x": 23,
+        "y": 33,
+        "z": 0.5
+    }
 }
 
 We can see from both the format, underlying data is same but the representation is different. In first robot, the linear and angular velocity has been identified with the keys "linear" and "angular", and in second robot, the same data will be identified with the keys "linear_velocity" and "angular_velocity". In multi robot environment, if all the robots know what data they are exchanging and how it has been encoded then there is no issues. But what if two stranger robots want to communicate or transfer data with each other? For example robot one wants to navigate from one location to other without colliding with other robots in the environment. With the above mentioned formats, robot one cannot understand what robot two is saying, because they dont talk in the same language.  
@@ -245,4 +245,4 @@ Result:
 }
 }
 
-As I said before context is injected in to the real data object. Now the result object can syntatically understandable by other robots.
+As I said before "@context" is injected in to the real data object. Now the result object can contextually understandable by other robots.
