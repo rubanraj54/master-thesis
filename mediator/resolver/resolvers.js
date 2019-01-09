@@ -1,7 +1,10 @@
+import GraphQLJSON from 'graphql-type-json';
+
 import Query from './query'
 import Mutation from './mutation'
 
 export default {
-  Query,
-  Mutation
+    JSON: GraphQLJSON,
+    Query,
+    Mutation
 }

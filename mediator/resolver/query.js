@@ -1,23 +1,27 @@
 export default {
-    allTalks: async (parent, args, { Talk, Robot }) => {
-      const talks = await Talk.find(args)
-      return talks.map(x => {
-        x._id = x._id.toString()
-        return x
-      })
-    },
-    allRobots: async (parent, args, { Talk, Robot }) => {
+    allRobots: async (parent, args, { Robot, Sensor }) => {
       const robots = await Robot.find(args)
       return robots.map(x => {
         x._id = x._id.toString()
         return x
       })
     },
-    getTalk: async (parent, args, { Talk, Robot }) => {
-      const talk = await Talk.findById(args.id)
-      return talk
+    allSensors: async (parent, args, { Robot, Sensor }) => {
+      const sensors = await Sensor.find(args)
+      return sensors.map(x => {
+        x._id = x._id.toString()
+        return x
+      })
     },
-    getRobot: async (parent, args, { Talk, Robot }) => {
+    allTemperatureObservations: async (parent, args, { Robot, Sensor,TemperatureObservation }) => {
+      const temperatureObservations = await TemperatureObservation.find(args).populate('robot').
+      populate('sensor')
+      return temperatureObservations.map(x => {
+        x._id = x._id.toString()
+        return x
+      })
+    },
+    getRobot: async (parent, args, { Robot, Sensor}) => {
       const robot = await Robot.findById(args.id)
       return robot
     }
