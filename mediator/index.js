@@ -5,7 +5,7 @@ import { makeExecutableSchema } from 'graphql-tools'
 import mongoose from 'mongoose'
 
 import typeDefs from './schema'
-import resolvers from './resolvers'
+import resolvers from './resolver/resolvers'
 import Talk from './model'
 import Robot from './robotmodel'
 const env = require('dotenv').config()
