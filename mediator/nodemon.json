@@ -1,0 +1,4 @@
+{
+    "verbose": false,
+    "ignore": ["schema_registry.json"]
+}

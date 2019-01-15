@@ -46,21 +46,22 @@ app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
 
 app.use(express.json());
 
-app.post('/schemaregistry', function (request, response) {
+app.post('/schemaregistry/', function (request, response) {
     let data = request.body;
     
-    if (!sr.has(data.robot.name).value()) {
-        // sr.set(data.robot.name, request.body).write()
-        utility.registerRobot(data.robot, data.dbInfo);
-        // utility.registerSensors(data.sensors, data.dbInfo);
-    } else {
-
-    }
-
-    // sr.unset(data.robot.name).write()
-    
-    // console.log(request.body); // your JSON
-    response.send(data); // echo the result back
+    // sr.set(data.robot.name, data).write()
+    let req = utility.registerRobot(data.robot, data.dbInfo)
+    let req2 = utility.registerRobot(data.robot, data.dbInfo)
+    let promisearray = Promise.all([req,req2]);
+    promisearray.then(values => {
+        sr.set(values[0]._id, data).write();
+        sr.set(values[1]._id, data).write();
+        console.log(values);
+        response.send("Success")
+    }).catch(err => {
+        response.send("Robot registry failed")
+        console.log(err);
+    })
 });
 
 app.listen(PORT)
