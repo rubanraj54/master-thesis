@@ -1,3 +1,5 @@
+const utility = require("./utils")
+
 export default {
     createRobot: async (parent, args, { Robot, Sensor }) => {
       const robot = await new Robot(args).save().then(robot => robot.populate('context').execPopulate())
@@ -10,7 +12,7 @@ export default {
       return sensor
     },
     createContext: async (parent, args, { Robot, Sensor,Context }) => {
-      const context = await new Context(args).save()
+      const context = await new Context(utility.replaceKeysDeep(args)).save()
       context._id = context._id.toString()
       return context
     },

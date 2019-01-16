@@ -32,6 +32,29 @@ module.exports = {
     },
     
     registerSensor(sensor, dbInfo) {
+        const mutation = `mutation {
+                            createSensor(
+                                type: "${sensor.type}",
+                                name: "${sensor.name}",
+                                context: "${sensor.context}",
+                                description: "${sensor.description}",
+                                measures: "${sensor.measures}",
+                                value_schema: "${sensor.value_schema}",
+                                unit: "${sensor.unit}",
+                                meta: ${sensor.meta}
+                            ) {
+                                _id
+                                name
+                            }
+                        }`
+        return request('http://localhost:3085/graphql', mutation)
+                .then(data => {
+                    return data.createSensor;
+                })
+                .catch(err => {
+                    return err.response;
+                })
         console.log(sensor, dbInfo);
     }
+
 }

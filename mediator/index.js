@@ -53,17 +53,37 @@ app.post('/schemaregistry/', function (request, response) {
     
     // sr.set(data.robot.name, data).write()
     let req = utility.registerRobot(data.robot, data.dbInfo)
-    // let req2 = utility.registerRobot(data.robot, data.dbInfo)
-    let promisearray = Promise.all([req]);
-    promisearray.then(values => {
-        sr.set(values[0]._id, data).write();
+
+    req.then(res => {
+        sr.set(res._id, data).write();
         // sr.set(values[1]._id, data).write();
-        console.log(values[0]);
-        response.send("Success")
+        // console.log(values[0]);
+        let sensorPromises = [];
+        data.sensors.forEach(sensor => {
+            sensorPromises.push(utility.registerSensor(sensor,data.dbInfo));
+        });
+
+        Promise.all(sensorPromises).then(values => {
+            response.send("Robot and Sensor registry success")
+        }).catch(err => {
+            response.send("Sensor registry failed")
+        });
+
     }).catch(err => {
         response.send("Robot registry failed")
         console.log(err);
     })
+    // let req2 = utility.registerRobot(data.robot, data.dbInfo)
+    // let promisearray = Promise.all([req]);
+    // promisearray.then(values => {
+    //     sr.set(values[0]._id, data).write();
+    //     // sr.set(values[1]._id, data).write();
+    //     // console.log(values[0]);
+    //     response.send("Success")
+    // }).catch(err => {
+    //     response.send("Robot registry failed")
+    //     // console.log(err);
+    // })
 });
 
 app.listen(PORT)

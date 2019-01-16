@@ -16,6 +16,7 @@ type Sensor {
     name: String
     description: String
     measures: String
+    unit: String
     value_schema: String
     meta: JSON
     context: Context
@@ -98,6 +99,7 @@ type Mutation {
         description: String!,
         measures: String!,
         value_schema: String!,
+        unit: String!,
         meta: JSON!,
         context : String!,
     ): Sensor!

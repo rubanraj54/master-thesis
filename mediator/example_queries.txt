@@ -21,6 +21,34 @@ mutation {
   }
 }
 
+mutation {
+  createContext(name:"tempsensor",value:{
+         schema: "http://robot.schema.org/",
+         xsd: "http://www.w3.org/2001/XMLSchema#",
+         schemaUrl: "http://dataschema.com/",
+         dataUrl: "http://data.mongodb.com/",
+         id: "@id",
+         type: "@type",
+         name: "schema:name",
+         description: "schema:description",
+         measures: "schema:measures",
+         value_schema: {
+             _id: "schema:value_schema",
+             _type: "@id"
+         },
+         schema__value_schema: {
+             _type: "@id"
+         },
+         unit: "schema:unit",
+         meta: "schema:meta"
+     }) {
+    _id
+    name
+    value
+  }
+}
+
+
 {
   allRobots {
     _id
@@ -39,7 +67,7 @@ mutation {
         context: {
             name: "name",
             value: {
-                
+
             }
         }
     ) {
@@ -51,4 +79,53 @@ mutation {
             value
         }
     }
+}
+
+mutation {
+  createSensor(
+    type: "schema:Sensor",
+		name: "Temperature brown",
+    context: "5c3f5b65ec9325165bad9b96",
+    description: "Sensor to measure the internal temperature of the robot",
+    measures: "heat",
+    value_schema: "schemaUrl:23764732647sdugf32u32g",
+    unit: "Celcius",
+    meta: {}
+  ) {
+    _id
+    name
+  }
+}
+
+
+{
+  "robot": {
+    "name": "tiny",
+    "type":"schema:robot",
+    "macAddress":"dd:3e:4d:5s",
+    "context":"5c3f2810402eb3557da397d7",
+    "db" : "mongodb"
+  },
+  "sensors": [
+    {
+      "type": "schema:Sensor",
+      "name": "Temperature brown",
+      "context": "5c3f5b65ec9325165bad9b96",
+      "description": "Sensor to measure the internal temperature of the robot",
+      "measures": "heat",
+      "value_schema": "schemaUrl:23764732647sdugf32u32g",
+      "unit": "Celcius",
+      "meta": {}
+    }
+  ],
+  "dbInfo": {
+    "mongodb": {
+      "auth": {
+        "username": "admin",
+        "password": "password"
+      },
+      "clusterMode": true,
+      "numOfClusters": 3
+    }
+  }
 }
