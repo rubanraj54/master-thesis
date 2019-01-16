@@ -6,17 +6,25 @@ type Robot {
   _id: String
   type: String
   name: String
-  mac_address: String
+  mac_address: String,
+  context: Context
 }
 
 type Sensor {
+    _id: String
+    type: String
+    name: String
+    description: String
+    measures: String
+    value_schema: String
+    meta: JSON
+    context: Context
+}
+
+type Context {
   _id: String
-  type: String
   name: String
-  description: String
-  measures: String
-  value_schema: String
-  meta: JSON
+  value: JSON
 }
 
 type TemperatureObservation {
@@ -65,6 +73,10 @@ allSensors(
 allTemperatureObservations(
     name: String
   ): [TemperatureObservation!] !,
+  
+allContexts(
+    name: String
+  ): [Context!] !,
 
   getRobot(
     id: String!
@@ -77,8 +89,9 @@ type Mutation {
         type: String!,
         name : String!,
         mac_address : String!,
-    ): Robot!
-
+        context : String!,
+        ): Robot!
+        
     createSensor(
         type: String!,
         name : String!,
@@ -86,7 +99,13 @@ type Mutation {
         measures: String!,
         value_schema: String!,
         meta: JSON!,
+        context : String!,
     ): Sensor!
+
+    createContext(
+        name: String!
+        value: JSON!,
+    ): Context!
 
     createTemperatureObservation(
         input:InputTemperatureObservation!

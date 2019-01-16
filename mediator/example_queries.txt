@@ -1,0 +1,54 @@
+{
+  allContexts {
+    _id
+    name
+    value
+  }
+}
+
+mutation {
+  createContext(name:"robot",value:{
+           schema: "http://robot.schema.org/",
+           dataUrl: "http://data.mongodb.com/",
+           id : "@id",
+           type : "@type",
+           name: "schema:name",
+           mac_address: "schema:mac_address"
+       }) {
+    _id
+    name
+    value
+  }
+}
+
+{
+  allRobots {
+    _id
+    name
+    context {
+      value
+    }
+  }
+}
+
+mutation {
+    createRobot(
+        type:"type",
+        name:"name",
+        mac_address:"mac_address"
+        context: {
+            name: "name",
+            value: {
+                
+            }
+        }
+    ) {
+        _id
+        type
+        name
+        mac_address,
+        context {
+            value
+        }
+    }
+}
