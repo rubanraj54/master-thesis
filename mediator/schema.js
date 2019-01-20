@@ -38,10 +38,24 @@ type TemperatureObservation {
   value: TemperatureObservationValue
 }
 
+type AccelerometerObservation {
+  _id: String
+  value: [AccelerometerObservationValue]
+}
+
 type TemperatureObservationValue {
   x: Int,
   y: Int,
   z: Int
+}
+
+type AccelerometerObservationValue {
+        x: Int,
+        y: Int,
+        z: Int,
+        test: {
+            value: Int
+        }
 }
 
 input InputTemperatureObservation {
@@ -74,6 +88,10 @@ allSensors(
 allTemperatureObservations(
     name: String
   ): [TemperatureObservation!] !,
+
+allAccelerometerObservations(
+    name: String
+  ): [AccelerometerObservation!] !,
   
 allContexts(
     name: String

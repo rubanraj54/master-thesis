@@ -28,6 +28,19 @@ export default {
         return x
       })
     },
+    allAccelerometerObservations: async (parent, args, {
+                Robot,
+                Sensor,
+                Context,
+                TemperatureObservation,
+                AccelerometerObservation
+            }) => {
+      const accelerometerObservation = await AccelerometerObservation.find(args)
+      return accelerometerObservation.map(x => {
+        x._id = x._id.toString()
+        return x
+      })
+    },
     getRobot: async (parent, args, { Robot, Sensor}) => {
       const robot = await Robot.findById(args.id)
       return robot

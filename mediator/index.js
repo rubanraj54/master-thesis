@@ -10,6 +10,7 @@ import Robot from './models/robot'
 import Sensor from './models/sensor'
 import Context from './models/context'
 import TemperatureObservation from './models/observations/temperature-observation'
+import AccelerometerObservation from './models/observations/accelerometer-observation'
 const utility = require("./schema_registry/utils.js")
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
@@ -26,6 +27,24 @@ const schema = makeExecutableSchema({
 
 mongoose.connect('mongodb://localhost:27017/test',{useNewUrlParser:true});
 
+const accobv = new AccelerometerObservation({
+    value : [
+        {
+            x : 1,
+            y : 2,
+            z : 3
+        },
+        {
+            x : 2,
+            y : 3,
+            z : 45
+        }
+    ]
+}).save();
+
+console.log(accobv);
+
+
 const PORT = 3085
 
 const app = express()
@@ -39,7 +58,8 @@ app.use(
             Robot,
             Sensor,
             Context,
-            TemperatureObservation
+            TemperatureObservation,
+            AccelerometerObservation
         }
     })
 )
