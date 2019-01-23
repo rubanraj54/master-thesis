@@ -12,3 +12,5 @@
 *.blg
 
 reports/proposal/proposal\.pdf
+
+mediator/schema_registry\.json
