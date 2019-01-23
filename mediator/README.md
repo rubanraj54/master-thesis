@@ -1,10 +1,12 @@
-# master thesis (Mediator component)
+# Master thesis (Mediator component)
 
 ## Requirements:
 
 Node : v8.11.1
 
 npm : 6.4.1
+
+mongodb (Follow the instructions here to know how to spinup mongodb docker container)
 
 ## Instructions to run mediator:
 
