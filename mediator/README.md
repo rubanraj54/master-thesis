@@ -1,3 +1,4 @@
+
 # Master thesis (Mediator component)
 
 ## Requirements:
@@ -6,8 +7,24 @@ Node : v8.11.1
 
 npm : 6.4.1
 
-mongodb (Follow the instructions here to know how to spinup mongodb docker container)
+mongodb 
 
+Note: Before running mediator make sure the data sources are up and running for storing or fetching.
+
+## Instruction to spinup mongodb docker container
+
+Simple setup:
+ ```
+$ docker run -d --name robomongo -p 27017:27017 mvertes/alpine-mongo
+```
+
+Mounting data location from host to container: (preferred)
+
+```
+$ docker run -d --name mongo -p 27017:27017 \
+  -v /somewhere/onmyhost/mydatabase:/data/db \
+  mvertes/alpine-mongo
+```
 ## Instructions to run mediator:
 
  1. Clone the repository
