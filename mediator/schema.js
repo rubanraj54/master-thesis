@@ -52,10 +52,7 @@ type TemperatureObservationValue {
 type AccelerometerObservationValue {
         x: Int,
         y: Int,
-        z: Int,
-        test: {
-            value: Int
-        }
+        z: Int
 }
 
 input InputTemperatureObservation {

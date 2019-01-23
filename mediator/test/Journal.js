@@ -1,4 +1,3 @@
 
-var fs = require("fs");
-var writeStream = fs.createWriteStream("Journal2.js");
-writeStream.end();
+const files = require.context('../models', true, /(Module|Utils)\.js$/)
+console.log(files);
