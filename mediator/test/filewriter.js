@@ -1,12 +1,64 @@
 var fs = require("fs");
-
-var observationName = "AccelerometerObservation";
+var djvi = require("djvi");
+const forEach = require('lodash').forEach;
 
 var writeStream = fs.createWriteStream("accelerometer-observation.js");
+var observationName = "AccelerometerObservation";
+var jsonSchema = {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "values": {
+            "type": "array",
+            "items": [{
+                "type": "object",
+                "properties": {
+                    "x": {
+                        "type": "integer"
+                    },
+                    "y": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "x",
+                    "y"
+                ]
+            }]
+        }
+    },
+    "required": [
+        "values"
+    ]
+};
+
+var env = new djvi();
+env.addSchema('test', jsonSchema);
+let model = env.instance('test#');
+let transformedValue = "";
+let value = (Array.isArray(model.values)) ? model.values[0] : model.values;
+let mongooseModel = {};
+forEach(value, (element, key) => {
+    if (Array.isArray(element) || typeof element == "object") {
+        return false;
+    }
+    let type = "String";
+    if (typeof element == "number" || typeof element == "integer") {
+        type = "Number";
+    } else if (typeof element == "boolean") {
+        type = "Boolean";
+    }
+    mongooseModel[key] = type;
+})
+transformedValue = JSON.stringify(mongooseModel).replace(/["']/g, "");
+if (Array.isArray(model.values)) {
+    transformedValue = "[" + transformedValue + "]"
+}
+
 writeStream.write(`
 import mongoose from 'mongoose'
 
-const Observation = mongoose.model('${observationName}', {
+const ${observationName} = mongoose.model('${observationName}', {
     name: String,
     type: String,
     featureOfInterest: String,
@@ -18,14 +70,10 @@ const Observation = mongoose.model('${observationName}', {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Robot'
     },
-    value: {
-        x: Number,
-        y: Number,
-        z: Number
-    }
+    value: ${transformedValue}
 })
 
-export default Observation
+export default ${observationName}
 `);
 
 writeStream.end();
