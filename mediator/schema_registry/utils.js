@@ -26,10 +26,6 @@ module.exports = {
                     return err.response;
                 })
     },
-
-    registerSensors(sensors, dbInfo) {
-        console.log(sensors, dbInfo);
-    },
     
     registerSensor(sensor, dbInfo) {
         const mutation = `mutation {
@@ -54,7 +50,6 @@ module.exports = {
                 .catch(err => {
                     return err.response;
                 })
-        console.log(sensor, dbInfo);
     }
 
 }

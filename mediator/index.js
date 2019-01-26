@@ -24,24 +24,6 @@ const schema = makeExecutableSchema({
 
 mongoose.connect('mongodb://localhost:27017/test',{useNewUrlParser:true});
 
-// const accobv = new AccelerometerObservation({
-//     value : [
-//         {
-//             x : 1,
-//             y : 2,
-//             z : 3
-//         },
-//         {
-//             x : 2,
-//             y : 3,
-//             z : 45
-//         }
-//     ]
-// }).save();
-
-// console.log(accobv);
-
-
 const PORT = 3085
 
 const app = express()

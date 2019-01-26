@@ -1,7 +1,7 @@
 
 import mongoose from 'mongoose'
 
-const AccelerometerObservation = mongoose.model('AccelerometerObservation', {
+const AccelerometerTest = mongoose.model('AccelerometerTest', {
     name: String,
     type: String,
     featureOfInterest: String,
@@ -16,4 +16,4 @@ const AccelerometerObservation = mongoose.model('AccelerometerObservation', {
     value: [{x:Number,y:Number}]
 })
 
-export default AccelerometerObservation
+export default AccelerometerTest

@@ -1,17 +1,19 @@
 
-import Robot from '../models/robot'
-import Sensor from '../models/sensor'
-import Context from '../models/context'
+import Robot from '/home/ruby/repos/master-thesis/mediator/models/robot'
+import Sensor from '/home/ruby/repos/master-thesis/mediator/models/sensor'
+import Context from '/home/ruby/repos/master-thesis/mediator/models/context'
     
-import AccelerometerObservation from '../models/observations/accelerometer-observation.js'
-import TemperatureObservation from '../models/observations/temperature-observation.js'
+import AccelerometerObservation from '/home/ruby/repos/master-thesis/mediator/models/observations/accelerometer-observation.js'
+import AccelerometerTest from '/home/ruby/repos/master-thesis/mediator/models/observations/accelerometer-test.js'
+import TemperatureObservation from '/home/ruby/repos/master-thesis/mediator/models/observations/temperature-observation.js'
 export {
     Robot,
     Sensor,
     Context,
     
 AccelerometerObservation,
+AccelerometerTest,
 TemperatureObservation,
-    };
+};
 
     
