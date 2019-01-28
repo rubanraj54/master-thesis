@@ -14,10 +14,10 @@ module.exports = {
                 let observationName = splitNames.map(function (name) {
                     return name.charAt(0).toUpperCase() + name.slice(1)
                 }).join("");
+                observationName += "Observation";
                 let importStatement = `import ${observationName} from '${appDir}/models/observations/${file}'`
                 importStatements += "\n" + importStatement;
                 exportStatements += "\n" + observationName + ",";
-
             });
 
             writeStream.write(`

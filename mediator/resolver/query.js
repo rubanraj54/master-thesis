@@ -20,29 +20,28 @@ export default {
         return x
       })
     },
-    allTemperatureObservations: async (parent, args, { Robot, Sensor,Context, TemperatureObservation }) => {
-      const temperatureObservations = await TemperatureObservation.find(args).populate('robot').
-      populate('sensor')
-      return temperatureObservations.map(x => {
-        x._id = x._id.toString()
-        return x
-      })
-    },
-    allAccelerometerObservations: async (parent, args, {
+    // allVelocitySensorObservations: async (parent, args, { Robot, Sensor,Context, TemperatureObservation }) => {
+    //   const temperatureObservations = await TemperatureObservation.find(args).populate('robot').
+    //   populate('sensor')
+    //   return temperatureObservations.map(x => {
+    //     x._id = x._id.toString()
+    //     return x
+    //   })
+    // },
+    allAccelorometerSensorObservations: async (parent, args, {
                 Robot,
                 Sensor,
                 Context,
-                TemperatureObservation,
-                AccelerometerObservation
+                AccelorometerSensorObservation
             }) => {
-      const accelerometerObservation = await AccelerometerObservation.find(args)
+      const accelerometerObservation = await AccelorometerSensorObservation.find(args)
       return accelerometerObservation.map(x => {
         x._id = x._id.toString()
         return x
       })
     },
-    getRobot: async (parent, args, { Robot, Sensor}) => {
-      const robot = await Robot.findById(args.id)
-      return robot
-    }
+    // getRobot: async (parent, args, { Robot, Sensor}) => {
+    //   const robot = await Robot.findById(args.id)
+    //   return robot
+    // }
   }

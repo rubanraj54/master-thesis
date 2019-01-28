@@ -16,9 +16,9 @@ export default {
       context._id = context._id.toString()
       return context
     },
-    createTemperatureObservation: async (_, {input}, { Robot, Sensor, Context, TemperatureObservation }) => {
-      const temperatureObservation = await new TemperatureObservation(input).save()
-      temperatureObservation._id = temperatureObservation._id.toString()
-      return temperatureObservation
-    }
+    // createTemperatureObservation: async (_, {input}, { Robot, Sensor, Context, TemperatureObservation }) => {
+    //   const temperatureObservation = await new TemperatureObservation(input).save()
+    //   temperatureObservation._id = temperatureObservation._id.toString()
+    //   return temperatureObservation
+    // }
   }

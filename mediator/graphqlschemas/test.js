@@ -1,5 +1,6 @@
 
                     export default `
+                    scalar JSON
                     type Robot {
                         _id: String
                         type: String
