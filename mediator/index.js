@@ -22,9 +22,11 @@ const schema = makeExecutableSchema({
   resolvers
 })
 
+
+
 mongoose.connect('mongodb://localhost:27017/test',{useNewUrlParser:true});
 
-const PORT = 3085
+const PORT = 3086
 
 const app = express()
 

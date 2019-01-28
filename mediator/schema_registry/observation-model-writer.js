@@ -5,12 +5,21 @@ var appDir = path.dirname(__dirname);
 
 const forEach = require('lodash').forEach;
 
+
+import {
+    generateObservationName,
+    generateObservationFileName
+} from "../general/utils"
+
 module.exports = {
 
-    createObservationModel(observationName, jsonSchema) {
-        var writeStream = fs.createWriteStream(appDir + "/models/observations/" + observationName + ".js");
+    createObservationModel(sensorName, jsonSchema) {
+        let observationName = generateObservationName(sensorName);
+        let observationFileName = generateObservationFileName(sensorName);
         
+        var writeStream = fs.createWriteStream(appDir + "/models/observations/" + observationFileName + ".js");
         var env = new djvi();
+
         env.addSchema('test', jsonSchema);
         
         let model = env.instance('test#');
