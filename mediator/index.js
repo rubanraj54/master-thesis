@@ -57,6 +57,8 @@ app.post('/schemaregistry/', function (request, response) {
         });
 
         Promise.all(sensorPromises).then(values => {
+            // console.log(values);
+            
             response.send("Robot and Sensor registry success")
         }).catch(err => {
             response.send("Sensor registry failed")
@@ -66,17 +68,6 @@ app.post('/schemaregistry/', function (request, response) {
         response.send("Robot registry failed")
         console.log(err);
     })
-    // let req2 = utility.registerRobot(data.robot, data.dbInfo)
-    // let promisearray = Promise.all([req]);
-    // promisearray.then(values => {
-    //     sr.set(values[0]._id, data).write();
-    //     // sr.set(values[1]._id, data).write();
-    //     // console.log(values[0]);
-    //     response.send("Success")
-    // }).catch(err => {
-    //     response.send("Robot registry failed")
-    //     // console.log(err);
-    // })
 });
 
 app.listen(PORT)
