@@ -1,13 +1,13 @@
 
             export default {
-            allRobots: async (parent, args, { Robot, Sensor }) => {
+            allRobots: async (parent, args, { Robot, Sensor, Context }) => {
                 const robots = await Robot.find(args).populate('context')
                 return robots.map(x => {
                 x._id = x._id.toString()
                 return x
                 })
             },
-            allSensors: async (parent, args, { Robot, Sensor }) => {
+            allSensors: async (parent, args, { Robot, Sensor, Context }) => {
                 const sensors = await Sensor.find(args).populate('context')
                 return sensors.map(x => {
                 x._id = x._id.toString()
