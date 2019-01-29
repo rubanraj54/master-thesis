@@ -18,8 +18,36 @@
                     return context
                 },
                 
-                createAccelorometerSensorObservation: async (_, {input}, { Robot, Sensor, Context, AccelorometerSensorObservation }) => {
+                createAccelorometerSensorObservation: async (_, {input}, { Robot, Sensor, Context, AccelorometerSensorObservation,VelocitySensorObservation,VelocitySensor2Observation,VelocitySensor3Observation,VelocitySensor4Observation }) => {
                 const observation = await new AccelorometerSensorObservation(input).save()
+                observation._id = observation._id.toString()
+                return observation
+                },            
+            
+
+                createVelocitySensorObservation: async (_, {input}, { Robot, Sensor, Context, AccelorometerSensorObservation,VelocitySensorObservation,VelocitySensor2Observation,VelocitySensor3Observation,VelocitySensor4Observation }) => {
+                const observation = await new VelocitySensorObservation(input).save()
+                observation._id = observation._id.toString()
+                return observation
+                },            
+            
+
+                createVelocitySensor2Observation: async (_, {input}, { Robot, Sensor, Context, AccelorometerSensorObservation,VelocitySensorObservation,VelocitySensor2Observation,VelocitySensor3Observation,VelocitySensor4Observation }) => {
+                const observation = await new VelocitySensor2Observation(input).save()
+                observation._id = observation._id.toString()
+                return observation
+                },            
+            
+
+                createVelocitySensor3Observation: async (_, {input}, { Robot, Sensor, Context, AccelorometerSensorObservation,VelocitySensorObservation,VelocitySensor2Observation,VelocitySensor3Observation,VelocitySensor4Observation }) => {
+                const observation = await new VelocitySensor3Observation(input).save()
+                observation._id = observation._id.toString()
+                return observation
+                },            
+            
+
+                createVelocitySensor4Observation: async (_, {input}, { Robot, Sensor, Context, AccelorometerSensorObservation,VelocitySensorObservation,VelocitySensor2Observation,VelocitySensor3Observation,VelocitySensor4Observation }) => {
+                const observation = await new VelocitySensor4Observation(input).save()
                 observation._id = observation._id.toString()
                 return observation
                 },            
