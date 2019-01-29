@@ -28,17 +28,12 @@ export default {
     //     return x
     //   })
     // },
-    allAccelorometerSensorObservations: async (parent, args, {
-                Robot,
-                Sensor,
-                Context,
-                AccelorometerSensorObservation
-            }) => {
-      const accelerometerObservation = await AccelorometerSensorObservation.find(args)
-      return accelerometerObservation.map(x => {
+    allAccelorometerSensorObservations: async (parent, args, {Robot, Sensor,Context,AccelorometerSensorObservation}) => {
+        const accelerometerObservation = await AccelorometerSensorObservation.find(args)
+        return accelerometerObservation.map(x => {
         x._id = x._id.toString()
         return x
-      })
+        })
     },
     // getRobot: async (parent, args, { Robot, Sensor}) => {
     //   const robot = await Robot.findById(args.id)

@@ -5,7 +5,8 @@ import { makeExecutableSchema } from 'graphql-tools'
 import mongoose from 'mongoose'
 import { request } from 'graphql-request'
 import { updateGraphQlSchema } from './schema_registry/graphql-schema-updater'
-
+import { updateGraphQlQuery } from './schema_registry/graphql-query-updater'
+updateGraphQlQuery
 // import typeDefs from './schema'
 import typeDefs from './graphqlschemas/newtypedef'
 import resolvers from './resolver/resolvers'
@@ -76,7 +77,7 @@ app.post('/schemaregistry/', function (requestEndpoint, response) {
                         console.log(data.allSensors);
 
                         updateGraphQlSchema(data.allSensors);
-                        
+                        updateGraphQlQuery(data.allSensors);
                         response.send("Robot and Sensor registry success")
                         // return data.allSensors;
                     })
