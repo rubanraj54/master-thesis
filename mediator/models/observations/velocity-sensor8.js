@@ -1,7 +1,7 @@
 
         import mongoose from 'mongoose'
 
-        const VelocitySensor3Observation = mongoose.model('VelocitySensor3Observation', {
+        const VelocitySensor8Observation = mongoose.model('VelocitySensor8Observation', {
             name: String,
             type: String,
             featureOfInterest: String,
@@ -16,5 +16,5 @@
             value: [{x:Number,y:Number}]
         })
 
-        export default VelocitySensor3Observation
+        export default VelocitySensor8Observation
         

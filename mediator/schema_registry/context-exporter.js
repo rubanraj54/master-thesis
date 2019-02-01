@@ -5,7 +5,7 @@ var appDir = path.dirname(__dirname);
 
 module.exports = {
     exportContexts() {
-        var writeStream = fs.createWriteStream(appDir + "/models/modelexporter.js");
+        var writeStream = fs.createWriteStream(appDir + "/models/main.js");
         fs.readdir(appDir + "/models/observations", (err, files) => {
             let importStatements = "";
             let exportStatements = "";

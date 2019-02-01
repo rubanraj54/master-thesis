@@ -22,8 +22,14 @@
                 })
             },
             
-                allAccelorometerSensorObservations: async (parent, args, {Robot, Sensor,Context,AccelorometerSensorObservation,VelocitySensorObservation,VelocitySensor2Observation,VelocitySensor3Observation,VelocitySensor4Observation}) => {
-                    const observations = await AccelorometerSensorObservation.find(args).populate('robot').populate({
+                allVelocitySensor8Observations: async (parent, args, {Robot, Sensor,Context,VelocitySensor8Observation,VelocitySensorObservation}) => {
+                    const observations = await VelocitySensor8Observation.find(args).populate({
+                        path: 'robot',
+                        populate : {
+                            path: "context",
+                            model: "Context"
+                        }
+                    }).populate({
                         path: 'sensor',
                         populate : {
                             path: "context",
@@ -37,53 +43,14 @@
                 },            
             
 
-                allVelocitySensorObservations: async (parent, args, {Robot, Sensor,Context,AccelorometerSensorObservation,VelocitySensorObservation,VelocitySensor2Observation,VelocitySensor3Observation,VelocitySensor4Observation}) => {
-                    const observations = await VelocitySensorObservation.find(args).populate('robot').populate({
-                        path: 'sensor',
+                allVelocitySensorObservations: async (parent, args, {Robot, Sensor,Context,VelocitySensor8Observation,VelocitySensorObservation}) => {
+                    const observations = await VelocitySensorObservation.find(args).populate({
+                        path: 'robot',
                         populate : {
                             path: "context",
                             model: "Context"
                         }
-                    })
-                    return observations.map(x => {
-                        x._id = x._id.toString()
-                        return x
-                    })
-                },            
-            
-
-                allVelocitySensor2Observations: async (parent, args, {Robot, Sensor,Context,AccelorometerSensorObservation,VelocitySensorObservation,VelocitySensor2Observation,VelocitySensor3Observation,VelocitySensor4Observation}) => {
-                    const observations = await VelocitySensor2Observation.find(args).populate('robot').populate({
-                        path: 'sensor',
-                        populate : {
-                            path: "context",
-                            model: "Context"
-                        }
-                    })
-                    return observations.map(x => {
-                        x._id = x._id.toString()
-                        return x
-                    })
-                },            
-            
-
-                allVelocitySensor3Observations: async (parent, args, {Robot, Sensor,Context,AccelorometerSensorObservation,VelocitySensorObservation,VelocitySensor2Observation,VelocitySensor3Observation,VelocitySensor4Observation}) => {
-                    const observations = await VelocitySensor3Observation.find(args).populate('robot').populate({
-                        path: 'sensor',
-                        populate : {
-                            path: "context",
-                            model: "Context"
-                        }
-                    })
-                    return observations.map(x => {
-                        x._id = x._id.toString()
-                        return x
-                    })
-                },            
-            
-
-                allVelocitySensor4Observations: async (parent, args, {Robot, Sensor,Context,AccelorometerSensorObservation,VelocitySensorObservation,VelocitySensor2Observation,VelocitySensor3Observation,VelocitySensor4Observation}) => {
-                    const observations = await VelocitySensor4Observation.find(args).populate('robot').populate({
+                    }).populate({
                         path: 'sensor',
                         populate : {
                             path: "context",

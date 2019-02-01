@@ -11,7 +11,7 @@ import { updateGraphQlMutation } from './schema_registry/graphql-mutation-update
 // import typeDefs from './schema'
 import typeDefs from './graphqlschemas/newtypedef'
 import resolvers from './resolver/resolvers'
-import * as Contexts from './models/modelexporter'
+import * as Contexts from './models/main'
 
 const utility = require("./schema_registry/utils.js")
 const low = require('lowdb')

@@ -23,7 +23,13 @@ module.exports = {
         observationNames.forEach(observationName => {
             let query = `
                 all${observationName}s: async (parent, args, {Robot, Sensor,Context,${observationContexts}}) => {
-                    const observations = await ${observationName}.find(args).populate('robot').populate({
+                    const observations = await ${observationName}.find(args).populate({
+                        path: 'robot',
+                        populate : {
+                            path: "context",
+                            model: "Context"
+                        }
+                    }).populate({
                         path: 'sensor',
                         populate : {
                             path: "context",

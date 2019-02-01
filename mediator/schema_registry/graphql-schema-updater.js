@@ -42,6 +42,13 @@ module.exports = {
             }).join("");
 
             observationName += "Observation";
+            
+            let inputValueName = `Input${observationName}Value`;
+
+            if (Array.isArray(model.values)) {
+                inputValueName = "[" + inputValueName + "]"
+            }
+
             // let observationName = generateObservationName(sensor.name);
             let typeValueName = (Array.isArray(model.values)) ? `[${observationName}Value]` : `${observationName}Value`
             let template = `
@@ -66,7 +73,7 @@ module.exports = {
                                 featureOfInterest: String
                                 sensor: String
                                 robot: String
-                                value: Input${observationName}Value
+                                value: ${inputValueName}
                             }
                     
                             input Input${observationName}Value {
