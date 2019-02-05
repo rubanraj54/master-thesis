@@ -1,0 +1,13 @@
+{
+    "db": [
+        {
+            "name": "mongodb",
+            "entities": ["context","robot","sensor","observation"],
+            "url": "localhost:27017",
+            "dbName": "test",
+            "userName": "",
+            "password": ""
+        }
+    ],
+    "format": "json-ld"
+}

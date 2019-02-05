@@ -20,10 +20,8 @@ const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync('schema_registry.json')
 const sr = low(adapter)
 
-
-import findIndex from 'lodash/findIndex'
-
-console.log();
+const mediatorConfigAdapter = new FileSync('mediatorconfig.json')
+const mediatorConfig = low(mediatorConfigAdapter)
 
 if (!sr.has('robots').value()) {
     sr.set('robots', []).write()
@@ -41,8 +39,24 @@ const schema = makeExecutableSchema({
 })
 
 
+let databases = mediatorConfig.get('db').value();
 
-mongoose.connect('mongodb://localhost:27017/test',{useNewUrlParser:true});
+//checking for mongodb configuration and making connection
+let mongoDbIndex = databases.findIndex(database => database.name === "mongodb");
+if (mongoDbIndex != -1) {
+    let mongoDb = databases[mongoDbIndex];
+    let hostWithCredentials = "";
+    if (mongoDb.userName == "" && mongoDb.password == "") {
+        hostWithCredentials = mongoDb.url;
+    } else if (mongoDb.userName == "") {
+        hostWithCredentials = `:${mongoDb.password}@${mongoDb.url}`;;
+    } else if (mongoDb.password == "") {
+        hostWithCredentials = `${mongoDb.userName}:@${mongoDb.url}`;
+    }
+    mongoose.connect(`mongodb://${hostWithCredentials}/${mongoDb.dbName}`,{useNewUrlParser:true});
+} else {
+    console.log("mongodb configuration missing");
+}
 
 const PORT = 3085
 
