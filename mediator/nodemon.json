@@ -1,5 +1,5 @@
 {
     "verbose": true,
     "ignore": ["schema_registry.json","./models/observations/",
-        "./models/"]
+        "./models/", "/graphqlschemas/newqueries.js", "/graphqlschemas/newtypedef.js"]
 }

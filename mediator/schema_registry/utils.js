@@ -21,7 +21,7 @@ module.exports = {
                                 }
                             }
                         }`
-        return request('http://localhost:3086/graphql', mutation)
+        return request('http://localhost:3085/graphql', mutation)
                 .then(data => {
                     return data.createRobot;
                 })
@@ -53,7 +53,7 @@ module.exports = {
                             }
                         }`
 
-        return request('http://localhost:3086/graphql', mutation)
+        return request('http://localhost:3085/graphql', mutation)
                 .then(data => {
                     createObservationModel(sensor.name,sensor.value_schema);
                     exportContexts();

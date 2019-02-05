@@ -20,6 +20,19 @@ const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync('schema_registry.json')
 const sr = low(adapter)
 
+
+import findIndex from 'lodash/findIndex'
+
+console.log();
+
+if (!sr.has('robots').value()) {
+    sr.set('robots', []).write()
+}
+if (!sr.has('sensors').value()) {
+    sr.set('sensors', []).write()
+}
+
+
 const env = require('dotenv').config()
 
 const schema = makeExecutableSchema({
@@ -31,7 +44,7 @@ const schema = makeExecutableSchema({
 
 mongoose.connect('mongodb://localhost:27017/test',{useNewUrlParser:true});
 
-const PORT = 3086
+const PORT = 3085
 
 const app = express()
 
@@ -48,55 +61,152 @@ app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
 
 app.use(express.json());
 
-app.post('/schemaregistry/', function (requestEndpoint, response) {
-    let data = requestEndpoint.body;
-    
-    // sr.set(data.robot.name, data).write()
-    let req = utility.registerRobot(data.robot, data.dbInfo)
 
-    req.then(res => {
-        sr.set(res._id, data).write();
-        // sr.set(values[1]._id, data).write();
-        // console.log(values[0]);
+app.post('/schemaregistry/', function (requestEndpoint, response) {
+    let finalResponse = {
+        robot: {
+            name: "",
+            id: ""
+        },
+        sensors: []
+    };
+    let data = requestEndpoint.body;
+    let robot = data.robot;
+    let robots = sr.get('robots').value();
+    let robotIndexInRegistry = robots.findIndex(_robot => _robot.name === robot.name);
+    if (robot && robotIndexInRegistry == -1) {
+        let req = utility.registerRobot(data.robot, data.dbInfo)
+    
+        req.then(res => {
+            let newRobot = {
+                id: res._id,
+                name: data.robot.name,
+            }
+
+            sr.get('robots').push(newRobot).write();
+            finalResponse.robot.id = res._id;
+            finalResponse.robot.name = data.robot.name;
+
+            let existingSensors = sr.get('sensors').value();
+            let sensorPromises = [];
+            data.sensors.forEach(sensor => {
+                let sensorIndexInRegistry = existingSensors.findIndex(existingSensor => existingSensor.name === sensor.name);
+                if (sensorIndexInRegistry == -1) {
+                    sensorPromises.push(utility.registerSensor(sensor,data.dbInfo));
+                } else {
+                    let existingSensor = existingSensors[sensorIndexInRegistry];
+                    finalResponse.sensors.push({
+                        id: existingSensor.id,
+                        name: existingSensor.name
+                    });
+                    console.log(sensor.name, ' already exits');
+                }
+            });
+            if (sensorPromises.length != 0) {
+                Promise.all(sensorPromises).then(values => {
+                    values.forEach(value => {
+                        let newSensor = {
+                            id: value._id,
+                            name: value.name,
+                        }
+                        sr.get('sensors').push(newSensor).write();
+                        finalResponse.sensors.push({
+                            id: value._id,
+                            name: value.name
+                        });
+                    });       
+                    const query = `{
+                                        allSensors {
+                                            _id,
+                                            value_schema,
+                                            name
+                                        }
+                                    }`
+        
+                    request('http://localhost:3085/graphql', query)
+                            .then(data => {
+                                // console.log(data.allSensors);
+        
+                                updateGraphQlSchema(data.allSensors);
+                                updateGraphQlQuery(data.allSensors);
+                                updateGraphQlMutation(data.allSensors);
+                                response.json(finalResponse);
+                            })
+                            .catch(err => {
+                                response.send("all Sensors failed")
+                            })
+                }).catch(err => {
+                    console.log(err);
+                    response.send("Sensor registry failed")
+                });
+            } else {
+                response.json(finalResponse);
+            }
+        }).catch(err => {
+            response.send("Robot registry failed")
+            console.log(err);
+        })
+    } else if (robotIndexInRegistry > -1) {
+        let existingRobot = robots[robotIndexInRegistry];
+        finalResponse.robot.id = existingRobot.id;
+        finalResponse.robot.name = existingRobot.name;
+        let existingSensors = sr.get('sensors').value();
         let sensorPromises = [];
         data.sensors.forEach(sensor => {
-            sensorPromises.push(utility.registerSensor(sensor,data.dbInfo));
+            let sensorIndexInRegistry = existingSensors.findIndex(existingSensor => existingSensor.name === sensor.name);
+            if (sensorIndexInRegistry == -1) {
+                sensorPromises.push(utility.registerSensor(sensor, data.dbInfo));
+            } else {
+                let existingSensor = existingSensors[sensorIndexInRegistry];
+                finalResponse.sensors.push({
+                    id: existingSensor.id,
+                    name: existingSensor.name
+                });
+                console.log(sensor.name, ' already exits');
+            }
         });
-
-        Promise.all(sensorPromises).then(values => {
-            // console.log(values);
-                    const query = `{
-                                            allSensors {
-                                                _id,
-                                                value_schema,
-                                                name
-                                            }
-                                        }`
-
-            request('http://localhost:3086/graphql', query)
+        if (sensorPromises.length != 0) {
+            Promise.all(sensorPromises).then(values => {
+                // let existingSensors = sr.get('robots').find({ name: newRobot.name }).sensors
+                values.forEach(value => {
+                    let newSensor = {
+                        id: value._id,
+                        name: value.name,
+                    }
+                    sr.get('sensors').push(newSensor).write();
+                    finalResponse.sensors.push({
+                        id: value._id,
+                        name: value.name
+                    });
+                });
+                const query = `{
+                                    allSensors {
+                                        _id,
+                                        value_schema,
+                                        name
+                                    }
+                                }`
+    
+                request('http://localhost:3085/graphql', query)
                     .then(data => {
-                        console.log(data.allSensors);
-
+                        // console.log(data.allSensors);
+    
                         updateGraphQlSchema(data.allSensors);
                         updateGraphQlQuery(data.allSensors);
                         updateGraphQlMutation(data.allSensors);
-                        response.send("Robot and Sensor registry success")
-                        // return data.allSensors;
+                        response.json(finalResponse);
                     })
                     .catch(err => {
                         response.send("all Sensors failed")
-                        // return err.response;
                     })
-        }).catch(err => {
-            console.log(err);
-            
-            response.send("Sensor registry failed")
-        });
-
-    }).catch(err => {
-        response.send("Robot registry failed")
-        console.log(err);
-    })
+            }).catch(err => {
+                console.log(err);
+                response.send("Sensor registry failed")
+            });
+        } else {
+            response.json(finalResponse);
+        }
+    }
 });
 
 app.listen(PORT)
