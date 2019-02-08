@@ -9,5 +9,8 @@
             "password": ""
         }
     ],
-    "format": "json-ld"
+    "format": "json-ld",
+    "graphqli": true,
+    "port": 3085,
+    "url": "http://localhost"
 }
