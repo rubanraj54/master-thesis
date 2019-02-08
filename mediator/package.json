@@ -9,7 +9,7 @@
         "lint": "eslint .",
         "test": "npm run lint"
     },
-    "author": "Sara Vieira",
+    "author": "Rubanraj Ravichandran",
     "license": "MIT",
     "devDependencies": {
         "babel-cli": "^6.26.0",

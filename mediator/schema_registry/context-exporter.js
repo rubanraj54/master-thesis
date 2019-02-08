@@ -15,15 +15,15 @@ module.exports = {
                     return name.charAt(0).toUpperCase() + name.slice(1)
                 }).join("");
                 observationName += "Observation";
-                let importStatement = `import ${observationName} from '${appDir}/models/observations/${file}'`
+                let importStatement = `import ${observationName} from './observations/${file}'`
                 importStatements += "\n" + importStatement;
                 exportStatements += "\n" + observationName + ",";
             });
 
             writeStream.write(`
-        import Robot from '${appDir}/models/robot'
-        import Sensor from '${appDir}/models/sensor'
-        import Context from '${appDir}/models/context'
+        import Robot from './robot'
+        import Sensor from './sensor'
+        import Context from './context'
             ${importStatements}
         export {
             Robot,

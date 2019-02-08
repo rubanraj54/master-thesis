@@ -4,10 +4,10 @@
   "description": "Individual component to handle robot and sensors schema registration",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node start.js"
   },
   "author": "Rubanraj Ravichandran",
-  "license": "ISC",
+  "license": "Mit",
   "dependencies": {
     "express": "^4.16.4",
     "request": "^2.88.0"
