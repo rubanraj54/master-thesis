@@ -1,5 +1,5 @@
 {
-  "name": "schema-registry",
+  "name": "mediator-schema-registry-component",
   "version": "1.0.0",
   "description": "Individual component to handle robot and sensors schema registration",
   "main": "index.js",

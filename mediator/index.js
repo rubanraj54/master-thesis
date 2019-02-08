@@ -17,7 +17,9 @@ const schema = makeExecutableSchema({
   resolvers
 })
 
-
+// Url & port initialization
+const URL = mediatorConfig.has('url') ? mediatorConfig.get('url').value() : "";
+const PORT = mediatorConfig.has('port') ? mediatorConfig.get('port').value() : 8000;
 
 //checking for mongodb configuration and making connection
 let databases = mediatorConfig.get('db').value();
@@ -55,7 +57,7 @@ app.use(
 */
 if (mediatorConfig.get('graphqli').value()) {
     app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
-    console.log(`Graphql is running on port : ${PORT}`)
+    console.log(`Graphql query interface is running on port : ${URL}:${PORT}`)
 }
 
 // Enable json parsing for the data attached in request body
@@ -67,8 +69,6 @@ app.get('/restart', function (req, res, next) {
 });
 
 // Expose graphQl on port specified in mediator config
-const PORT = mediatorConfig.has('port') ? mediatorConfig.get('port').value() : 8000;
-const URL = mediatorConfig.has('url') ? mediatorConfig.get('url').value() : "";
 app.listen(PORT)
 
 console.log(`Graphql is running on : ${URL}:${PORT}`);
