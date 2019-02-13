@@ -21,6 +21,11 @@ const schema = makeExecutableSchema({
 const URL = mediatorConfig.has('url') ? mediatorConfig.get('url').value() : "";
 const PORT = mediatorConfig.has('port') ? mediatorConfig.get('port').value() : 8000;
 
+String.prototype.toObjectId = function () {
+    var ObjectId = (require('mongoose').Types.ObjectId);
+    return new ObjectId(this.toString());
+};
+
 //checking for mongodb configuration and making connection
 let databases = mediatorConfig.get('db').value();
 let mongoDbIndex = databases.findIndex(database => database.name === "mongodb");

@@ -9,6 +9,7 @@
                                 name: String
                                 mac_address: String,
                                 context: Context
+                                sensors: [Sensor]
                             }
 
                             type Sensor {
@@ -21,6 +22,7 @@
                                 value_schema: JSON
                                 meta: JSON
                                 context: Context
+                                robots: [Robot]
                             }
 
                             type Context {
@@ -113,8 +115,14 @@ y: Int,
                                     ): [Context!] !,
 
                                     getRobot(
-                                        id: String!
-                                    ): Robot!
+                                        _id: String!
+                                        name: String
+                                    ): Robot
+
+                                    getSensor(
+                                        _id: String!
+                                        name: String
+                                    ): Sensor
 
                                 
                         allVelocitySensor8Observations(

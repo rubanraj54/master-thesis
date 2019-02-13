@@ -5,6 +5,9 @@
     "main": "index.js",
     "scripts": {
         "dev": "forever start start.js",
+        "dev:default": "node start.js",
+        "dev:restart": "forever restart start.js",
+        "dev:stop": "forever stop start.js",
         "format": "prettier --write '**/*.{js}'",
         "lint": "eslint .",
         "test": "npm run lint"
