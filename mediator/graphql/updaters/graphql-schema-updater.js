@@ -108,15 +108,25 @@ module.exports = {
 
                             scalar JSON
 
+                            type Task {
+                                _id: String
+                                name: String
+                                context: Context
+                                robots: [Robot]
+                                sensors: [Sensor]
+                            }
+
                             type Robot {
                                 _id: String
                                 type: String
                                 name: String
                                 mac_address: String,
                                 context: Context
+                                sensors: [Sensor]
+                                tasks: [Task]
                             }
 
-                            type Sensor {
+                           type Sensor {
                                 _id: String
                                 type: String
                                 name: String
@@ -126,6 +136,8 @@ module.exports = {
                                 value_schema: JSON
                                 meta: JSON
                                 context: Context
+                                robots: [Robot]
+                                tasks: [Task]
                             }
 
                             type Context {

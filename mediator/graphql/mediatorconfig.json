@@ -1,0 +1,16 @@
+{
+    "db": [
+        {
+            "name": "mongodb",
+            "entities": ["context","robot","sensor","observation"],
+            "url": "localhost:27017",
+            "dbName": "test",
+            "userName": "",
+            "password": ""
+        }
+    ],
+    "format": "json-ld",
+    "graphqli": true,
+    "port": 3085,
+    "url": "http://localhost"
+}
