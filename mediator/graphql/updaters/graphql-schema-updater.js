@@ -163,8 +163,19 @@ module.exports = {
                                     ): [Context!] !,
 
                                     getRobot(
-                                        id: String!
-                                    ): Robot!
+                                        _id: String!
+                                        name: String
+                                    ): Robot
+
+                                    getSensor(
+                                        _id: String!
+                                        name: String
+                                    ): Sensor
+
+                                    getTask(
+                                        _id: String!
+                                        name: String
+                                    ): Task
 
                                 ${queries}
                             }
