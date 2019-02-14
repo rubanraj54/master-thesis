@@ -7,7 +7,7 @@ import has from 'lodash/has'
 import Task from "./models/task.js"
 import Robot from "./models/robot.js"
 import Sensor from "./models/sensor.js"
-import RobotSensor from "./models/robot-sensor.js"
+import TaskRobotSensor from "./models/task-robot-sensor.js"
 
 const express = require('express')
 const app = express()
@@ -68,8 +68,8 @@ function updateGraphQl(allSensors) {
 app.get('/test',async (requestEndpoint,response) => {
 
     // let data = requestEndpoint.body;
-    // let data = dummyData;
-    let data = dummyResuableData;
+    let data = dummyData;
+    // let data = dummyResuableData;
     
     let finalResponse = {
         task: {
@@ -91,16 +91,16 @@ app.get('/test',async (requestEndpoint,response) => {
 
             // sensor registration
             let sensors = _robot.sensors;
-            let regSensorIds = [];
+            let sensorIds = [];
             if (sensors && sensors.length > 0) {
-                regSensorIds = await registerSensors(sensors);
+                sensorIds = await registerSensors(sensors);
             }
             finalResponse.robots.push({
                 _id: newRobotId,
-                sensors: regSensorIds.map(regSensorId => { return {_id:regSensorId}})
+                sensors: sensorIds.map(regSensorId => { return {_id:regSensorId}})
             });
             // robot-sensor registration
-            await registerRobotSensors(newRobotId, regSensorIds);
+            await registerRobotSensors(task._id, newRobotId, sensorIds);
         }));
     }
     response.send(finalResponse);
@@ -119,10 +119,11 @@ async function registerSensors(sensors) {
     }));
 }
 
-async function registerRobotSensors(newRobotId, regSensorIds) {
-    return regSensorIds.forEach(async regSensorId => {
-        await RobotSensor({
-            robot: newRobotId,
+async function registerRobotSensors(taskId, robotId, sensorIds) {
+    return sensorIds.forEach(async regSensorId => {
+        await TaskRobotSensor({
+            task: taskId,
+            robot: robotId,
             sensor: regSensorId,
             timestamp: new Date()
         }).save();

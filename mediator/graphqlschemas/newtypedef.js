@@ -3,6 +3,14 @@
 
                             scalar JSON
 
+                            type Task {
+                                _id: String
+                                name: String
+                                context: Context
+                                robots: [Robot]
+                                sensors: [Sensor]
+                            }
+
                             type Robot {
                                 _id: String
                                 type: String
@@ -10,6 +18,7 @@
                                 mac_address: String,
                                 context: Context
                                 sensors: [Sensor]
+                                tasks: [Task]
                             }
 
                             type Sensor {
@@ -23,6 +32,7 @@
                                 meta: JSON
                                 context: Context
                                 robots: [Robot]
+                                tasks: [Task]
                             }
 
                             type Context {
@@ -118,6 +128,11 @@ y: Int,
                                         _id: String!
                                         name: String
                                     ): Robot
+
+                                    getTask(
+                                        _id: String!
+                                        name: String
+                                    ): Task
 
                                     getSensor(
                                         _id: String!

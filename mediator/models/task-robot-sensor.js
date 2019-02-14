@@ -1,6 +1,10 @@
 import mongoose from 'mongoose'
 
-const RobotSensor = mongoose.model('RobotSensor', {
+const TaskRobotSensor = mongoose.model('TaskRobotSensor', {
+    task: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task'
+    },
     robot: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Robot'
@@ -12,4 +16,4 @@ const RobotSensor = mongoose.model('RobotSensor', {
     timestamp: Date
 })
 
-export default RobotSensor
+export default TaskRobotSensor

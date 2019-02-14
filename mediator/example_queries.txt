@@ -164,3 +164,29 @@ mutation {
     name
   }
 }
+
+
+{
+  getRobot(_id:"5c6562de882ac112a93a0798") {
+    _id
+    name,
+    context {
+      value
+    },
+    sensors {
+      name
+      description
+    },
+    tasks {
+      _id
+      name
+      sensors {
+        name
+      },
+      robots {
+        _id
+        name
+      }
+    }
+  }
+}
