@@ -1,9 +1,12 @@
 var fs = require("fs");
 var djvi = require("djvi");
+var path = require('path');
+var appDir = path.dirname(__dirname);
+
 const forEach = require('lodash').forEach;
 
-var writeStream = fs.createWriteStream("accelerometer-observation.js");
-var observationName = "AccelerometerObservation";
+var writeStream = fs.createWriteStream(appDir + "/models/observations/" + "accelerometer-test.js");
+var observationName = "AccelerometerTest";
 var jsonSchema = {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",

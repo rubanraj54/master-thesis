@@ -36,23 +36,53 @@ $ docker run -d --name mongo -p 27017:27017 \
 Initial Robot, Sensor registration configuration file,
 ```javascript
 {
-  "robot": {
-    "name": "newrobot",
-    "type":"schema:robot",
-    "macAddress":"dd:3e:4d:5s",
-    "context":"5c3f5b4dec9325165bad9b95"
-  },
-  "sensors": [
-    {
-      "type": "schema:Sensor",
-      "name": "newsensor",
-      "context": "5c3f5b65ec9325165bad9b96",
-      "description": "Sensor to measure the internal temperature of the robot",
-      "measures": "heat",
-      "value_schema": "schemaUrl:23764732647sdugf32u32g",
-      "unit": "Celcius",
-      "meta": {}
-    }
-  ]
+    "robot": {
+        "name": "newrobot",
+        "type": "schema:robot",
+        "macAddress": "dd:3e:4d:5s",
+        "context": "5c4f5bacdb878529d8999978"
+    },
+    "sensors": [
+        {
+            "type": "schema:Sensor",
+            "name": "velocity_sensor9",
+            "context": "5c4f5b7bdb878529d8999977",
+            "description": "Sensor to measure the internal temperature of the robot",
+            "measures": "heat",
+            "value_schema": {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                    "values": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "x": {
+                                        "type": "integer"
+                                    },
+                                    "y": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "x",
+                                    "y"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "values"
+                ]
+            },
+            "unit": "Celcius",
+            "meta": {
+            	"test" : "123"
+            }
+        }
+    ]
 }
 ```

@@ -1,0 +1,89 @@
+{
+    "task": {
+        "name": "testone",
+        "env": "house",
+        "context": "5c4f6a3700c3d43fa87954ce"
+    },
+    "robots": [{
+        "name": "newrobot44",
+        "type": "schema:robot",
+        "macAddress": "dd:3e:4d:5s",
+        "context": "5c4f5bacdb878529d8999978",
+        "sensors": [{
+            "type": "schema:Sensor",
+            "name": "velocity_sensor34",
+            "context": "5c4f5b7bdb878529d8999977",
+            "description": "Sensor to measure the internal temperature of the robot",
+            "measures": "heat",
+            "value_schema": {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                    "values": {
+                        "type": "array",
+                        "items": [{
+                            "type": "object",
+                            "properties": {
+                                "x": {
+                                    "type": "integer"
+                                },
+                                "y": {
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "x",
+                                "y"
+                            ]
+                        }]
+                    }
+                },
+                "required": [
+                    "values"
+                ]
+            },
+            "unit": "Celcius",
+            "meta": {
+                "test": "123"
+            }
+        }, {
+            "type": "schema:Sensor",
+            "name": "velocity_sensor35",
+            "context": "5c4f5b7bdb878529d8999977",
+            "description": "Sensor to measure the internal temperature of the robot",
+            "measures": "heat",
+            "value_schema": {
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                    "values": {
+                        "type": "array",
+                        "items": [{
+                            "type": "object",
+                            "properties": {
+                                "x": {
+                                    "type": "integer"
+                                },
+                                "y": {
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "x",
+                                "y"
+                            ]
+                        }]
+                    }
+                },
+                "required": [
+                    "values"
+                ]
+            },
+            "unit": "Celcius",
+            "meta": {
+                "test": "123"
+            }
+        }
+    ]
+    }]
+}

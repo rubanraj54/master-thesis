@@ -1,8 +1,9 @@
 var fs = require("fs");
 const forEach = require('lodash').forEach;
 var writeStream = fs.createWriteStream("modelexporter.js");
-
-fs.readdir("../models/observations", (err, files) => {
+var path = require('path');
+var appDir = path.dirname(__dirname);
+fs.readdir(appDir + "/models/observations", (err, files) => {
     let importStatements = "";
     let exportStatements = "";
     files.forEach(file => {
@@ -10,16 +11,16 @@ fs.readdir("../models/observations", (err, files) => {
         let observationName = splitNames.map(function (name) {
             return name.charAt(0).toUpperCase() + name.slice(1)
         }).join("");
-        let importStatement = `import ${observationName} from '../models/observations/${file}'`
+        let importStatement = `import ${observationName} from '${appDir}/models/observations/${file}'`
         importStatements += "\n" + importStatement;
         exportStatements += "\n" + observationName + ",";
         
     });
 
     writeStream.write(`
-import Robot from '../models/robot'
-import Sensor from '../models/sensor'
-import Context from '../models/context'
+import Robot from '${appDir}/models/robot'
+import Sensor from '${appDir}/models/sensor'
+import Context from '${appDir}/models/context'
     ${importStatements}
 export {
     Robot,

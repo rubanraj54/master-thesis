@@ -5,7 +5,7 @@ const Sensor = mongoose.model('Sensor', {
     type: String,
     description: String,
     measures: String,
-    value_schema: String,
+    value_schema: mongoose.Schema.Types.Mixed,
     unit: String,
     meta: mongoose.Schema.Types.Mixed,
     context: {
