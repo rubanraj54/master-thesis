@@ -1,6 +1,6 @@
-import { updateGraphQlSchema } from '../schema_registry/graphql-schema-updater'
-import { updateGraphQlQuery } from '../schema_registry/graphql-query-updater'
-import { updateGraphQlMutation } from '../schema_registry/graphql-mutation-updater'
+import { updateGraphQlSchema } from '../graphql/updaters/graphql-schema-updater'
+import { updateGraphQlQuery } from '../graphql/updaters/graphql-query-updater'
+import { updateGraphQlMutation } from '../graphql/updaters/graphql-mutation-updater'
 import { request } from 'graphql-request'
 import mongoose from 'mongoose'
 import has from 'lodash/has'
@@ -13,7 +13,7 @@ const express = require('express')
 const app = express()
 const port = 3084
 const apiRequest = require('request');
-const utility = require("../schema_registry/utils.js")
+const utility = require("../graphql/updaters/utils.js")
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync('schema_registry.json')
