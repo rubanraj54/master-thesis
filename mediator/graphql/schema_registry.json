@@ -1,0 +1,86 @@
+{
+  "robots": [
+    {
+      "id": "5c59894e65a1550856fe5bb7",
+      "name": "newrobot"
+    },
+    {
+      "id": "5c59896ecbf96a09668824b3",
+      "name": "newrobot2"
+    },
+    {
+      "id": "5c5989d70ff0560ab4722fa2",
+      "name": "newrobot3"
+    },
+    {
+      "id": "5c598e460ff0560ab4722fa3",
+      "name": "newrobot4"
+    },
+    {
+      "id": "5c598ee879e9831497552b05",
+      "name": "newrobot5"
+    },
+    {
+      "id": "5c598f0309f7821508a20c6e",
+      "name": "newrobot10"
+    },
+    {
+      "id": "5c598f1ed0dc3615fc18eb24",
+      "name": "newrobot11"
+    },
+    {
+      "id": "5c598f3d7d3998162abf5877",
+      "name": "newrobot12"
+    },
+    {
+      "id": "5c598f6d16d66116d5c66460",
+      "name": "newrobot13"
+    },
+    {
+      "id": "5c598fceef52a717602394dd",
+      "name": "newrobot14"
+    },
+    {
+      "id": "5c599009792ff018374a3bb9",
+      "name": "newrobot15"
+    },
+    {
+      "id": "5c59b61738e3604d6f11ab26",
+      "name": "newrobot25"
+    }
+  ],
+  "sensors": [
+    {
+      "id": "5c59894e65a1550856fe5bb8",
+      "name": "velocity_sensor18"
+    },
+    {
+      "id": "5c598e460ff0560ab4722fa4",
+      "name": "velocity_sensor19"
+    },
+    {
+      "id": "5c598f0309f7821508a20c6f",
+      "name": "velocity_sensor20"
+    },
+    {
+      "id": "5c598f1fd0dc3615fc18eb25",
+      "name": "velocity_sensor21"
+    },
+    {
+      "id": "5c598f3d7d3998162abf5878",
+      "name": "velocity_sensor22"
+    },
+    {
+      "id": "5c598f6d16d66116d5c66461",
+      "name": "velocity_sensor23"
+    },
+    {
+      "id": "5c5993d3af1c512010831ffb",
+      "name": "velocity_sensor24"
+    },
+    {
+      "id": "5c59b61738e3604d6f11ab27",
+      "name": "velocity_sensor25"
+    }
+  ]
+}

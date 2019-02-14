@@ -1,0 +1,17 @@
+{
+    "task": {
+        "name": "reusabilty test",
+        "env": "dec",
+        "context": "5c62ec1a40c1e761fe66b11f"
+    },
+    "robots": [{
+        "_id": "5c62ec1a40c1e761fe66b120",
+        "sensors": [{
+                "_id": "5c62ec1a40c1e761fe66b121"
+            },
+            {
+                "_id": "5c62ec1a40c1e761fe66b122"
+            }
+        ]
+    }]
+}

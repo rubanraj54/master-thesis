@@ -1,0 +1,192 @@
+{
+  allContexts {
+    _id
+    name
+    value
+  }
+}
+
+mutation {
+  createContext(name:"robot",value:{
+           schema: "http://robot.schema.org/",
+           dataUrl: "http://data.mongodb.com/",
+           id : "@id",
+           type : "@type",
+           name: "schema:name",
+           mac_address: "schema:mac_address"
+       }) {
+    _id
+    name
+    value
+  }
+}
+
+mutation {
+  createContext(name:"tempsensor",value:{
+         schema: "http://robot.schema.org/",
+         xsd: "http://www.w3.org/2001/XMLSchema#",
+         schemaUrl: "http://dataschema.com/",
+         dataUrl: "http://data.mongodb.com/",
+         id: "@id",
+         type: "@type",
+         name: "schema:name",
+         description: "schema:description",
+         measures: "schema:measures",
+         value_schema: {
+             _id: "schema:value_schema",
+             _type: "@id"
+         },
+         schema__value_schema: {
+             _type: "@id"
+         },
+         unit: "schema:unit",
+         meta: "schema:meta"
+     }) {
+    _id
+    name
+    value
+  }
+}
+
+
+{
+  allRobots {
+    _id
+    name
+    context {
+      value
+    }
+  }
+}
+
+mutation {
+    createRobot(
+        type:"type",
+        name:"name",
+        mac_address:"mac_address"
+        context: {
+            name: "name",
+            value: {
+
+            }
+        }
+    ) {
+        _id
+        type
+        name
+        mac_address,
+        context {
+            value
+        }
+    }
+}
+
+mutation {
+  createSensor(
+    type: "schema:Sensor",
+		name: "Temperature brown",
+    context: "5c3f5b65ec9325165bad9b96",
+    description: "Sensor to measure the internal temperature of the robot",
+    measures: "heat",
+    value_schema: "schemaUrl:23764732647sdugf32u32g",
+    unit: "Celcius",
+    meta: {}
+  ) {
+    _id
+    name
+  }
+}
+
+
+{
+  "robot": {
+    "name": "tiny",
+    "type":"schema:robot",
+    "macAddress":"dd:3e:4d:5s",
+    "context":"5c3f2810402eb3557da397d7",
+    "db" : "mongodb"
+  },
+  "sensors": [
+    {
+      "type": "schema:Sensor",
+      "name": "Temperature brown",
+      "context": "5c3f5b65ec9325165bad9b96",
+      "description": "Sensor to measure the internal temperature of the robot",
+      "measures": "heat",
+      "value_schema": "schemaUrl:23764732647sdugf32u32g",
+      "unit": "Celcius",
+      "meta": {}
+    }
+  ],
+  "dbInfo": {
+    "mongodb": {
+      "auth": {
+        "username": "admin",
+        "password": "password"
+      },
+      "clusterMode": true,
+      "numOfClusters": 3
+    }
+  }
+}
+
+
+mutation {
+  createAccelorometerSensorObservation(input:{
+    type:"acceleorometer"
+    name: "pinksensor"
+    featureOfInterest: "dont know"
+    sensor: "5c507ddc17e6ec23067d95ee"
+    robot: "5c507ddc17e6ec23067d95ed"
+    value: {
+      x: 10
+      y: 12
+    }
+  }) {
+    _id
+    name
+  }
+}
+
+mutation {
+  createVelocitySensor4Observation(input:{
+    type:"acceleorometer"
+    name: "redsensor"
+    featureOfInterest: "dont know"
+    sensor: "5c509debbff1534c3f39b75b"
+    robot: "5c507ddc17e6ec23067d95ed"
+    value: {
+      x: 10
+      y: 12
+    }
+  }) {
+    _id
+    name
+  }
+}
+
+
+{
+  getRobot(_id:"5c6562de882ac112a93a0798") {
+    _id
+    name,
+    context {
+      value
+    },
+    sensors {
+      name
+      description
+    },
+    tasks {
+      _id
+      name
+      sensors {
+        name
+      },
+      robots {
+        _id
+        name
+      }
+    }
+  }
+}
