@@ -20,7 +20,7 @@ const adapter = new FileSync('schema_registry.json')
 const sr = low(adapter)
 const dummyData = require('./toy_data/test.json'); 
 const dummyResuableData = require('./toy_data/resuable_test.json'); 
-const mediatorConfigAdapter = new FileSync('../mediatorconfig.json')
+const mediatorConfigAdapter = new FileSync('mediatorconfig.json')
 const mediatorConfig = low(mediatorConfigAdapter)
 
 //checking for mongodb configuration and making connection
@@ -57,7 +57,7 @@ function updateGraphQl(sensors) {
     updateGraphQlSchema(sensors);
     updateGraphQlQuery(sensors);
     updateGraphQlMutation(sensors);
-    // apiRequest('http://localhost:3085/restart', function (error, response, body) {});
+    apiRequest('http://graphql:3085/restart', function (error, response, body) {});
 }
 
 app.get('/test',async (requestEndpoint,response) => {

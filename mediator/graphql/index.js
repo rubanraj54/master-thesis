@@ -10,7 +10,7 @@ import * as Contexts from './models/main'
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const process = require('process');
-const mediatorConfigAdafpter = new FileSync('../mediatorconfig.json')
+const mediatorConfigAdapter = new FileSync('mediatorconfig.json')
 const mediatorConfig = low(mediatorConfigAdapter)
 const schema = makeExecutableSchema({
   typeDefs,

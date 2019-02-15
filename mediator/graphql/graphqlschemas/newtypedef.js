@@ -40,74 +40,6 @@
                                 name: String
                                 value: JSON
                             }
-                                
-                            type VelocitySensor8Observation {
-                                _id: String
-                                type: String
-                                name: String
-                                featureOfInterest: String
-                                sensor: Sensor
-                                robot: Robot
-                                value: [VelocitySensor8ObservationValue]
-                            }
-                            
-                            type VelocitySensor8ObservationValue {
-                                x: Int,
-y: Int,
-
-                            }
-                    
-                            input InputVelocitySensor8Observation {
-                                _id: String
-                                type: String
-                                name: String
-                                featureOfInterest: String
-                                sensor: String
-                                robot: String
-                                value: [InputVelocitySensor8ObservationValue]
-                            }
-                    
-                            input InputVelocitySensor8ObservationValue {
-                                x: Int,
-y: Int,
-
-                    
-                            }
-                        
-
-                            type VelocitySensorObservation {
-                                _id: String
-                                type: String
-                                name: String
-                                featureOfInterest: String
-                                sensor: Sensor
-                                robot: Robot
-                                value: [VelocitySensorObservationValue]
-                            }
-                            
-                            type VelocitySensorObservationValue {
-                                x: Int,
-y: Int,
-
-                            }
-                    
-                            input InputVelocitySensorObservation {
-                                _id: String
-                                type: String
-                                name: String
-                                featureOfInterest: String
-                                sensor: String
-                                robot: String
-                                value: [InputVelocitySensorObservationValue]
-                            }
-                    
-                            input InputVelocitySensorObservationValue {
-                                x: Int,
-y: Int,
-
-                    
-                            }
-                        
 
                             type Query {
 
@@ -138,17 +70,6 @@ y: Int,
                                         _id: String!
                                         name: String
                                     ): Sensor
-
-                                
-                        allVelocitySensor8Observations(
-                            name: String
-                        ): [VelocitySensor8Observation!] !,
-                
-
-                        allVelocitySensorObservations(
-                            name: String
-                        ): [VelocitySensorObservation!] !,
-                
                             }
 
                             type Mutation {
@@ -175,16 +96,6 @@ y: Int,
                                         name: String!
                                         value: JSON!,
                                     ): Context!
-            
-                                    
-                        createVelocitySensor8Observation(
-                            input: InputVelocitySensor8Observation!
-                        ): VelocitySensor8Observation!
-                
-
-                        createVelocitySensorObservation(
-                            input: InputVelocitySensorObservation!
-                        ): VelocitySensorObservation!
                 
         }
         `

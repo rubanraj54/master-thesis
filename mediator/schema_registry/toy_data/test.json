@@ -11,7 +11,7 @@
         "context": "5c4f5bacdb878529d8999978",
         "sensors": [{
             "type": "schema:Sensor",
-            "name": "velocity_sensor34",
+            "name": "velocity_sensor44",
             "context": "5c4f5b7bdb878529d8999977",
             "description": "Sensor to measure the internal temperature of the robot",
             "measures": "heat",
@@ -48,7 +48,7 @@
             }
         }, {
             "type": "schema:Sensor",
-            "name": "velocity_sensor35",
+            "name": "velocity_sensor45",
             "context": "5c4f5b7bdb878529d8999977",
             "description": "Sensor to measure the internal temperature of the robot",
             "measures": "heat",

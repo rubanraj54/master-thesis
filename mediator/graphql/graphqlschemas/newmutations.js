@@ -17,19 +17,6 @@
                     context._id = context._id.toString()
                     return context
                 },
-                
-                createVelocitySensor8Observation: async (_, {input}, { Robot, Sensor, Context, VelocitySensor8Observation,VelocitySensorObservation }) => {
-                const observation = await new VelocitySensor8Observation(input).save()
-                observation._id = observation._id.toString()
-                return observation
-                },            
-            
-
-                createVelocitySensorObservation: async (_, {input}, { Robot, Sensor, Context, VelocitySensor8Observation,VelocitySensorObservation }) => {
-                const observation = await new VelocitySensorObservation(input).save()
-                observation._id = observation._id.toString()
-                return observation
-                },            
             
             }
         
