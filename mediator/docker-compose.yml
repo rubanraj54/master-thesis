@@ -24,8 +24,8 @@ services:
         ports:
             - 3085:3085
         command: > 
-            sh -c "npm run dev:default && tail -F anything"
-            # sh -c "npm run dev && tail -F anything"
+            sh -c "npm run dev && tail -F anything"
+            # sh -c "npm run dev:default && tail -F anything"
     mongo:
         image: mongo
         expose:
