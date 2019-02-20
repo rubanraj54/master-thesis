@@ -1,6 +1,6 @@
+
             import groupBy from 'lodash/groupBy'
             import forEach from 'lodash/forEach'
-
             export default {
             allRobots: async (parent, args, { Robot, TaskRobotSensor }) => {
                 const robots = await Robot.find(args).populate('context')
@@ -13,13 +13,38 @@
                                                                 model: "Context"
                                                             }
                                                         })
+                                                        .populate({
+                                                            path: 'robot',
+                                                            populate: {
+                                                                path: "context",
+                                                                model: "Context"
+                                                            }
+                                                        })
+                                                        .populate('task')
+                    let groupByTask = groupBy(robotsensors, (robotsensor => robotsensor.task._id));
+                    let tasks = [];  
+                    forEach(groupByTask, (taskRobotSensors, key) => {
+                        let task = taskRobotSensors[0].task.toObject();
+    
+                        let sensors = taskRobotSensors.map(taskRobotSensor => {
+                            return taskRobotSensor.sensor
+                        });
+                        let robots = taskRobotSensors.map(taskRobotSensor => {
+                            return taskRobotSensor.robot
+                        });
+    
+                        task.sensors = sensors;
+                        task.robots = robots;
+                        tasks.push(task);
+                    });
                     
                     if (robotsensors.length != 0) {
                         x.sensors = robotsensors.map(robotsensor => {
                             robotsensor.sensor._id = robotsensor.sensor._id.toString();
                             return robotsensor.sensor;
                         });
-                    }                    
+                    }                
+                    x.tasks = tasks;    
                     x._id = x._id.toString()
                     return x
                 })
@@ -120,7 +145,7 @@
                 task._id = task.id.toString();
                 return task;
             },
-            getSensor: async (parent, args, {  Sensor, TaskRobotSensor }) => {
+            getSensor: async (parent, args, { Sensor, TaskRobotSensor }) => {
 
                 const sensor = await Sensor.findOne(args).populate('context')
                 
@@ -183,13 +208,40 @@
                                                                 model: "Context"
                                                             }
                                                         })
+                                                        .populate({
+                                                            path: 'robot',
+                                                            populate: {
+                                                                path: "context",
+                                                                model: "Context"
+                                                            }
+                                                        })
+                                                        .populate('task')
+                    let groupByTask = groupBy(robotsensors, (robotsensor => robotsensor.task._id));
+                    let tasks = [];   
+                    
+                    forEach(groupByTask, (taskRobotSensors, key) => {
+                        let task = taskRobotSensors[0].task.toObject();
+    
+                        let sensors = taskRobotSensors.map(taskRobotSensor => {
+                            return taskRobotSensor.sensor
+                        });
+                        let robots = taskRobotSensors.map(taskRobotSensor => {
+                            return taskRobotSensor.robot
+                        });
+    
+                        task.sensors = sensors;
+                        task.robots = robots;
+                        tasks.push(task);
+                    }); 
                     
                     if (robotsensors.length != 0) {
                         x.robots = robotsensors.map(robotsensor => {
                             robotsensor.robot._id = robotsensor.robot._id.toString();
                             return robotsensor.robot;
                         });
-                    }                    
+                    }     
+                    
+                    x.tasks = tasks;                
                     x._id = x._id.toString()
                     return x
                 })

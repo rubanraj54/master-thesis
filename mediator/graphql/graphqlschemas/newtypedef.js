@@ -21,7 +21,7 @@
                                 tasks: [Task]
                             }
 
-                            type Sensor {
+                           type Sensor {
                                 _id: String
                                 type: String
                                 name: String
@@ -40,6 +40,7 @@
                                 name: String
                                 value: JSON
                             }
+                                
 
                             type Query {
 
@@ -61,15 +62,17 @@
                                         name: String
                                     ): Robot
 
+                                    getSensor(
+                                        _id: String!
+                                        name: String
+                                    ): Sensor
+
                                     getTask(
                                         _id: String!
                                         name: String
                                     ): Task
 
-                                    getSensor(
-                                        _id: String!
-                                        name: String
-                                    ): Sensor
+                                
                             }
 
                             type Mutation {
@@ -96,7 +99,8 @@
                                         name: String!
                                         value: JSON!,
                                     ): Context!
-                
+            
+                                    
         }
         `
                         

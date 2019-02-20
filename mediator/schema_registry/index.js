@@ -22,6 +22,7 @@ const dummyData = require('./toy_data/test.json');
 const dummyResuableData = require('./toy_data/resuable_test.json'); 
 const mediatorConfigAdapter = new FileSync('mediatorconfig.json')
 const mediatorConfig = low(mediatorConfigAdapter)
+const fs = require('fs');
 
 //checking for mongodb configuration and making connection
 let databases = mediatorConfig.get('db').value();
@@ -108,6 +109,40 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
 
     response.send(finalResponse);
 })
+
+app.get('/reset', async (requestEndpoint,response) => {
+    await Task.remove({});
+    await Robot.remove({});
+    await Sensor.remove({});
+    await TaskRobotSensor.remove({});
+
+    const dirPath = "../graphql/models/observations";
+    try { var files = fs.readdirSync(dirPath); }
+    catch(e) { return; }
+    console.log(files);
+    
+    // delete the observation model files from graphql model folder
+    if (files.length > 0) {
+        for (var i = 0; i < files.length; i++) {
+          var filePath = dirPath + '/' + files[i];
+          if (fs.statSync(filePath).isFile()) {
+              fs.unlinkSync(filePath);
+          }
+          else {
+              rmDir(filePath);
+          }
+        }
+    }
+        
+    // update main.js which exports all contexts to graphql
+    exportContexts();
+
+    // get all sensors & update graphql component
+    let sensors = await Sensor.find({});
+    updateGraphQl(sensors);
+
+    response.send('success');
+});
 
 
 async function registerSensors(sensors) {
