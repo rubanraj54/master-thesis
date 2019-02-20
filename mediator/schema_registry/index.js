@@ -60,7 +60,7 @@ function updateGraphQl(sensors) {
     apiRequest('http://graphql:3085/restart', function (error, response, body) {});
 }
 
-app.get('/test',async (requestEndpoint,response) => {
+app.get('/schema-registry',async (requestEndpoint,response) => {
 
     // let data = requestEndpoint.body;
     let data = dummyData;
