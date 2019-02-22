@@ -2,11 +2,11 @@ const uuid = require('uuid/v4');
 
 module.exports = (sequelize, Sequelize) => {
     const Context = sequelize.define('contexts', {
-        id: {
+        _id: {
             allowNull: false,
             primaryKey: true,
             type: Sequelize.UUID,
-            defaultValue: uuid()
+            defaultValue: () => uuid()
           },
         name: Sequelize.STRING,
         value: Sequelize.JSON
