@@ -1,0 +1,4 @@
+Storing each information in different databasaes makes code compexity in terms of different combinations
+between Sensor, Task, Robot, TaskRobotSensor and Observation models. 
+Also it decreases the parallel query processing time which directly impacts the purpose of mediator.
+So our approach is grouping the entities in to a single set that potentially have strongler relationships with eachother.
