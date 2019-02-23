@@ -2,7 +2,7 @@
     "db": [
         {
             "name": "mongodb",
-            "entities": ["context","sensor","observation","robot"],
+            "entities": ["context"],
             "url": "localhost:27017",
             "dbName": "test",
             "userName": "",
@@ -10,7 +10,7 @@
         },
         {
             "name": "mysql",
-            "entities": ["sd"],
+            "entities": ["robot","task","sensor","observation","taskrobotsensor"],
             "url": "localhost:27017",
             "dbName": "test",
             "userName": "",

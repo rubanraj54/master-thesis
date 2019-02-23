@@ -3,10 +3,62 @@ import { updateGraphQlQuery } from '../graphql/updaters/graphql-query-updater'
 import { updateGraphQlMutation } from '../graphql/updaters/graphql-mutation-updater'
 import mongoose from 'mongoose'
 import has from 'lodash/has'
-import Task from "./models/task.js"
-import Robot from "./models/robot.js"
-import Sensor from "./models/sensor.js"
-import TaskRobotSensor from "./models/task-robot-sensor.js"
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('mysql://root:password@localhost:3308/db');
+const Context = require("./models/mysql/context")(sequelize,Sequelize);
+
+const mediatorConfigAdapter = new FileSync('mediatorconfig.json');
+const mediatorConfig = low(mediatorConfigAdapter);
+
+const dbConfigs = mediatorConfig.get('db').value();
+
+// Task initialization - start
+const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "task") > -1);
+const taskDb = taskDbConfig.name
+let Task;
+if (taskDb == "mongodb") {
+    Task = require("./models/mongodb/task").default
+} else if (taskDb == "mysql") {
+    Task = require("./models/mysql/task")(sequelize,Sequelize,Context)
+}
+// Task initialization - end
+
+// Robot initialization - start
+const robotDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "robot") > -1);
+const robotDb = robotDbConfig.name
+let Robot;
+if (robotDb == "mongodb") {
+    Robot = require("./models/mongodb/robot").default
+} else if (robotDb == "mysql") {
+    Robot = require("./models/mysql/robot")(sequelize,Sequelize,Context)
+}
+// Robot initialization - end
+
+// Sensor initialization - start
+const sensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "sensor") > -1);
+const sensorDb = sensorDbConfig.name
+let Sensor;
+if (sensorDb == "mongodb") {
+    Sensor = require("./models/mongodb/sensor").default
+} else if (sensorDb == "mysql") {
+    Sensor = require("./models/mysql/sensor")(sequelize,Sequelize,Context)
+}
+// Sensor initialization - end
+
+// TaskRobotSensor initialization - start
+const taskrobotsensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "taskrobotsensor") > -1);
+const taskrobotsensorDb = taskrobotsensorDbConfig.name
+let TaskRobotSensor;
+if (taskrobotsensorDb == "mongodb") {
+    TaskRobotSensor = require("./models/mongodb/task-robot-sensor").default
+} else if (taskrobotsensorDb == "mysql") {
+    TaskRobotSensor = require("./models/mysql/task-robot-sensor")(sequelize,Sequelize)
+}
+// TaskRobotSensor initialization - end
+
 import { createObservationModel } from '../graphql/updaters/observation-model-writer'
 import { exportContexts } from '../graphql/updaters/context-exporter'
 
@@ -14,14 +66,11 @@ const express = require('express')
 const app = express()
 const port = 3084
 const apiRequest = require('request');
-const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync('schema_registry.json')
 const sr = low(adapter)
 const dummyData = require('./toy_data/test.json'); 
 const dummyResuableData = require('./toy_data/resuable_test.json'); 
-const mediatorConfigAdapter = new FileSync('mediatorconfig.json')
-const mediatorConfig = low(mediatorConfigAdapter)
+
 const fs = require('fs');
 
 //checking for mongodb configuration and making connection
@@ -58,7 +107,7 @@ function updateGraphQl(sensors) {
     updateGraphQlSchema(sensors);
     updateGraphQlQuery(sensors);
     updateGraphQlMutation(sensors);
-    apiRequest('http://graphql:3085/restart', function (error, response, body) {});
+    apiRequest('http://localhost:3085/restart', function (error, response, body) {});
 }
 
 app.get('/schema-registry',async (requestEndpoint,response) => {
@@ -76,14 +125,29 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
     
     // creating test record (context field is mandatory)
     let taskInfo = data.task;
-    let task = await Task(taskInfo).save();
+    let task;
+    if (taskDb == "mongodb") {
+        task = await Task(taskInfo).save();
+    } else if (taskDb == "mysql") {
+        task = await Task.create(taskInfo);
+    }    
+
     finalResponse.task._id = task._id;
 
     // creating all robots and sensors
     let robots = data.robots;
     if(robots && robots.length > 0) {
         await Promise.all(robots.map(async _robot => {
-            let newRobotId = has(_robot, '_id') ? _robot._id :(await Robot(_robot).save())._id;
+            let newRobotId = "";
+            if (!has(_robot, '_id')) {
+                if (robotDb == "mongodb") {
+                    newRobotId = (await Robot(_robot).save())._id;
+                } else if (robotDb == "mysql") {
+                    newRobotId = (await Robot.create(_robot))._id;
+                }
+            } else {
+                newRobotId = _robot._id; 
+            }
 
             // sensor registration
             let sensors = _robot.sensors;
@@ -101,20 +165,32 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
     }
 
     // update main.js which exports all contexts to graphql
-    exportContexts();
+    // exportContexts();
 
     // get all sensors & update graphql component
     let sensors = await Sensor.find({});
-    updateGraphQl(sensors);
+    // updateGraphQl(sensors);
 
     response.send(finalResponse);
 })
 
 app.get('/reset', async (requestEndpoint,response) => {
-    await Task.remove({});
-    await Robot.remove({});
-    await Sensor.remove({});
-    await TaskRobotSensor.remove({});
+    
+    if (taskDb == "mongodb") { 
+        await Task.remove({});
+    }
+
+    if (robotDb == "mongodb") { 
+        await Robot.remove({});
+    }
+
+    if (sensorDb == "mongodb") { 
+        await Sensor.remove({});
+    }
+
+    if (taskrobotsensorDb == "mongodb") { 
+        await TaskRobotSensor.remove({});
+    }
 
     const dirPath = "../graphql/models/observations";
     try { var files = fs.readdirSync(dirPath); }
@@ -149,7 +225,12 @@ async function registerSensors(sensors) {
     return await Promise.all(sensors.map(async _sensor => {
         if (!has(_sensor, '_id')) {
             _sensor.value_schema = JSON.parse(JSON.stringify(_sensor.value_schema).replace(/\$schema/g, "schema"));
-            let newSensor = await Sensor(_sensor).save();
+            let newSensor;
+            if (sensorDb == "mongodb") {
+                newSensor = await Sensor(_sensor).save();
+            } else if (sensorDb == "mysql") {
+                newSensor = await Sensor.create(_sensor);
+            }
             createObservationModel(newSensor.name, newSensor.value_schema);
             return newSensor._id.toString();
         } else {
@@ -160,12 +241,29 @@ async function registerSensors(sensors) {
 
 async function registerRobotSensors(taskId, robotId, sensorIds) {
     return sensorIds.forEach(async regSensorId => {
-        await TaskRobotSensor({
-            task: taskId,
-            robot: robotId,
-            sensor: regSensorId,
-            timestamp: new Date()
-        }).save();
+        if (taskrobotsensorDb == "mongodb") {
+            console.log(33);
+            
+            console.log(taskId,robotId,regSensorId);
+            await TaskRobotSensor({
+                task: taskId,
+                robot: robotId,
+                sensor: regSensorId,
+                timestamp: new Date()
+            }).save();
+        } else if (taskrobotsensorDb == "mysql") {
+            console.log(taskId,robotId,regSensorId);
+            
+            await TaskRobotSensor.create({
+                taskId: taskId,
+                robotId: robotId,
+                sensorId: regSensorId,
+                timestamp: new Date()
+            });
+        } else {
+            console.log(44);
+            
+        }
     })
 }
 
