@@ -1,16 +1,23 @@
 import mongoose from 'mongoose'
-
+const uuid = require('uuid/v4');
 const TaskRobotSensor = mongoose.model('TaskRobotSensor', {
+    _id: {
+        type: String,
+        default: uuid,
+    },
     task: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
+        default: uuid,
         ref: 'Task'
     },
     robot: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
+        default: uuid,
         ref: 'Robot'
     },
     sensor: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
+        default: uuid,
         ref: 'Sensor'
     },
     timestamp: Date
