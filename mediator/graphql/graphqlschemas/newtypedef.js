@@ -53,6 +53,10 @@
                                         name: String
                                     ): [Sensor!] !,
 
+                                    allTasks(
+                                        name: String
+                                    ): [Task!] !,
+
                                     allContexts(
                                         name: String
                                     ): [Context!] !,
