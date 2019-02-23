@@ -165,7 +165,7 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
     }
 
     // update main.js which exports all contexts to graphql
-    // exportContexts();
+    exportContexts();
 
     // get all sensors & update graphql component
     let sensors = await Sensor.find({});
@@ -242,9 +242,6 @@ async function registerSensors(sensors) {
 async function registerRobotSensors(taskId, robotId, sensorIds) {
     return sensorIds.forEach(async regSensorId => {
         if (taskrobotsensorDb == "mongodb") {
-            console.log(33);
-            
-            console.log(taskId,robotId,regSensorId);
             await TaskRobotSensor({
                 task: taskId,
                 robot: robotId,
@@ -252,17 +249,12 @@ async function registerRobotSensors(taskId, robotId, sensorIds) {
                 timestamp: new Date()
             }).save();
         } else if (taskrobotsensorDb == "mysql") {
-            console.log(taskId,robotId,regSensorId);
-            
             await TaskRobotSensor.create({
                 taskId: taskId,
                 robotId: robotId,
                 sensorId: regSensorId,
                 timestamp: new Date()
             });
-        } else {
-            console.log(44);
-            
         }
     })
 }
