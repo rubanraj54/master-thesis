@@ -178,18 +178,38 @@ app.get('/reset', async (requestEndpoint,response) => {
     
     if (taskDb == "mongodb") { 
         await Task.remove({});
+    } else if (taskDb == "mysql") {
+        await Task.destroy({
+            where: {},
+            truncate: { cascade: true }
+          });
     }
 
     if (robotDb == "mongodb") { 
         await Robot.remove({});
+    } else if (robotDb == "mysql") {
+        await Robot.destroy({
+            where: {},
+            truncate: { cascade: true }
+          });
     }
 
     if (sensorDb == "mongodb") { 
         await Sensor.remove({});
+    } else if (sensorDb == "mysql") {
+        await Sensor.destroy({
+            where: {},
+            truncate: { cascade: true }
+          });
     }
 
     if (taskrobotsensorDb == "mongodb") { 
         await TaskRobotSensor.remove({});
+    } else if (taskrobotsensorDb == "mysql") {
+        await TaskRobotSensor.destroy({
+            where: {},
+            truncate: { cascade: true }
+          });
     }
 
     const dirPath = "../graphql/models/observations";
@@ -215,7 +235,7 @@ app.get('/reset', async (requestEndpoint,response) => {
 
     // get all sensors & update graphql component
     let sensors = await Sensor.find({});
-    updateGraphQl(sensors);
+    // updateGraphQl(sensors);
 
     response.send('success');
 });
