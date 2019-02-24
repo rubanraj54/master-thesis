@@ -22,7 +22,7 @@ module.exports = {
     
         observationNames.forEach(observationName => {
             let query = `
-                all${observationName}s: async (parent, args, {Robot, Sensor,Context,${observationContexts}}) => {
+                all${observationName}s: async (parent, args, {Robot, Sensor, MongoContext,Context,${observationContexts}}) => {
                     const observations = await ${observationName}.find(args).populate({
                         path: 'robot',
                         populate : {
@@ -51,7 +51,7 @@ module.exports = {
             import groupBy from 'lodash/groupBy'
             import forEach from 'lodash/forEach'
             export default {
-            allRobots: async (parent, args, {Task, Robot,Sensor, Context, TaskRobotSensor }) => {
+            allRobots: async (parent, args, {Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor }) => {
                 const robots = await Robot.find(args).populate('context')
                 return robots.map(async x => {
                     let robotsensors = await TaskRobotSensor.find({robot : x._id.toString()})
@@ -95,7 +95,7 @@ module.exports = {
                     return x
                 })
             },
-            getRobot: async (parent, args, {Task, Robot,Sensor, Context, TaskRobotSensor }) => {
+            getRobot: async (parent, args, {Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor }) => {
 
                 const robot = await Robot.findOne(args).populate('context')
                 
@@ -145,7 +145,7 @@ module.exports = {
                 robot._id = robot.id.toString();
                 return robot;
             },
-            getTask: async (parent, args, {Task, Robot,Sensor, Context, TaskRobotSensor  }) => {
+            getTask: async (parent, args, {Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor  }) => {
 
                 const task = await Task.findOne(args).populate('context')
                 
@@ -180,7 +180,7 @@ module.exports = {
                 task._id = task.id.toString();
                 return task;
             },
-            getSensor: async (parent, args, { Task, Robot,Sensor, Context, TaskRobotSensor }) => {
+            getSensor: async (parent, args, { Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor }) => {
 
                 const sensor = await Sensor.findOne(args).populate('context')
                 
@@ -228,7 +228,7 @@ module.exports = {
                 sensor._id = sensor.id.toString();
                 return sensor;
             },
-            allSensors: async (parent, args, { Task, Robot,Sensor, Context, TaskRobotSensor }) => {
+            allSensors: async (parent, args, { Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor }) => {
                 const sensors = await Sensor.find(args).populate('context');
                 return sensors.map(async x => {
                     let robotsensors = await TaskRobotSensor.find({sensor : x._id.toString()});
@@ -274,7 +274,7 @@ module.exports = {
                     return x
                 })
             },
-            allTasks: async (parent, args, { Task, Robot,Sensor, Context, TaskRobotSensor }) => {
+            allTasks: async (parent, args, { Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor }) => {
                 const tasks = await Task.find(args).populate('context');
                 return tasks.map(async x => {
                     let robotsensors = await TaskRobotSensor.find({task : x._id.toString()});
@@ -303,7 +303,7 @@ module.exports = {
                     return x
                 })
             },
-            allContexts: async (parent, args, { Context }) => {
+            allContexts: async (parent, args, { MongoContext, Context }) => {
                 const contexts = await Context.find(args)
                 return contexts.map(x => {
                 x._id = x._id.toString()

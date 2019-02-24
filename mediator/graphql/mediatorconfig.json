@@ -2,7 +2,15 @@
     "db": [
         {
             "name": "mongodb",
-            "entities": ["context","robot","sensor","observation"],
+            "entities": ["context"],
+            "url": "localhost:27017",
+            "dbName": "test",
+            "userName": "",
+            "password": ""
+        },
+        {
+            "name": "mysql",
+            "entities": ["robot","task","sensor","observation","taskrobotsensor"],
             "url": "localhost:27017",
             "dbName": "test",
             "userName": "",

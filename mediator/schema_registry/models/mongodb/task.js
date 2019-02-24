@@ -7,10 +7,6 @@ const Task = mongoose.model('Task', {
         default: uuid,
     },
     name: String,
-    robot_sensor: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'RobotSensor'
-    },
     context: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Context'
