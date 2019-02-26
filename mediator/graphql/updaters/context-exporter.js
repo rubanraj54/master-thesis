@@ -72,7 +72,7 @@ module.exports = {
 
             writeStream.write(`
             const Sequelize = require('sequelize');
-            const sequelize = new Sequelize('mysql://root:password@localhost:3308/db');
+            const sequelize = new Sequelize('mysql://root:password@mysql:3306/db');
             const Context = require("./mysql/context")(sequelize,Sequelize); 
         ${taskImport}
         ${robotImport}

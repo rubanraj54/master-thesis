@@ -7,7 +7,7 @@ const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('mysql://root:password@localhost:3308/db');
+const sequelize = new Sequelize('mysql://root:password@mysql:3306/db');
 const Context = require("./models/mysql/context")(sequelize,Sequelize);
 
 const mediatorConfigAdapter = new FileSync('mediatorconfig.json');
@@ -114,7 +114,7 @@ function updateGraphQl(sensors) {
     updateGraphQlSchema(sensors);
     updateGraphQlQuery(sensors);
     updateGraphQlMutation(sensors);
-    // apiRequest('http://localhost:3085/restart', function (error, response, body) {});
+    apiRequest('http://graphql:3085/restart', function (error, response, body) {});
 }
 
 app.get('/schema-registry',async (requestEndpoint,response) => {
