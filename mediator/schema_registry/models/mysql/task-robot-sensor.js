@@ -8,17 +8,17 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.UUID,
             defaultValue: () => uuid()
         },
-        taskId: {
+        task: {
             allowNull: false,
             type: Sequelize.UUID,
             defaultValue: () => uuid()
         },
-        robotId: {
+        robot: {
             allowNull: false,
             type: Sequelize.UUID,
             defaultValue: () => uuid()
         },
-        sensorId: {
+        sensor: {
             allowNull: false,
             type: Sequelize.UUID,
             defaultValue: () => uuid()
@@ -27,10 +27,6 @@ module.exports = (sequelize, Sequelize) => {
     }, {
         timestamps: false
     })
-
-    // TaskRobotSensor.belongsTo(Task);
-    // TaskRobotSensor.belongsTo(Robot);
-    // TaskRobotSensor.belongsTo(Sensor);
 
     return TaskRobotSensor;
 }

@@ -74,6 +74,12 @@ const dummyResuableData = require('./toy_data/resuable_test.json');
 
 const fs = require('fs');
 
+// create tables in mysql if it doesn't exists in the database
+sequelize.sync()
+  .then(() => {
+    console.log(`Database & tables created!`)
+})
+
 //checking for mongodb configuration and making connection
 let databases = mediatorConfig.get('db').value();
 let mongoDbIndex = databases.findIndex(database => database.name === "mongodb");
@@ -295,9 +301,9 @@ async function registerRobotSensors(taskId, robotId, sensorIds) {
             }).save();
         } else if (taskrobotsensorDb == "mysql") {
             await TaskRobotSensor.create({
-                taskId: taskId,
-                robotId: robotId,
-                sensorId: regSensorId,
+                task: taskId,
+                robot: robotId,
+                sensor: regSensorId,
                 timestamp: new Date()
             });
         }
