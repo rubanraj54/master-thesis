@@ -60,6 +60,7 @@ if (taskrobotsensorDb == "mongodb") {
 // TaskRobotSensor initialization - end
 
 import { createObservationModel } from '../graphql/updaters/observation-model-writer'
+import { createMysqlObservationModel } from '../graphql/updaters/mysql-observation-model-writer'
 import { exportContexts } from '../graphql/updaters/context-exporter'
 
 const express = require('express')
@@ -107,7 +108,7 @@ function updateGraphQl(sensors) {
     updateGraphQlSchema(sensors);
     updateGraphQlQuery(sensors);
     updateGraphQlMutation(sensors);
-    apiRequest('http://localhost:3085/restart', function (error, response, body) {});
+    // apiRequest('http://localhost:3085/restart', function (error, response, body) {});
 }
 
 app.get('/schema-registry',async (requestEndpoint,response) => {
@@ -168,8 +169,17 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
     exportContexts();
 
     // get all sensors & update graphql component
-    let sensors = await Sensor.find({});
-    // updateGraphQl(sensors);
+    let sensors = [];
+    if (sensorDb == "mongodb") {
+        sensors = await Sensor.find({});
+    } else if (sensorDb == "mysql") {
+        sensors = await Sensor.findAll({
+            raw: true,
+            nest: true
+        });
+    }   
+
+    updateGraphQl(sensors);
 
     response.send(finalResponse);
 })
@@ -212,7 +222,13 @@ app.get('/reset', async (requestEndpoint,response) => {
           });
     }
 
-    const dirPath = "../graphql/models/observations";
+    let dirPath = "";
+    if (sensorDb == "mongodb") { 
+        dirPath = "../graphql/models/observations";
+    } else if (taskrobotsensorDb == "mysql") {
+        dirPath = "../graphql/models/mysql/observations";
+    }
+
     try { var files = fs.readdirSync(dirPath); }
     catch(e) { return; }
     console.log(files);
@@ -234,8 +250,16 @@ app.get('/reset', async (requestEndpoint,response) => {
     exportContexts();
 
     // get all sensors & update graphql component
-    let sensors = await Sensor.find({});
-    // updateGraphQl(sensors);
+    let sensors = [];
+    if (sensorDb == "mongodb") {
+        sensors = await Sensor.find({});
+    } else if (sensorDb == "mysql") {
+        sensors = await Sensor.findAll({
+            raw: true,
+            nest: true
+        });
+    } 
+    updateGraphQl(sensors);
 
     response.send('success');
 });
@@ -248,10 +272,11 @@ async function registerSensors(sensors) {
             let newSensor;
             if (sensorDb == "mongodb") {
                 newSensor = await Sensor(_sensor).save();
+                createObservationModel(newSensor.name, newSensor.value_schema);
             } else if (sensorDb == "mysql") {
                 newSensor = await Sensor.create(_sensor);
+                createMysqlObservationModel(newSensor.name, newSensor.value_schema);
             }
-            createObservationModel(newSensor.name, newSensor.value_schema);
             return newSensor._id.toString();
         } else {
             return _sensor._id;

@@ -22,24 +22,15 @@ module.exports = {
     
         observationNames.forEach(observationName => {
             let query = `
-                all${observationName}s: async (parent, args, {Robot, Sensor, MongoContext,Context,${observationContexts}}) => {
-                    const observations = await ${observationName}.find(args).populate({
-                        path: 'robot',
-                        populate : {
-                            path: "context",
-                            model: "Context"
-                        }
-                    }).populate({
-                        path: 'sensor',
-                        populate : {
-                            path: "context",
-                            model: "Context"
-                        }
-                    })
-                    return observations.map(x => {
-                        x._id = x._id.toString()
-                        return x
-                    })
+                all${observationName}s: async (parent, args, {Task, Robot, Sensor, MongoContext,Context,${observationContexts}}) => {
+                    const observations = await ${observationName}.find(args);
+                    
+                    return await Promise.all(observations.map(async observation => {
+                        observation.task = await Task.findOne({_id : observation.task});
+                        observation.robot = await Robot.findOne({_id : observation.robot});
+                        observation.sensor = await Sensor.findOne({_id : observation.sensor});
+                        return observation;
+                    }));
                 },            
             `;
             queries.push(query);
