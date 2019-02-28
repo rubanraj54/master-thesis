@@ -14,72 +14,119 @@
             "name": "velocity_sensor44",
             "description": "Sensor to measure the internal temperature of the robot",
             "measures": "heat",
-            "value_schema": {
-                "$schema": "http://json-schema.org/draft-04/schema#",
-                "type": "object",
-                "properties": {
-                    "values": {
-                        "type": "array",
-                        "items": [{
-                            "type": "object",
-                            "properties": {
-                                "x": {
-                                    "type": "integer"
-                                },
-                                "y": {
-                                    "type": "integer"
-                                }
-                            },
-                            "required": [
-                                "x",
-                                "y"
-                            ]
-                        }]
+            "value_schema": 
+            {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "type": "array",
+                "title": "The Root Schema",
+                "items": {
+                  "type": "object",
+                  "title": "The Items Schema",
+                  "required": [
+                    "x",
+                    "y"
+                  ],
+                  "properties": {
+                    "x": {
+                      "type": "integer",
+                      "title": "The X Schema",
+                      "default": 0
+                    },
+                    "y": {
+                      "type": "integer",
+                      "title": "The Y Schema",
+                      "default": 0
                     }
-                },
-                "required": [
-                    "values"
-                ]
-            },
+                  }
+                }
+              },
             "unit": "Celcius",
             "meta": {
                 "test": "123"
             }
         }, {
             "type": "schema:Sensor",
-            "name": "velocity_sensor45",
-            "description": "Sensor to measure the internal temperature of the robot",
-            "measures": "heat",
+            "name": "Scan_front",
+            "description": "Scanner mounted on the front side of the robot",
+            "measures": "area",
             "value_schema": {
-                "$schema": "http://json-schema.org/draft-04/schema#",
+                "definitions": {},
+                "$schema": "http://json-schema.org/draft-07/schema#",
                 "type": "object",
-                "properties": {
-                    "values": {
-                        "type": "array",
-                        "items": [{
-                            "type": "object",
-                            "properties": {
-                                "x": {
-                                    "type": "integer"
-                                },
-                                "y": {
-                                    "type": "integer"
-                                }
-                            },
-                            "required": [
-                                "x",
-                                "y"
-                            ]
-                        }]
-                    }
-                },
+                "title": "The Root Schema",
                 "required": [
-                    "values"
-                ]
-            },
-            "unit": "Celcius",
+                  "angle_increment",
+                  "angle_max",
+                  "angle_min",
+                  "frame_id",
+                  "range_max",
+                  "range_min",
+                  "ranges",
+                  "scan_time",
+                  "time_increment",
+                  "timestamp"
+                ],
+                "properties": {
+                  "angle_increment": {
+                    "type": "number",
+                    "title": "The Angle_increment Schema",
+                    "default": 0.0
+                  },
+                  "angle_max": {
+                    "type": "number",
+                    "title": "The Angle_max Schema",
+                    "default": 0.0
+                  },
+                  "angle_min": {
+                    "type": "number",
+                    "title": "The Angle_min Schema",
+                    "default": 0.0
+                  },
+                  "frame_id": {
+                    "type": "string",
+                    "title": "The Frame_id Schema",
+                    "default": "",
+                    "pattern": "^(.*)$"
+                  },
+                  "range_max": {
+                    "type": "number",
+                    "title": "The Range_max Schema",
+                    "default": 0.0
+                  },
+                  "range_min": {
+                    "type": "number",
+                    "title": "The Range_min Schema",
+                    "default": 0.0
+                  },
+                  "ranges": {
+                    "type": "array",
+                    "title": "The Ranges Schema",
+                    "items": {
+                      "type": "number",
+                      "title": "The Items Schema",
+                      "default": 0.0
+                    }
+                  },
+                  "scan_time": {
+                    "type": "number",
+                    "title": "The Scan_time Schema",
+                    "default": 0.0
+                  },
+                  "time_increment": {
+                    "type": "number",
+                    "title": "The Time_increment Schema",
+                    "default": 0.0
+                  },
+                  "timestamp": {
+                    "type": "number",
+                    "title": "The Timestamp Schema",
+                    "default": 0.0
+                  }
+                }
+              },
+            "unit": "null",
             "meta": {
-                "test": "123"
+                "manufacturer": "Leica geosystems"
             }
         }
     ]

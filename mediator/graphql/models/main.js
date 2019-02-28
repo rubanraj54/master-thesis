@@ -1,11 +1,16 @@
 
             const Sequelize = require('sequelize');
-            const sequelize = new Sequelize('mysql://root:password@mysql:3306/db');
+            const sequelize = new Sequelize('mysql://root:password@localhost:3308/db');
+            // create tables in mysql if it doesn't exists in the database
+            sequelize.sync()
+            .then(() => {
+                console.log("Database & tables created!")
+            })
             const Context = require("./mysql/context")(sequelize,Sequelize); 
-        let Task = require("./mysql/task")(sequelize,Sequelize,Context)
+        let Task = require("./mongodb/task").default
         let Robot = require("./mongodb/robot").default
-        let Sensor = require("./mysql/sensor")(sequelize,Sequelize,Context)
-        let TaskRobotSensor = require("./mysql/task-robot-sensor")(sequelize,Sequelize)
+        let Sensor = require("./mongodb/sensor").default
+        let TaskRobotSensor = require("./mongodb/task-robot-sensor").default
         let MongoContext = require("./mongodb/context").default
             
         export {

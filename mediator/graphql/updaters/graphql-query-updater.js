@@ -23,12 +23,37 @@ module.exports = {
         observationNames.forEach(observationName => {
             let query = `
                 all${observationName}s: async (parent, args, {Task, Robot, Sensor, MongoContext,Context,${observationContexts}}) => {
-                    const observations = await ${observationName}.find(args);
+                    let observations = null;
+                    if (observationDb == "mongodb") {
+                        observations = await ${observationName}.find(args);
+                    } else if (observationDb == "mysql") {
+                        observations = await ${observationName}.findAll({
+                            where: args,
+                            raw: true,
+                            nest: true
+                        });
+                    }
                     
                     return await Promise.all(observations.map(async observation => {
-                        observation.task = await Task.findOne({_id : observation.task});
-                        observation.robot = await Robot.findOne({_id : observation.robot});
-                        observation.sensor = await Sensor.findOne({_id : observation.sensor});
+                        if (taskDb == "mongodb") {
+                            observation.task = await Task.findOne({_id : observation.task});
+                        } else if (taskDb == "mysql") {
+                            observation.task = await Task.findOne({where:{_id : observation.task}});
+                        }
+                        
+                        if (robotDb == "mongodb") {
+                            observation.robot = await Robot.findOne({_id : observation.robot});
+                        } else if (robotDb == "mysql") {
+                            observation.robot = await Robot.findOne({where:{_id : observation.robot}});
+                            
+                        }
+                        
+                        if (sensorDb == "mongodb") {
+                            observation.sensor = await Sensor.findOne({_id : observation.sensor});
+                        } else if (sensorDb == "mysql") {
+                            observation.sensor = await Sensor.findOne({where:{_id : observation.sensor}});
+                        }   
+
                         return observation;
                     }));
                 },            
@@ -59,6 +84,9 @@ module.exports = {
 
             const taskrobotsensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "taskrobotsensor") > -1);
             const taskrobotsensorDb = taskrobotsensorDbConfig.name
+
+            const observationDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "observation") > -1);
+            const observationDb = observationDbConfig.name
 
             export default {
             allRobots: async (parent, args, {Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor }) => {

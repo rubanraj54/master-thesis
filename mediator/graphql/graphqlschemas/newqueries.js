@@ -20,6 +20,9 @@
             const taskrobotsensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "taskrobotsensor") > -1);
             const taskrobotsensorDb = taskrobotsensorDbConfig.name
 
+            const observationDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "observation") > -1);
+            const observationDb = observationDbConfig.name
+
             export default {
             allRobots: async (parent, args, {Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor }) => {
 

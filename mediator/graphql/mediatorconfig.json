@@ -2,19 +2,19 @@
     "db": [
         {
             "name": "mongodb",
-            "entities": ["context","robot"],
-            "url": "mongo:27017",
+            "entities": ["context","robot","task","sensor","taskrobotsensor"],
+            "url": "localhost:27017",
             "dbName": "test",
             "userName": "",
             "password": ""
         },
         {
             "name": "mysql",
-            "entities": ["task","sensor","observation","taskrobotsensor"],
-            "url": "mysql:3306",
-            "dbName": "test",
-            "userName": "",
-            "password": ""
+            "entities": ["observation"],
+            "url": "localhost:3308",
+            "dbName": "db",
+            "userName": "root",
+            "password": "password"
         }
     ],
     "format": "json-ld",

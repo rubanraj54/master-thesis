@@ -5,15 +5,34 @@ import mongoose from 'mongoose'
 import has from 'lodash/has'
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
-
-const Sequelize = require('sequelize');
-const sequelize = new Sequelize('mysql://root:password@mysql:3306/db');
-const Context = require("./models/mysql/context")(sequelize,Sequelize);
-
 const mediatorConfigAdapter = new FileSync('mediatorconfig.json');
 const mediatorConfig = low(mediatorConfigAdapter);
 
 const dbConfigs = mediatorConfig.get('db').value();
+
+//checking for mongodb configuration and making connection
+let mysqlIndex = dbConfigs.findIndex(database => database.name === "mysql");
+let mysqlConnectionString = "";
+if (mysqlIndex != -1) {
+    let mysql = dbConfigs[mysqlIndex];
+    let hostWithCredentials = "";
+    if (mysql.userName == "" && mysql.password == "") {
+        hostWithCredentials = mysql.url;
+    } else if (mysql.userName == "") {
+        hostWithCredentials = `:${mysql.password}@${mysql.url}`;;
+    } else if (mysql.password == "") {
+        hostWithCredentials = `${mysql.userName}:@${mysql.url}`;
+    } else {
+        hostWithCredentials = `${mysql.userName}:${mysql.password}@${mysql.url}`;
+    }
+    mysqlConnectionString = `mysql://${hostWithCredentials}/${mysql.dbName}`;
+} else {
+    console.log("mongodb configuration missing");
+}
+
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize(mysqlConnectionString);
+const Context = require("./models/mysql/context")(sequelize,Sequelize);
 
 // Task initialization - start
 const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "task") > -1);
@@ -59,6 +78,9 @@ if (taskrobotsensorDb == "mongodb") {
 }
 // TaskRobotSensor initialization - end
 
+const observationDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "observation") > -1);
+const observationDb = observationDbConfig.name
+
 import { createObservationModel } from '../graphql/updaters/observation-model-writer'
 import { createMysqlObservationModel } from '../graphql/updaters/mysql-observation-model-writer'
 import { exportContexts } from '../graphql/updaters/context-exporter'
@@ -81,10 +103,9 @@ sequelize.sync()
 })
 
 //checking for mongodb configuration and making connection
-let databases = mediatorConfig.get('db').value();
-let mongoDbIndex = databases.findIndex(database => database.name === "mongodb");
+let mongoDbIndex = dbConfigs.findIndex(database => database.name === "mongodb");
 if (mongoDbIndex != -1) {
-    let mongoDb = databases[mongoDbIndex];
+    let mongoDb = dbConfigs[mongoDbIndex];
     let hostWithCredentials = "";
     if (mongoDb.userName == "" && mongoDb.password == "") {
         hostWithCredentials = mongoDb.url;
@@ -172,7 +193,7 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
     }
 
     // update main.js which exports all contexts to graphql
-    exportContexts();
+    exportContexts(observationDb);
 
     // get all sensors & update graphql component
     let sensors = [];
@@ -229,9 +250,9 @@ app.get('/reset', async (requestEndpoint,response) => {
     }
 
     let dirPath = "";
-    if (sensorDb == "mongodb") { 
+    if (observationDb == "mongodb") { 
         dirPath = "../graphql/models/observations";
-    } else if (taskrobotsensorDb == "mysql") {
+    } else if (observationDb == "mysql") {
         dirPath = "../graphql/models/mysql/observations";
     }
 
@@ -253,7 +274,7 @@ app.get('/reset', async (requestEndpoint,response) => {
     }
         
     // update main.js which exports all contexts to graphql
-    exportContexts();
+    exportContexts(observationDb);
 
     // get all sensors & update graphql component
     let sensors = [];
@@ -278,9 +299,12 @@ async function registerSensors(sensors) {
             let newSensor;
             if (sensorDb == "mongodb") {
                 newSensor = await Sensor(_sensor).save();
-                createObservationModel(newSensor.name, newSensor.value_schema);
             } else if (sensorDb == "mysql") {
                 newSensor = await Sensor.create(_sensor);
+            }
+            if (observationDb == "mongodb") {
+                createObservationModel(newSensor.name, newSensor.value_schema);
+            } else if (observationDb == "mysql") {
                 createMysqlObservationModel(newSensor.name, newSensor.value_schema);
             }
             return newSensor._id.toString();

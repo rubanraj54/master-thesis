@@ -190,3 +190,29 @@ mutation {
     }
   }
 }
+
+mutation {
+  createScanFrontObservation(input:{
+    type: "scanner"
+    name: "front scanner"
+    featureOfInterest: "area"
+    robot: "8612bb35-119a-4333-bd5a-fca7b3393e96"
+    sensor: "e1900b50-0fba-4c11-8781-2496b1be8833",
+    value: {
+          angle_increment : 0.00613592332229018,
+          angle_max: 1.57079637050629,
+          angle_min : -1.57079637050629,
+          frame_id : "base_laser_front_link",
+          range_max : 5.59999990463257,
+          range_min : 0.0199999995529652,
+          ranges : [ 
+              1.9210000038147
+          ],
+          scan_time : 0.100000001490116,
+          time_increment : 9.76562732830644e-05,
+          timestamp : 1528274499.85877
+    }
+  }) {
+    _id
+  }
+}

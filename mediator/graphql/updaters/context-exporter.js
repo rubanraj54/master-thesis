@@ -9,6 +9,26 @@ const mediatorConfigAdapter = new FileSync('mediatorconfig.json');
 const mediatorConfig = low(mediatorConfigAdapter);
 const dbConfigs = mediatorConfig.get('db').value();
 
+//checking for mongodb configuration and making connection
+let mysqlIndex = dbConfigs.findIndex(database => database.name === "mysql");
+let mysqlConnectionString = "";
+if (mysqlIndex != -1) {
+    let mysql = dbConfigs[mysqlIndex];
+    let hostWithCredentials = "";
+    if (mysql.userName == "" && mysql.password == "") {
+        hostWithCredentials = mysql.url;
+    } else if (mysql.userName == "") {
+        hostWithCredentials = `:${mysql.password}@${mysql.url}`;;
+    } else if (mysql.password == "") {
+        hostWithCredentials = `${mysql.userName}:@${mysql.url}`;
+    } else {
+        hostWithCredentials = `${mysql.userName}:${mysql.password}@${mysql.url}`;
+    }
+    mysqlConnectionString = `mysql://${hostWithCredentials}/${mysql.dbName}`;
+} else {
+    console.log("mongodb configuration missing");
+}
+
 // Task initialization - start
 const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "task") > -1);
 const taskDb = taskDbConfig.name
@@ -53,10 +73,19 @@ if (taskrobotsensorDb == "mongodb") {
 }
 // TaskRobotSensor initialization - end
 
+const observationDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "observation") > -1);
+const observationDb = observationDbConfig.name
+
 module.exports = {
-    exportContexts() {
+    exportContexts(dbName) {
         var writeStream = fs.createWriteStream(appDir + "/models/main.js");
-        fs.readdir(appDir + "/models/observations", (err, files) => {
+        let folderPath = "";
+        if (dbName == "mongodb") {
+            folderPath = "/models/observations";
+        } else if (dbName == "mysql") {
+            folderPath = "/models/mysql/observations";
+        }
+        fs.readdir(appDir + folderPath, (err, files) => {
             let importStatements = "";
             let exportStatements = "";
             files.forEach(file => {
@@ -65,14 +94,25 @@ module.exports = {
                     return name.charAt(0).toUpperCase() + name.slice(1)
                 }).join("");
                 observationName += "Observation";
-                let importStatement = `import ${observationName} from './observations/${file}'`
+                let importStatement = "";
+                // let importStatement = `import ${observationName} from '${filePath}${file}'`
+                if (dbName == "mongodb") {
+                    importStatement = `let ${observationName} = require("./observations/${file}").default`;
+                } else if (dbName == "mysql") {
+                    importStatement = `let ${observationName} = require("./mysql/observations/${file}")(sequelize,Sequelize)`;
+                }
                 importStatements += "\n" + importStatement;
                 exportStatements += "\n" + observationName + ",";
             });
 
             writeStream.write(`
             const Sequelize = require('sequelize');
-            const sequelize = new Sequelize('mysql://root:password@mysql:3306/db');
+            const sequelize = new Sequelize('${mysqlConnectionString}');
+            // create tables in mysql if it doesn't exists in the database
+            sequelize.sync()
+            .then(() => {
+                console.log("Database & tables created!")
+            })
             const Context = require("./mysql/context")(sequelize,Sequelize); 
         ${taskImport}
         ${robotImport}

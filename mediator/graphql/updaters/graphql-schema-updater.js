@@ -18,20 +18,33 @@ module.exports = {
             env.addSchema('test', sensor.value_schema);
 
             let model = env.instance('test#');
+            
             let transformedValue = "";
-            let value = (Array.isArray(model.values)) ? model.values[0] : model.values;
+            let value = (Array.isArray(model)) ? model[0] : model;
             let observationValue = "";
-
+            
             forEach(value, (element, key) => {
-                if (Array.isArray(element) || typeof element == "object") {
-                    return false;
+                let isValidArray = false;
+                if (!Array.isArray(element) && typeof element == "object") {
+                    return;
                 }
+                if (Array.isArray(element) && typeof element[0] == "object") {
+                    return;
+                } else if(Array.isArray(element)){
+                    element = element[0];
+                    isValidArray = true;
+                }
+
                 let type = "String";
+                
                 if (typeof element == "number" || typeof element == "integer") {
-                    type = "Int";
+                    type = "Float";
                 } else if (typeof element == "boolean") {
                     type = "Boolean";
                 }
+
+                type = (isValidArray) ? `[${type}]` : type;
+
                 observationValue += `${key}: ${type},` + "\n";
             })
 
@@ -73,6 +86,7 @@ module.exports = {
                                 featureOfInterest: String
                                 sensor: String
                                 robot: String
+                                task: String
                                 value: ${inputValueName}
                             }
                     
@@ -86,6 +100,10 @@ module.exports = {
             let query = `
                         all${observationName}s(
                             name: String
+                            featureOfInterest: String
+                            sensor: String
+                            robot: String
+                            task: String
                         ): [${observationName}!] !,
                 `;
             allQueries.push(query);

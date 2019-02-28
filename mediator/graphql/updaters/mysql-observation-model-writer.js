@@ -9,7 +9,7 @@ import {
 
 module.exports = {
 
-    createMysqlObservationModel(sensorName, jsonSchema) {
+    createMysqlObservationModel(sensorName) {
         let observationName = generateObservationName(sensorName);
         let observationFileName = generateObservationFileName(sensorName);
         
@@ -32,6 +32,18 @@ module.exports = {
                 featureOfInterest: Sequelize.STRING,
                 description: Sequelize.STRING,
                 value: Sequelize.JSON,
+                task: {
+                    allowNull: true,
+                    type: Sequelize.STRING
+                },
+                robot: {
+                    allowNull: true,
+                    type: Sequelize.STRING
+                },
+                sensor: {
+                    allowNull: true,
+                    type: Sequelize.STRING
+                },
             }, {
                 timestamps: false
             })
