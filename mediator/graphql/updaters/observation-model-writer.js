@@ -46,7 +46,9 @@ module.exports = {
                 default: uuid,
                 ref: 'Sensor'
             },
-            value: mongoose.Schema.Types.Mixed
+            value: mongoose.Schema.Types.Mixed,
+            phenomenonTime: Date,
+            resultTime: Date
         })
 
         export default ${observationName}

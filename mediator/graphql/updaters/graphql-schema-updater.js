@@ -69,6 +69,8 @@ module.exports = {
                                 sensor: Sensor
                                 robot: Robot
                                 task: Task
+                                phenomenonTime: DateTime
+                                resultTime: DateTime
                                 value: ${typeValueName}
                             }
                             
@@ -84,6 +86,8 @@ module.exports = {
                                 sensor: String
                                 robot: String
                                 task: String
+                                phenomenonTime: DateTime
+                                resultTime: DateTime
                                 value: ${inputValueName}
                             }
                     
@@ -121,6 +125,7 @@ module.exports = {
                             export default \`
 
                             scalar JSON
+                            scalar DateTime
 
                             type Task {
                                 _id: String

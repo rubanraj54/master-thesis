@@ -2,6 +2,7 @@
                             export default `
 
                             scalar JSON
+                            scalar DateTime
 
                             type Task {
                                 _id: String

@@ -32,6 +32,8 @@ module.exports = {
                 featureOfInterest: Sequelize.STRING,
                 description: Sequelize.STRING,
                 value: Sequelize.JSON,
+                phenomenonTime: Sequelize.DATE,
+                resultTime: Sequelize.DATE,
                 task: {
                     allowNull: true,
                     type: Sequelize.STRING

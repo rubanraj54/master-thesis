@@ -19,9 +19,10 @@ module.exports = {
         observationNames.forEach(observationName => {
             let mutation = `
                 create${observationName}: async (_, {input}, { Robot, Sensor, Context, ${observationContexts} }) => {
-                const observation = await new ${observationName}(input).save()
-                observation._id = observation._id.toString()
-                return observation
+                    input.resultTime = new Date();
+                    const observation = await new ${observationName}(input).save()
+                    observation._id = observation._id.toString()
+                    return observation
                 },            
             `;
             mutations.push(mutation);
