@@ -11,38 +11,57 @@
         "context": "5c6bf2e7d80174002302ddca",
         "sensors": [{
             "type": "schema:Sensor",
-            "name": "velocity_sensor44",
-            "description": "Sensor to measure the internal temperature of the robot",
-            "measures": "heat",
+            "name": "Joint states",
+            "description": "Measures the joing states",
+            "measures": "Joint states",
             "value_schema": 
             {
-                "$schema": "http://json-schema.org/draft-07/schema#",
-                "type": "array",
-                "title": "The Root Schema",
-                "items": {
-                  "type": "object",
-                  "title": "The Items Schema",
-                  "required": [
-                    "x",
-                    "y"
-                  ],
-                  "properties": {
-                    "x": {
-                      "type": "integer",
-                      "title": "The X Schema",
-                      "default": 0
-                    },
-                    "y": {
-                      "type": "integer",
-                      "title": "The Y Schema",
-                      "default": 0
+                "$schema": "http://json-schema.org/draft-04/schema#",
+                "type": "object",
+                "properties": {
+                  "effort": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "frame_id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "position": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "timestamp": {
+                    "type": "number"
+                  },
+                  "velocity": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
                     }
                   }
-                }
+                },
+                "required": [
+                  "effort",
+                  "frame_id",
+                  "name",
+                  "position",
+                  "timestamp",
+                  "velocity"
+                ]
               },
-            "unit": "Celcius",
+            "unit": "Position",
             "meta": {
-                "test": "123"
+                "device_name": "bingo"
             }
         }, {
             "type": "schema:Sensor",

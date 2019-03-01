@@ -39,7 +39,7 @@ Initial Robot, Sensor registration configuration file,
     "robot": {
         "name": "newrobot",
         "type": "schema:robot",
-        "macAddress": "dd:3e:4d:5s",
+        "mac_address": "dd:3e:4d:5s",
         "context": "5c4f5bacdb878529d8999978"
     },
     "sensors": [

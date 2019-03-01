@@ -1,7 +1,7 @@
 module.exports = {
 
     generateObservationName(sensorName) {
-        let names = sensorName.split('_');
+        let names = sensorName.replace(/\s+/g, '_').split('_');
 
         let observationName = names.map(function (name) {
             return name.charAt(0).toUpperCase() + name.slice(1)
@@ -10,7 +10,7 @@ module.exports = {
         return observationName + "Observation";
     } ,
     generateObservationFileName(sensorName) {
-        let names = sensorName.split('_');
+        let names = sensorName.replace(/\s+/g, '_').split('_');
 
         let observationFileName = names.map(function (name) {
             return name.toLowerCase()

@@ -4,7 +4,9 @@ var path = require('path');
 var appDir = path.dirname(__dirname);
 
 const forEach = require('lodash').forEach;
-
+import {
+    generateObservationName,
+} from "../general/utils"
 
 module.exports = {
     updateGraphQlSchema(sensors) {
@@ -48,13 +50,7 @@ module.exports = {
                 observationValue += `${key}: ${type},` + "\n";
             })
 
-            let names = sensor.name.split('_');
-
-            let observationName = names.map(function (name) {
-                return name.charAt(0).toUpperCase() + name.slice(1)
-            }).join("");
-
-            observationName += "Observation";
+            let observationName = generateObservationName(sensor.name);
             
             let inputValueName = `Input${observationName}Value`;
 
@@ -72,6 +68,7 @@ module.exports = {
                                 featureOfInterest: String
                                 sensor: Sensor
                                 robot: Robot
+                                task: Task
                                 value: ${typeValueName}
                             }
                             
@@ -119,7 +116,6 @@ module.exports = {
         let templates = typesTemplate.join('\n');
         let queries = allQueries.join('\n');
         let mutations = allMutations.join('\n');
-        // console.log(template);
         var writeStream = fs.createWriteStream(appDir + "/graphqlschemas/" + "newtypedef.js");
         writeStream.write(`
                             export default \`

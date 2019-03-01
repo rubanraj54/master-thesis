@@ -1,6 +1,9 @@
 var fs = require("fs");
 var path = require('path');
 var appDir = path.dirname(__dirname);
+import {
+    generateObservationName,
+} from "../general/utils"
 
 module.exports = {
     updateGraphQlQuery(sensors) {
@@ -8,11 +11,7 @@ module.exports = {
         let observationNames = [];
     
         sensors.forEach(sensor => {
-            let observationName = sensor.name.split('_').map(function (sensorName) {
-                return sensorName.charAt(0).toUpperCase() + sensorName.slice(1)
-            }).join("");
-            observationName += "Observation";
-            observationNames.push(observationName);
+            observationNames.push(generateObservationName(sensor.name));
         });
     
         let observationContexts = observationNames.join(',');
