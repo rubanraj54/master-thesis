@@ -18,50 +18,37 @@ module.exports = {
         let observationFileName = generateObservationFileName(sensorName);
         
         var writeStream = fs.createWriteStream(appDir + "/models/observations/" + observationFileName + ".js");
-        var env = new djvi();
-
-        env.addSchema('test', jsonSchema);
-        
-        let model = env.instance('test#');
-        let transformedValue = "";
-        let value = (Array.isArray(model.values)) ? model.values[0] : model.values;
-        let mongooseModel = {};
-        
-        forEach(value, (element, key) => {
-            if (Array.isArray(element) || typeof element == "object") {
-                return false;
-            }
-            let type = "String";
-            if (typeof element == "number" || typeof element == "integer") {
-                type = "Number";
-            } else if (typeof element == "boolean") {
-                type = "Boolean";
-            }
-            mongooseModel[key] = type;
-        })
-        
-        transformedValue = JSON.stringify(mongooseModel).replace(/["']/g, "");
-        
-        if (Array.isArray(model.values)) {
-            transformedValue = "[" + transformedValue + "]"
-        }
 
         writeStream.write(`
         import mongoose from 'mongoose'
+        const uuid = require('uuid/v4');
 
         const ${observationName} = mongoose.model('${observationName}', {
+            _id: {
+                type: String,
+                default: uuid
+            },
             name: String,
             type: String,
             featureOfInterest: String,
-            sensor: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Sensor'
+            task: {
+                type: String,
+                default: uuid,
+                ref: 'Task'
             },
             robot: {
-                type: mongoose.Schema.Types.ObjectId,
+                type: String,
+                default: uuid,
                 ref: 'Robot'
             },
-            value: ${transformedValue}
+            sensor: {
+                type: String,
+                default: uuid,
+                ref: 'Sensor'
+            },
+            value: mongoose.Schema.Types.Mixed,
+            phenomenonTime: Date,
+            resultTime: Date
         })
 
         export default ${observationName}

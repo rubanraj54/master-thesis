@@ -2,6 +2,7 @@
                             export default `
 
                             scalar JSON
+                            scalar DateTime
 
                             type Task {
                                 _id: String
@@ -21,7 +22,7 @@
                                 tasks: [Task]
                             }
 
-                            type Sensor {
+                           type Sensor {
                                 _id: String
                                 type: String
                                 name: String
@@ -40,6 +41,7 @@
                                 name: String
                                 value: JSON
                             }
+                                
 
                             type Query {
 
@@ -52,6 +54,10 @@
                                         name: String
                                     ): [Sensor!] !,
 
+                                    allTasks(
+                                        name: String
+                                    ): [Task!] !,
+
                                     allContexts(
                                         name: String
                                     ): [Context!] !,
@@ -61,15 +67,17 @@
                                         name: String
                                     ): Robot
 
+                                    getSensor(
+                                        _id: String!
+                                        name: String
+                                    ): Sensor
+
                                     getTask(
                                         _id: String!
                                         name: String
                                     ): Task
 
-                                    getSensor(
-                                        _id: String!
-                                        name: String
-                                    ): Sensor
+                                
                             }
 
                             type Mutation {
@@ -96,7 +104,8 @@
                                         name: String!
                                         value: JSON!,
                                     ): Context!
-                
+            
+                                    
         }
         `
                         

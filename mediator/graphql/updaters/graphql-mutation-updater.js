@@ -1,16 +1,15 @@
 var fs = require("fs");
 var path = require('path');
 var appDir = path.dirname(__dirname);
+import {
+    generateObservationName,
+} from "../general/utils"
 
 module.exports = {
     updateGraphQlMutation(sensors) {
         let observationNames = [];
         sensors.forEach(sensor => {
-            let observationName = sensor.name.split('_').map(function (sensorName) {
-                return sensorName.charAt(0).toUpperCase() + sensorName.slice(1)
-            }).join("");
-            observationName += "Observation";
-            observationNames.push(observationName);
+            observationNames.push(generateObservationName(sensor.name));
         });
 
         let observationContexts = observationNames.join(',');
@@ -20,9 +19,10 @@ module.exports = {
         observationNames.forEach(observationName => {
             let mutation = `
                 create${observationName}: async (_, {input}, { Robot, Sensor, Context, ${observationContexts} }) => {
-                const observation = await new ${observationName}(input).save()
-                observation._id = observation._id.toString()
-                return observation
+                    input.resultTime = new Date();
+                    const observation = await new ${observationName}(input).save()
+                    observation._id = observation._id.toString()
+                    return observation
                 },            
             `;
             mutations.push(mutation);

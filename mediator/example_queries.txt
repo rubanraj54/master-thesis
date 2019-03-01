@@ -102,7 +102,7 @@ mutation {
   "robot": {
     "name": "tiny",
     "type":"schema:robot",
-    "macAddress":"dd:3e:4d:5s",
+    "mac_address":"dd:3e:4d:5s",
     "context":"5c3f2810402eb3557da397d7",
     "db" : "mongodb"
   },
