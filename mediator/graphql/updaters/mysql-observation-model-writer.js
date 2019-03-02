@@ -19,7 +19,7 @@ module.exports = {
 
         const uuid = require('uuid/v4');
 
-        module.exports = (sequelize, Sequelize) => {
+        module.exports = (sequelize, Sequelize,Context) => {
             const ${observationName} = sequelize.define('${observationName}', {
                 _id: {
                     allowNull: false,
@@ -49,6 +49,8 @@ module.exports = {
             }, {
                 timestamps: false
             })
+
+            ${observationName}.belongsTo(Context);
 
             return ${observationName};
         }

@@ -28,9 +28,9 @@ module.exports = (sequelize, Sequelize) => {
         timestamps: false
     })
 
-    // TaskRobotSensor.belongsTo(Task);
-    // TaskRobotSensor.belongsTo(Robot);
-    // TaskRobotSensor.belongsTo(Sensor);
+    TaskRobotSensor.belongsTo(Task);
+    TaskRobotSensor.belongsTo(Robot);
+    TaskRobotSensor.belongsTo(Sensor);
 
     return TaskRobotSensor;
 }

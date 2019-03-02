@@ -99,7 +99,7 @@ module.exports = {
                 if (dbName == "mongodb") {
                     importStatement = `let ${observationName} = require("./observations/${file}").default`;
                 } else if (dbName == "mysql") {
-                    importStatement = `let ${observationName} = require("./mysql/observations/${file}")(sequelize,Sequelize)`;
+                    importStatement = `let ${observationName} = require("./mysql/observations/${file}")(sequelize,Sequelize,Context)`;
                 }
                 importStatements += "\n" + importStatement;
                 exportStatements += "\n" + observationName + ",";
