@@ -13,7 +13,7 @@ import {
 
 module.exports = {
 
-    createObservationModel(sensorName, jsonSchema) {
+    createObservationModel(sensorName) {
         let observationName = generateObservationName(sensorName);
         let observationFileName = generateObservationFileName(sensorName);
         

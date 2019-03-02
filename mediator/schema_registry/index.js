@@ -9,81 +9,66 @@ const mediatorConfigAdapter = new FileSync('mediatorconfig.json');
 const mediatorConfig = low(mediatorConfigAdapter);
 
 const dbConfigs = mediatorConfig.get('db').value();
-
-//checking for mongodb configuration and making connection
-let mysqlIndex = dbConfigs.findIndex(database => database.name === "mysql");
-let mysqlConnectionString = "";
-if (mysqlIndex != -1) {
-    let mysql = dbConfigs[mysqlIndex];
-    let hostWithCredentials = "";
-    if (mysql.userName == "" && mysql.password == "") {
-        hostWithCredentials = mysql.url;
-    } else if (mysql.userName == "") {
-        hostWithCredentials = `:${mysql.password}@${mysql.url}`;;
-    } else if (mysql.password == "") {
-        hostWithCredentials = `${mysql.userName}:@${mysql.url}`;
-    } else {
-        hostWithCredentials = `${mysql.userName}:${mysql.password}@${mysql.url}`;
-    }
-    mysqlConnectionString = `mysql://${hostWithCredentials}/${mysql.dbName}`;
-} else {
-    console.log("mongodb configuration missing");
-}
+const entityDBMapping = mediatorConfig.get('entityDBMapping').value();
 
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize(mysqlConnectionString);
-const Context = require("./models/mysql/context")(sequelize,Sequelize);
+
+// making mongodb connection pool
+let mongoDbConfigPool = makeConnectionPool(dbConfigs,"mongodb");
+
+// making mysql connection pool
+let mysqlConfigPool = makeConnectionPool(dbConfigs,"mysql");
+
+// const Context = require("./models/mysql/context")(sequelize,Sequelize);
 
 // Task initialization - start
-const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "task") > -1);
-const taskDb = taskDbConfig.name
+const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.task);
+const taskDb = taskDbConfig.type
 let Task;
+
 if (taskDb == "mongodb") {
-    Task = require("./models/mongodb/task").default
+    Task = require("./models/mongodb/task")(getConnection(mongoDbConfigPool,taskDbConfig.name,"Task"))
 } else if (taskDb == "mysql") {
-    Task = require("./models/mysql/task")(sequelize,Sequelize,Context)
+    Task = require("./models/mysql/task")(getConnection(mysqlConfigPool,taskDbConfig.name,"Task"),Sequelize,Context)
 }
 // Task initialization - end
 
 // Robot initialization - start
-const robotDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "robot") > -1);
-const robotDb = robotDbConfig.name
+const robotDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.robot);
+const robotDb = robotDbConfig.type
 let Robot;
 if (robotDb == "mongodb") {
-    Robot = require("./models/mongodb/robot").default
+    Robot = require("./models/mongodb/robot")(getConnection(mongoDbConfigPool,robotDbConfig.name,"Robot"))
 } else if (robotDb == "mysql") {
-    Robot = require("./models/mysql/robot")(sequelize,Sequelize,Context)
+    Robot = require("./models/mysql/robot")(getConnection(mysqlConfigPool,robotDbConfig.name,"Robot"),Sequelize,Context)
 }
 // Robot initialization - end
 
 // Sensor initialization - start
-const sensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "sensor") > -1);
-const sensorDb = sensorDbConfig.name
+const sensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.sensor);
+const sensorDb = sensorDbConfig.type
 let Sensor;
 if (sensorDb == "mongodb") {
-    Sensor = require("./models/mongodb/sensor").default
+    Sensor = require("./models/mongodb/sensor")(getConnection(mongoDbConfigPool,sensorDbConfig.name,"Sensor"))
 } else if (sensorDb == "mysql") {
-    Sensor = require("./models/mysql/sensor")(sequelize,Sequelize,Context)
+    Sensor = require("./models/mysql/sensor")(getConnection(mysqlConfigPool,sensorDbConfig.name,"Sensor"),Sequelize,Context)
 }
 // Sensor initialization - end
 
 // TaskRobotSensor initialization - start
-const taskrobotsensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "taskrobotsensor") > -1);
-const taskrobotsensorDb = taskrobotsensorDbConfig.name
+const taskrobotsensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.taskrobotsensor);
+const taskrobotsensorDb = taskrobotsensorDbConfig.type
 let TaskRobotSensor;
 if (taskrobotsensorDb == "mongodb") {
-    TaskRobotSensor = require("./models/mongodb/task-robot-sensor").default
+    TaskRobotSensor = require("./models/mongodb/task-robot-sensor")(getConnection(mongoDbConfigPool,taskrobotsensorDbConfig.name,"TaskRobotSensor"))
 } else if (taskrobotsensorDb == "mysql") {
-    TaskRobotSensor = require("./models/mysql/task-robot-sensor")(sequelize,Sequelize)
+    TaskRobotSensor = require("./models/mysql/task-robot-sensor")(getConnection(mysqlConfigPool,taskrobotsensorDbConfig.name,"TaskRobotSensor"),Sequelize,Context)
 }
 // TaskRobotSensor initialization - end
 
-const observationDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "observation") > -1);
-const observationDb = observationDbConfig.name
-
 import { createObservationModel } from '../graphql/updaters/observation-model-writer'
 import { createMysqlObservationModel } from '../graphql/updaters/mysql-observation-model-writer'
-import { exportContexts } from '../graphql/updaters/context-exporter'
+// import { exportContexts } from '../graphql/updaters/context-exporter'
 
 const express = require('express')
 const app = express()
@@ -97,15 +82,14 @@ const dummyResuableData = require('./toy_data/resuable_test.json');
 const fs = require('fs');
 
 // create tables in mysql if it doesn't exists in the database
-sequelize.sync()
-  .then(() => {
-    console.log(`Database & tables created!`)
+mysqlConfigPool.forEach(mysqlConnection => {
+    mysqlConnection.connection.sync()
+      .then(() => {
+        console.log(`${mysqlConnection.name} - Database & tables created!`)
+    })
 })
 
-//checking for mongodb configuration and making connection
-let mongoDbIndex = dbConfigs.findIndex(database => database.name === "mongodb");
-if (mongoDbIndex != -1) {
-    let mongoDb = dbConfigs[mongoDbIndex];
+function makeMongoDBConnection(mongoDb) {
     let hostWithCredentials = "";
     if (mongoDb.userName == "" && mongoDb.password == "") {
         hostWithCredentials = mongoDb.url;
@@ -114,13 +98,33 @@ if (mongoDbIndex != -1) {
     } else if (mongoDb.password == "") {
         hostWithCredentials = `${mongoDb.userName}:@${mongoDb.url}`;
     }
-    mongoose.connect(`mongodb://${hostWithCredentials}/${mongoDb.dbName}`, {
+    return mongoose.createConnection(`mongodb://${hostWithCredentials}/${mongoDb.dbName}`, {
         useNewUrlParser: true
     });
-} else {
-    console.log("mongodb configuration missing");
+}
+function makeMysqlConnection(mysql) {
+    let hostWithCredentials = "";
+    if (mysql.userName == "" && mysql.password == "") {
+        hostWithCredentials = mysql.url;
+    } else if (mysql.userName == "") {
+        hostWithCredentials = `:${mysql.password}@${mysql.url}`;;
+    } else if (mysql.password == "") {
+        hostWithCredentials = `${mysql.userName}:@${mysql.url}`;
+    } else {
+        hostWithCredentials = `${mysql.userName}:${mysql.password}@${mysql.url}`;
+    }
+    return new Sequelize(`mysql://${hostWithCredentials}/${mysql.dbName}`);
 }
 
+function getConnection(connectionPool,dbName,entityName) {
+    let poolIndex = connectionPool.findIndex(connection => connection.name === dbName);
+    if (poolIndex > -1) {
+        return connectionPool[poolIndex].connection;
+    } else {
+        console.log(`${entityName} DB config not found`);
+        process.exit();
+    }
+}
 
 app.use(express.json());
 
@@ -161,7 +165,7 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
     }    
 
     finalResponse.task._id = task._id;
-
+    
     // creating all robots and sensors
     let robots = data.robots;
     if(robots && robots.length > 0) {
@@ -193,7 +197,7 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
     }
 
     // update main.js which exports all contexts to graphql
-    exportContexts(observationDb);
+    // exportContexts(observationDb);
 
     // get all sensors & update graphql component
     let sensors = [];
@@ -206,7 +210,7 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
         });
     }   
 
-    updateGraphQl(sensors);
+    // updateGraphQl(sensors);
 
     response.send(finalResponse);
 })
@@ -249,13 +253,29 @@ app.get('/reset', async (requestEndpoint,response) => {
           });
     }
 
-    let dirPath = "";
-    if (observationDb == "mongodb") { 
-        dirPath = "../graphql/models/observations";
-    } else if (observationDb == "mysql") {
-        dirPath = "../graphql/models/mysql/observations";
-    }
+    deleteObservations("../graphql/models/observations");
+    deleteObservations("../graphql/models/mysql/observations");
+        
+    // update main.js which exports all contexts to graphql
+    // exportContexts(observationDb);
 
+    // get all sensors & update graphql component
+    let sensors = [];
+    if (sensorDb == "mongodb") {
+        sensors = await Sensor.find({});
+    } else if (sensorDb == "mysql") {
+        sensors = await Sensor.findAll({
+            raw: true,
+            nest: true
+        });
+    } 
+    // updateGraphQl(sensors);
+
+    response.send('success');
+});
+
+
+function deleteObservations(dirPath) {
     try { var files = fs.readdirSync(dirPath); }
     catch(e) { return; }
     console.log(files);
@@ -272,26 +292,25 @@ app.get('/reset', async (requestEndpoint,response) => {
           }
         }
     }
-        
-    // update main.js which exports all contexts to graphql
-    exportContexts(observationDb);
+}
 
-    // get all sensors & update graphql component
-    let sensors = [];
-    if (sensorDb == "mongodb") {
-        sensors = await Sensor.find({});
-    } else if (sensorDb == "mysql") {
-        sensors = await Sensor.findAll({
-            raw: true,
-            nest: true
+function makeConnectionPool(dbConfigs,dbName) {
+    let connectionPool = [];
+    dbConfigs.forEach(dbConfig => {
+        if (dbConfig.type != dbName) return;
+        let connection = null;
+        if (dbName == "mysql") {
+            connection = makeMysqlConnection(dbConfig);
+        } else if (dbName == "mongodb") {
+            connection = makeMongoDBConnection(dbConfig);
+        }
+        connectionPool.push({
+            name: dbConfig.name,
+            connection 
         });
-    } 
-    updateGraphQl(sensors);
-
-    response.send('success');
-});
-
-
+    });
+    return connectionPool;
+}
 async function registerSensors(sensors) {
     return await Promise.all(sensors.map(async _sensor => {
         if (!has(_sensor, '_id')) {
@@ -302,11 +321,9 @@ async function registerSensors(sensors) {
             } else if (sensorDb == "mysql") {
                 newSensor = await Sensor.create(_sensor);
             }
-            if (observationDb == "mongodb") {
-                createObservationModel(newSensor.name, newSensor.value_schema);
-            } else if (observationDb == "mysql") {
-                createMysqlObservationModel(newSensor.name, newSensor.value_schema);
-            }
+            
+            createObservationModel(newSensor.name, newSensor.value_schema);
+            createMysqlObservationModel(newSensor.name, newSensor.value_schema);
             return newSensor._id.toString();
         } else {
             return _sensor._id;

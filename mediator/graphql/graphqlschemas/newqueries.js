@@ -7,21 +7,23 @@
             const mediatorConfigAdapter = new FileSync('mediatorconfig.json')
             const mediatorConfig = low(mediatorConfigAdapter)
             const dbConfigs = mediatorConfig.get('db').value();
+            const entityDBMapping = mediatorConfig.get('entityDBMapping').value();
+
             
-            const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "task") > -1);
-            const taskDb = taskDbConfig.name
+            const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.task);
+            const taskDb = taskDbConfig.type
 
-            const robotDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "robot") > -1);
-            const robotDb = robotDbConfig.name
+            const robotDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.robot);
+            const robotDb = robotDbConfig.type
 
-            const sensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "sensor") > -1);
-            const sensorDb = sensorDbConfig.name
+            const sensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.sensor);
+            const sensorDb = sensorDbConfig.type
 
-            const taskrobotsensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "taskrobotsensor") > -1);
-            const taskrobotsensorDb = taskrobotsensorDbConfig.name
+            const taskrobotsensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.taskrobotsensor);
+            const taskrobotsensorDb = taskrobotsensorDbConfig.type
 
-            const observationDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "observation") > -1);
-            const observationDb = observationDbConfig.name
+            // const observationDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "observation") > -1);
+            // const observationDb = observationDbConfig.name
 
             export default {
             allRobots: async (parent, args, {Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor }) => {
