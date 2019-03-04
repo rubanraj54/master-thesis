@@ -8,7 +8,6 @@
             const mediatorConfig = low(mediatorConfigAdapter)
             const dbConfigs = mediatorConfig.get('db').value();
             const entityDBMapping = mediatorConfig.get('entityDBMapping').value();
-
             
             const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.task);
             const taskDb = taskDbConfig.type
@@ -21,7 +20,6 @@
 
             const taskrobotsensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.taskrobotsensor);
             const taskrobotsensorDb = taskrobotsensorDbConfig.type
-
 
             export default {
             allRobots: async (parent, args, {Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor }) => {
@@ -467,57 +465,6 @@
                     return x
                 })
             },
-            
-            allCommandVelocityObservations: async (parent, args, {Task, Robot, Sensor,TaskRobotSensor,CommandVelocityObservationBuckets}) => {
-                let observationsFromAllBuckets = [];
-                
-                observationsFromAllBuckets = await Promise.all(CommandVelocityObservationBuckets.map(async CommandVelocityObservationBucket => {
-                    if (CommandVelocityObservationBucket.type == "mongodb") {
-                        return await CommandVelocityObservationBucket.observation.find(args);
-                    } else if (CommandVelocityObservationBucket.type == "mysql") {
-                        return await CommandVelocityObservationBucket.observation.findAll({
-                            where: args,
-                            raw: true,
-                            nest: true
-                        });
-                    } else {
-                        return [];
-                    }
-                }));
-
-                let observations = observationsFromAllBuckets.reduce((_observations,observationsFromSingleBucket) => {
-                    return _observations.concat(observationsFromSingleBucket);
-                },[]);
-                
-                return await Promise.all(observations.map(async observation => {
-
-                    if (observation.task) {
-                        if (taskDb == "mongodb") {
-                            observation.task = await Task.findOne({_id : observation.task});
-                        } else if (taskDb == "mysql") {
-                            observation.task = await Task.findOne({where:{_id : observation.task}});
-                        }
-                    }
-
-                    if (observation.robot) {
-                        if (robotDb == "mongodb") {
-                            observation.robot = await Robot.findOne({_id : observation.robot});
-                        } else if (robotDb == "mysql") {
-                            observation.robot = await Robot.findOne({where:{_id : observation.robot}});
-                        }
-                    }
-
-                    if (observation.sensor) {
-                        if (sensorDb == "mongodb") {
-                            observation.sensor = await Sensor.findOne({_id : observation.sensor});
-                        } else if (sensorDb == "mysql") {
-                            observation.sensor = await Sensor.findOne({where:{_id : observation.sensor}});
-                        }   
-                    }
-                    
-                    return observation;
-                }));
-            }, 
             allContexts: async (parent, args, { MongoContext, Context }) => {
                 const contexts = await Context.find(args)
                 return contexts.map(x => {

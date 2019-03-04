@@ -14,17 +14,6 @@
                 let mongoDbConfigPool = makeConnectionPool(dbConfigs, "mongodb");
                 // making mysql connection pool
                 let mysqlConfigPool = makeConnectionPool(dbConfigs, "mysql");
-                
-                
-                // Context initialization - start
-                dbConfigs.forEach(dbConfig => {
-                    if (dbConfig.type == "mysql") {
-                        require("./mysql/context")(getConnection(mysqlConfigPool, dbConfig.name, "Context"), Sequelize);
-                    } else if (dbConfig.type == "mongodb") {
-                        require("./mongodb/context")(getConnection(mongoDbConfigPool, dbConfig.name, "Context"));
-                    }
-                })
-                // Context initialization - end
     
                 // Task initialization - start
                 const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.task);
@@ -74,6 +63,9 @@
             
                 
 
+
+            const MySqlContext = require("./mysql/context");
+
             entityDBMapping.observations.forEach(_observation => {
                 let dbConfig = dbConfigs.find(dbConfig => dbConfig.name === _observation);
                 if (dbConfig == undefined) {
@@ -84,8 +76,10 @@
                 
             
                 if (dbConfig.type == "mysql") {
+                    let Context = MySqlContext(getConnection(mysqlConfigPool, dbConfig.name, "Context"), Sequelize);
                     
                 } else if (dbConfig.type == "mongodb") {
+                    require("./mongodb/context")(getConnection(mongoDbConfigPool, dbConfig.name, "Context"));
                     
                 }
             

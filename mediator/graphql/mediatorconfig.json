@@ -33,7 +33,7 @@
         "observations" : [
             "mongodb_blackboxone",
             "mongodb_central_server",
-            "mysql_blackboxthree"
+            "mysql_central_server"
         ]
     },
     "format": "json-ld",

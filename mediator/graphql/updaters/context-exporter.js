@@ -55,7 +55,7 @@ module.exports = {
                     let ${observationName}Buckets = [];
                 `;
                 observationStatements += "\n let " + observationName + " = null"; 
-                mysqlObservationStatements += "\n" + observationName + ` = MySql${observationName}(getConnection(mysqlConfigPool, dbConfig.name, "Mysql${observationName}"), Sequelize); `
+                mysqlObservationStatements += "\n" + observationName + ` = MySql${observationName}(getConnection(mysqlConfigPool, dbConfig.name, "Mysql${observationName}"), Sequelize,Context); `
                 mongodbObservationStatements += "\n" + observationName + ` = Mongo${observationName}(getConnection(mongoDbConfigPool, dbConfig.name, "Mongo${observationName}")); `
                 bucketsStatements += "\n" + `
                     ${observationName}Buckets.push({
@@ -69,6 +69,9 @@ module.exports = {
             });
 
             importStatements += "\n" + `
+
+            const MySqlContext = require("./mysql/context");
+
             entityDBMapping.observations.forEach(_observation => {
                 let dbConfig = dbConfigs.find(dbConfig => dbConfig.name === _observation);
                 if (dbConfig == undefined) {
@@ -79,8 +82,10 @@ module.exports = {
                 ${observationStatements}
             
                 if (dbConfig.type == "mysql") {
+                    let Context = MySqlContext(getConnection(mysqlConfigPool, dbConfig.name, "Context"), Sequelize);
                     ${mysqlObservationStatements}
                 } else if (dbConfig.type == "mongodb") {
+                    require("./mongodb/context")(getConnection(mongoDbConfigPool, dbConfig.name, "Context"));
                     ${mongodbObservationStatements}
                 }
             
@@ -104,17 +109,6 @@ module.exports = {
                 let mongoDbConfigPool = makeConnectionPool(dbConfigs, "mongodb");
                 // making mysql connection pool
                 let mysqlConfigPool = makeConnectionPool(dbConfigs, "mysql");
-                
-                
-                // Context initialization - start
-                dbConfigs.forEach(dbConfig => {
-                    if (dbConfig.type == "mysql") {
-                        require("./mysql/context")(getConnection(mysqlConfigPool, dbConfig.name, "Context"), Sequelize);
-                    } else if (dbConfig.type == "mongodb") {
-                        require("./mongodb/context")(getConnection(mongoDbConfigPool, dbConfig.name, "Context"));
-                    }
-                })
-                // Context initialization - end
     
                 // Task initialization - start
                 const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.task);

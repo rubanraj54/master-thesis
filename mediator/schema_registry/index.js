@@ -210,7 +210,7 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
         });
     }   
 
-    // updateGraphQl(sensors);
+    updateGraphQl(sensors);
 
     response.send(finalResponse);
 })
@@ -269,7 +269,7 @@ app.get('/reset', async (requestEndpoint,response) => {
             nest: true
         });
     } 
-    // updateGraphQl(sensors);
+    updateGraphQl(sensors);
 
     response.send('success');
 });

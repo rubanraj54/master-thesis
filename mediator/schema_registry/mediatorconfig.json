@@ -31,7 +31,9 @@
         "sensor": "mongodb_central_server",
         "taskrobotsensor": "mongodb_central_server",
         "observations" : [
-            "mongodb_blackboxone"
+            "mongodb_blackboxone",
+            "mongodb_central_server",
+            "mysql_central_server"
         ]
     },
     "format": "json-ld",
