@@ -87,7 +87,7 @@ mysqlConfigPool.forEach(mysqlConnection => {
       .then(() => {
         console.log(`${mysqlConnection.name} - Database & tables created!`)
     })
-})
+});
 
 function makeMongoDBConnection(mongoDb) {
     let hostWithCredentials = "";

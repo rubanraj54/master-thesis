@@ -157,6 +157,16 @@ module.exports = {
     
             
                 ${importStatements}
+
+                // create tables in mysql if it doesn't exists in the database
+                mysqlConfigPool.forEach(mysqlConnection => {
+                    mysqlConnection.connection.sync()
+                    .then(() => {
+                        console.log(mysqlConnection.name + " - Database & tables created!")
+                    })
+                });
+    
+
             export {
                 Task,
                 Robot,

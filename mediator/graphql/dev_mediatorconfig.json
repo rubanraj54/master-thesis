@@ -3,7 +3,7 @@
         {
             "name": "mongodb_central_server",
             "type": "mongodb",
-            "url": "mongo_central_server:27017",
+            "url": "localhost:27017",
             "dbName": "test",
             "userName": "",
             "password": ""
@@ -11,7 +11,7 @@
         {
             "name": "mongodb_blackboxone",
             "type": "mongodb",
-            "url": "mongodb_blackboxone:27017",
+            "url": "localhost:27018",
             "dbName": "test",
             "userName": "",
             "password": ""
@@ -19,7 +19,7 @@
         {
             "name": "mysql_central_server",
             "type": "mysql",
-            "url": "mysql_central_server:3306",
+            "url": "localhost:3308",
             "dbName": "db",
             "userName": "root",
             "password": "password"

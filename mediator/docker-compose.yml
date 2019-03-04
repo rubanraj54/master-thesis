@@ -6,8 +6,9 @@ services:
             - ./:/app
         working_dir: /app/schema_registry
         depends_on:
-            - mongo
-            - mysql
+            - mongo_central_server
+            - mongodb_blackboxone
+            - mysql_central_server
         environment:
             NODE_ENV: development
         ports:
@@ -19,8 +20,9 @@ services:
             - ./graphql:/app
         working_dir: /app
         depends_on:
-            - mongo
-            - mysql
+            - mongo_central_server
+            - mongodb_blackboxone
+            - mysql_central_server
         environment:
             NODE_ENV: development
         ports:
@@ -28,7 +30,7 @@ services:
         command: > 
             sh -c "npm run dev && tail -F anything"
             # sh -c "npm run dev:default && tail -F anything"
-    mongo:
+    mongo_central_server:
         image: mongo
         expose:
             - 27017
@@ -36,8 +38,16 @@ services:
             - 27017:27017            
         volumes:
             - ./data/db:/data/db
+    mongodb_blackboxone:
+        image: mongo
+        expose:
+            - 27017
+        ports:
+            - 27018:27017            
+        volumes:
+            - ./mongodb_blackboxone/db:/data/db
 
-    mysql:
+    mysql_central_server:
         image: mysql:5.7
         restart: always
         environment:
@@ -61,14 +71,14 @@ services:
         image: phpmyadmin/phpmyadmin
         environment:
             PMA_PORT: 3306
-            PMA_HOST: 'mysql'
+            PMA_HOST: 'mysql_central_server'
             PMA_USER: 'root'
             PMA_PASSWORD: 'password'
         ports:
             - "8004:80"
         restart: always
         depends_on: 
-            - mysql
+            - mysql_central_server
 # Names our volume
 volumes:
     my-db:            
