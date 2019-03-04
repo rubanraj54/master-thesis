@@ -21,28 +21,28 @@ const schema = makeExecutableSchema({
 const URL = mediatorConfig.has('url') ? mediatorConfig.get('url').value() : "";
 const PORT = mediatorConfig.has('port') ? mediatorConfig.get('port').value() : 8000;
 
-String.prototype.toObjectId = function () {
-    var ObjectId = (require('mongoose').Types.ObjectId);
-    return new ObjectId(this.toString());
-};
+// String.prototype.toObjectId = function () {
+//     var ObjectId = (require('mongoose').Types.ObjectId);
+//     return new ObjectId(this.toString());
+// };
 
-//checking for mongodb configuration and making connection
-let databases = mediatorConfig.get('db').value();
-let mongoDbIndex = databases.findIndex(database => database.name === "mongodb");
-if (mongoDbIndex != -1) {
-    let mongoDb = databases[mongoDbIndex];
-    let hostWithCredentials = "";
-    if (mongoDb.userName == "" && mongoDb.password == "") {
-        hostWithCredentials = mongoDb.url;
-    } else if (mongoDb.userName == "") {
-        hostWithCredentials = `:${mongoDb.password}@${mongoDb.url}`;;
-    } else if (mongoDb.password == "") {
-        hostWithCredentials = `${mongoDb.userName}:@${mongoDb.url}`;
-    }
-    mongoose.connect(`mongodb://${hostWithCredentials}/${mongoDb.dbName}`,{useNewUrlParser:true});
-} else {
-    console.log("mongodb configuration missing");
-}
+// //checking for mongodb configuration and making connection
+// let databases = mediatorConfig.get('db').value();
+// let mongoDbIndex = databases.findIndex(database => database.name === "mongodb");
+// if (mongoDbIndex != -1) {
+//     let mongoDb = databases[mongoDbIndex];
+//     let hostWithCredentials = "";
+//     if (mongoDb.userName == "" && mongoDb.password == "") {
+//         hostWithCredentials = mongoDb.url;
+//     } else if (mongoDb.userName == "") {
+//         hostWithCredentials = `:${mongoDb.password}@${mongoDb.url}`;;
+//     } else if (mongoDb.password == "") {
+//         hostWithCredentials = `${mongoDb.userName}:@${mongoDb.url}`;
+//     }
+//     mongoose.connect(`mongodb://${hostWithCredentials}/${mongoDb.dbName}`,{useNewUrlParser:true});
+// } else {
+//     console.log("mongodb configuration missing");
+// }
 
 const app = express()
 
