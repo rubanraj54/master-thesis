@@ -68,7 +68,7 @@ if (taskrobotsensorDb == "mongodb") {
 
 import { createObservationModel } from '../graphql/updaters/observation-model-writer'
 import { createMysqlObservationModel } from '../graphql/updaters/mysql-observation-model-writer'
-// import { exportContexts } from '../graphql/updaters/context-exporter'
+import { exportContexts } from '../graphql/updaters/context-exporter'
 
 const express = require('express')
 const app = express()
@@ -197,7 +197,7 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
     }
 
     // update main.js which exports all contexts to graphql
-    // exportContexts(observationDb);
+    exportContexts();
 
     // get all sensors & update graphql component
     let sensors = [];
@@ -257,7 +257,7 @@ app.get('/reset', async (requestEndpoint,response) => {
     deleteObservations("../graphql/models/mysql/observations");
         
     // update main.js which exports all contexts to graphql
-    // exportContexts(observationDb);
+    exportContexts();
 
     // get all sensors & update graphql component
     let sensors = [];
