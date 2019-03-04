@@ -41,6 +41,29 @@
                                 name: String
                                 value: JSON
                             }
+
+                            type CommandVelocityObservation {
+                                _id: String
+                                type: String
+                                name: String
+                                featureOfInterest: String
+                                sensor: Sensor
+                                robot: Robot
+                                task: Task
+                                phenomenonTime: DateTime
+                                resultTime: DateTime
+                                value: CommandVelocityObservationValue
+                            }
+                            
+                            type CommandVelocityObservationValue {
+                                angular_x : Float
+                                angular_y : Float
+                                angular_z : Float
+                                linear_x : Float
+                                linear_y : Float
+                                linear_z : Float
+                            }
+                    
                                 
 
                             type Query {
@@ -76,6 +99,10 @@
                                         _id: String!
                                         name: String
                                     ): Task
+                                    allCommandVelocityObservations(
+                                        _id: String
+                                        name: String
+                                    ): [CommandVelocityObservation!]
 
                                 
                             }
