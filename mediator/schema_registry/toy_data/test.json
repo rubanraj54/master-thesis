@@ -81,7 +81,8 @@
                 "unit": "meter",
                 "meta": {
                     "device_name": "max"
-                }
+                },
+                "isNewBucket": false
             }, {
                 "type": "schema:Sensor",
                 "name": "Command_Velocity",
@@ -126,7 +127,8 @@
                 "unit": "Meter per second",
                 "meta": {
                     "manufacturer": "Tesla"
-                }
+                },
+                "isNewBucket": false
             }]
         },
         {
@@ -186,7 +188,8 @@
                 "unit": "Position",
                 "meta": {
                     "device_name": "bingo"
-                }
+                },
+                "isNewBucket": false
             }, {
                 "type": "schema:Sensor",
                 "name": "Scan_front",
@@ -270,7 +273,8 @@
                 "unit": "null",
                 "meta": {
                     "manufacturer": "Leica geosystems"
-                }
+                },
+                "isNewBucket": true
             }]
         }
     ]
