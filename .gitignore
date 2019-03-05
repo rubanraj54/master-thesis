@@ -16,3 +16,5 @@ reports/proposal/proposal\.pdf
 mediator/schema_registry\.json
 
 mediator/schema/schema_registry\.json
+
+mediator/\.vscode/

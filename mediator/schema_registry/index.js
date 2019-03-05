@@ -128,12 +128,7 @@ function getConnection(connectionPool,dbName,entityName) {
 
 app.use(express.json());
 
-if (!sr.has('robots').value()) {
-    sr.set('robots', []).write()
-}
-if (!sr.has('sensors').value()) {
-    sr.set('sensors', []).write()
-}
+sr.defaults({ robots: [], sensors: [] }).write()
 
 function updateGraphQl(sensors) {
     updateGraphQlSchema(sensors);
@@ -148,6 +143,28 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
     let data = dummyData;
     // let data = dummyResuableData;
     
+    let newSensorNames = data.robots.reduce((accumulator,currentValue) => {
+        return accumulator.concat(currentValue.sensors.map(sensor => sensor.name.toLowerCase()));
+    },[]);
+
+    let existingSensorNames = sr.get('sensors').value().map(sensor => sensor.name.toLowerCase());
+
+    // Duplicate sensor name test rule
+    let ruleOne = (new Set(newSensorNames)).size !== newSensorNames.length;
+    let ruleTwo = false; 
+
+    newSensorNames.some(newSensorName => {
+        if (existingSensorNames.includes(newSensorName.toLowerCase())) {
+            ruleTwo = true;
+            return true; // this will break the loop once found
+        }
+    });
+
+    if (ruleOne || ruleTwo) {
+        response.send("Duplicate sensor name found");
+        return;
+    }
+
     let finalResponse = {
         task: {
             _id: ""
@@ -253,8 +270,10 @@ app.get('/reset', async (requestEndpoint,response) => {
           });
     }
 
-    deleteObservations("../graphql/models/observations");
-    deleteObservations("../graphql/models/mysql/observations");
+    deleteObservations('../graphql/models/observations')
+    deleteObservations('../graphql/models/mysql/observations')
+
+    sr.get('sensors').remove({}).write();
         
     // update main.js which exports all contexts to graphql
     exportContexts();
@@ -276,6 +295,9 @@ app.get('/reset', async (requestEndpoint,response) => {
 
 
 function deleteObservations(dirPath) {
+    if (!fs.existsSync(dirPath)){
+        fs.mkdirSync(dirPath);
+    }
     try { var files = fs.readdirSync(dirPath); }
     catch(e) { return; }
     console.log(files);
@@ -321,6 +343,8 @@ async function registerSensors(sensors) {
             } else if (sensorDb == "mysql") {
                 newSensor = await Sensor.create(_sensor);
             }
+
+            sr.get('sensors').push({ _id: newSensor._id, name: newSensor.name}).write();
             
             createObservationModel(newSensor.name, newSensor.value_schema);
             createMysqlObservationModel(newSensor.name, newSensor.value_schema);

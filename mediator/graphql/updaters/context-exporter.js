@@ -35,12 +35,18 @@ module.exports = {
         var writeStream = fs.createWriteStream(appDir + "/models/main.js");
         
         let folderPath = "/models/mysql/observations";
+
+        if (!fs.existsSync(appDir + folderPath)){
+            fs.mkdirSync(appDir + folderPath);
+        }
+
         let importStatements = "";
         let exportStatements = "";
         let observationStatements = "";
         let mysqlObservationStatements = "";
         let mongodbObservationStatements = "";
         let bucketsStatements = "";
+
         fs.readdir(appDir + folderPath, (err, files) => {
             files.forEach(file => {
                 file = file.replace(".js", "");
