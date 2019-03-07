@@ -33,7 +33,7 @@
 }
 % Execute the default option
 \ExecuteOptions{thesis}
-\ExecuteOptions{twosides}
+\ExecuteOptions{oneside}
 % Process other options
 \ProcessOptions\relax
 
