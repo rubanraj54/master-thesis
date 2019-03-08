@@ -41,7 +41,7 @@ Sebastian Blumenthal\\
 
 \subfile{chapters/abstract}
 \subfile{chapters/acknowledgment}
-
+\let\cleardoublepage\clearpage
 \tableofcontents
 \listoffigures
 \listoftables
@@ -54,27 +54,33 @@ Sebastian Blumenthal\\
 \pagestyle{mainmatter}
 
 \subfile{chapters/ch01_introduction}
-\subfile{chapters/ch02_stateoftheart}
-\subfile{chapters/ch03_methodology}
-\subfile{chapters/ch04_solution}
-\subfile{chapters/ch05_evaluation}
-\subfile{chapters/ch06_results}
-\subfile{chapters/ch07_conclusion}
+%\subfile{chapters/ch02_background}
+%\subfile{chapters/ch03_stateoftheart}
+\subfile{chapters/ch04_problem}
+%\subfile{chapters/ch04_solution}
+%\subfile{chapters/ch05_methodology}
+%
+%\subfile{chapters/ch06_evaluation}
+%\subfile{chapters/ch07_results}
+%\subfile{chapters/ch08_conclusion}
 
 %-------------------------------------------------------------------------------
 %	APPENDICES
 %-------------------------------------------------------------------------------
 \begin{appendices}
+	\let\cleardoublepage\clearpage
     \subfile{chapters/appendix}
 \end{appendices}
-
+\let\cleardoublepage\clearpage
 \backmatter
+\let\cleardoublepage\clearpage
 
 %-------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
-%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------  
 \addcontentsline{toc}{chapter}{References}
 \bibliographystyle{plainnat} % Use the plainnat bibliography style
 \bibliography{bibliography.bib} % Use the bibliography.bib file as the source of references
 
+% check the youtube video about falcor vs graphql ($ref in falcor solves loading duplicate values in the result)
 \end{document}

@@ -16,38 +16,22 @@ As mentioned in these papers \cite{ahmed1991pegasus,fahl1993amos,arens1996query,
     
 Streamlining the data produced from different sensors in robotic applications is a tedious task, and there are no specific standards to organize the data in terms of making relations between the entities and also giving context to the data. It will be even more complicated when we have a multi-robot platform and sharing data between them, and backing up the data into a database for fault diagnosis.
 
-Currently, in the ROPOD* project, there is a single black box component has been developed to simulate the robot test cases. During the simulation black box stores the data produced by the sensors as dumps into a single MongoDB instance locally.  
+Currently, in the ROPOD\footnote{ROPOD is a EU funded project to develop "Ultra-flat, ultra-flexible, and cost-effective robotic pods for handling legacy in logistics"} project, there is a single black box component has been developed to simulate the robot test cases. During the simulation black box stores the data produced by the sensors as dumps into a single MongoDB instance locally.  
 
-The first problem here is since the sensor data stored as dumps which makes the consumer's inability to make queries against the data. 
+The first problem here is since the sensor data stored as dumps which makes the consumer's\footnote{A consumer can be either humans or machines.} inability to make queries against the data. 
 
 And the second problem is missing contexts and the entity-relationship model. For example, if a consumer tries to query the data from dumps, it will be unsure that which sensor produced this data from which robot/black-box at which location and time, and who triggered this test case. What we mean "missing context" is if humans read the data they will understand what's the meaning of each parameter, but if a different robot/black-box tries to consume the data produced by other robots, then the context about the data should be shared somewhere globally.
 
 The final problem is, what if we have a situation where multi-robots tries to share data or human controller wants to do fault-diagnosis on data shared on multi-robots. 
 
-These significant issues inspired us to find a unique mediation technique to address the problems mentioned above. 
 
-Note: 
-A consumer can be either humans or machines.   
+These significant issues inspired us to find a suitable Entity-Relationship data model and unique mediation system to query heterogeneous sensor data from multiple data sources regardless of the database type.
 
 
-    \section{Challenges and Difficulties}
-    \subsection{...}
-
-    \lipsum[11-15]
-
-    \subsection{...}
-
-    \subsection{...}
-
-
-
-    \section{Problem Statement}
-    \subsection{...}
-
-    \lipsum[21-30]
-
-    \subsection{...}
-
-
-    \subsection{...}
+    \section{Structure}
+	
+		\begin{itemize}
+			\item Section x concisely describes the background knowledge of the topics which are relevant to this work.
+		\end{itemize}
+\let\cleardoublepage\clearpage
 \end{document}
