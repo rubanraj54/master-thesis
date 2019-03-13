@@ -53,6 +53,15 @@
 	
 	\citet{arens1996query} built a mediator which is flexible to map domain level query different data-sources and efficient to plan the query execution to reduce the overall execution time. Information source models provides relations between the super class and subclasses, and also the mapping between the domain models and information from heterogeneous sources. SIMS uses Loom as a representational language to make objects and relationship between them. SIMS supports parallel query access plan that makes the mediator to access information independent of data sources and the user will get the final answer as quick as possible.
 	
+	\section{Declarative data fetching frameworks}
+	
+	\citet{cederlund2016performance} performed an extensive comparison between REST, GraphQL and Falcor by declarative data fetching. They evaluated all three frameworks based on latency, data volume, and many requests with real-world test cases. Also, they analyzed the efficiency of filtering done by the frameworks.
+	
+	Their results reveal that Relay+GraphQL decreases the response time under parallel and sequential data flow. Furthermore, the response size is decreased when using the frameworks rather than REST API's. However, within the frameworks, Falcor response time and size is high compared to GraphQL. Ultimately, both the frameworks reduced the number of network calls to a single request.
+	
+	As a conclusion, \citet{cederlund2016performance} suggests to use custom REST endpoints since the frameworks increase the size of requests, but it still depends on the application requirement. In our application, Robots might work in the places where limited network access available, so we definitely use these frameworks as a base on our mediator to reduce the response size. Moreover, the observation data may have too many fields which are unnecessary for the other robots or tools to work on. Therefore only picking the necessary fields in the response profoundly reduce the response size as well as the response time.
+
+	
 	Many mediator systems developed in the past to support integrating heterogeneous information from different data sources. All of them built with different architectures, query language, and execution optimization. In our mediator approach we focus mainly on,
 	\begin{itemize}
 		\item How different type of robot generated data will be stored in multiple data sources?
