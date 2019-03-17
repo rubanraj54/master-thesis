@@ -142,13 +142,14 @@ app.get('/schema-registry',async (requestEndpoint,response) => {
     // let data = requestEndpoint.body;
     let data = dummyData;
     // let data = dummyResuableData;
-    let hasIsNewBucketField = data.robots.reduce((accumulator,currentValue) => {
-        let index = currentValue.sensors.findIndex(sensor => sensor.isNewBucket == undefined);
-        return !(index > -1); 
-    },true);
+    // let hasIsNewBucketField = data.robots.reduce((accumulator,currentValue) => {
+    //     let index = currentValue.sensors.findIndex(sensor => sensor.isNewBucket == undefined);
+    //     return !(index > -1); 
+    // },true);
     let newSensorNames = data.robots.reduce((accumulator,currentValue) => {
-        let sensors = currentValue.sensors.filter(sensor => sensor.isNewBucket);
-        return accumulator.concat(sensors.map(sensor => sensor.name.toLowerCase()));
+        return accumulator.concat(currentValue.sensors.map(sensor => sensor.name.toLowerCase()));
+        // let sensors = currentValue.sensors.filter(sensor => sensor.isNewBucket);
+        // return accumulator.concat(sensors.map(sensor => sensor.name.toLowerCase()));
     },[]);
     
     let existingSensorNames = sr.get('sensors').value().map(sensor => sensor.name.toLowerCase());
@@ -348,11 +349,11 @@ async function registerSensors(sensors) {
                 newSensor = await Sensor.create(_sensor);
             }
             
-            if (sensor.isNewBucket) {
-                sr.get('sensors').push({ _id: newSensor._id, name: newSensor.name}).write();
-                createObservationModel(newSensor.name, newSensor.value_schema);
-                createMysqlObservationModel(newSensor.name, newSensor.value_schema);
-            }
+            sr.get('sensors').push({ _id: newSensor._id, name: newSensor.name}).write();
+            createObservationModel(newSensor.name, newSensor.value_schema);
+            createMysqlObservationModel(newSensor.name, newSensor.value_schema);
+            // if (sensor.isNewBucket) {
+            // }
             
             return newSensor._id.toString();
         } else {

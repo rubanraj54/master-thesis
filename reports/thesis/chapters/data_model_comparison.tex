@@ -170,7 +170,7 @@
 			\begin{center}
 				\includegraphics[scale=0.1]{./images/png/jsonld/1}	
 				\caption{Twist message created by robot one}	
-				\label{fig:jsonls_1}	
+				\label{fig:jsonld_1}	
 			\end{center}
 		\end{figure}
 	
@@ -180,7 +180,7 @@
 			\begin{center}
 				\includegraphics[scale=0.1]{./images/png/jsonld/2}	
 				\caption{Twist message created by robot two}	
-				\label{fig:jsonls_2}	
+				\label{fig:jsonld_2}	
 			\end{center}
 		\end{figure}
 	
@@ -192,7 +192,7 @@
 			\begin{center}
 				\includegraphics[scale=0.1]{./images/png/jsonld/3}	
 				\caption{Twist message created by robot one in JSON-LD format}	
-				\label{fig:jsonls_3}	
+				\label{fig:jsonld_3}	
 			\end{center}
 		\end{figure}
 	
@@ -202,7 +202,7 @@
 			\begin{center}
 				\includegraphics[scale=0.1]{./images/png/jsonld/4}	
 				\caption{Transformed twist message created by robot two in JSON-LD format}	
-				\label{fig:jsonls_4}	
+				\label{fig:jsonld_4}	
 			\end{center}
 		\end{figure}	
 	
@@ -210,6 +210,67 @@
 		
 		JSON-LD does not offer only the semantic representation, but also offers two other important features called Expansion and Compaction algorithm.
 		
+		\textbf{Expansion algorithm}
+		
+	Expansion algorithm takes an object as an input along with its context and applies the context into the data attributes and expands all compact IRIs to absolute IRIs. Also, during the expansion, it expresses all JSON-LD values in the expanded form. Finally, it removes the "@context" information from the result data since all information is propagated to the real data. Let us apply the expansion algorithm on the twist messages created by robot one and two, and see the result after applying the expansion algorithm.
+		
+		\begin{figure}[!htbp] 
+			\begin{center}
+				\includegraphics[scale=0.1]{./images/png/jsonld/5}	
+				\caption{Transformed twist message created by robot one after applying expansion algorithm}	
+				\label{fig:jsonld_5}	
+			\end{center}
+		\end{figure}
+	
+		\begin{figure}[!htbp] 
+			\begin{center}
+				\includegraphics[scale=0.1]{./images/png/jsonld/6}	
+				\caption{Transformed twist message created by robot two after applying expansion algorithm}	
+				\label{fig:jsonld_6}	
+			\end{center}
+		\end{figure}
+	
+	Now both the messages \ref{fig:jsonld_5}, \ref{fig:jsonld_6} look precisely the same without any difference in keys and values. This is the power of JSON-LD expansion algorithm. One can probably think now, who creates the common vocabulary list which can be understandable by all the robots. So far, there are many vocabulary lists has been created for common things in the universe but ain't one for robots ecosystem. For example,
+	
+	\begin{itemize}
+		\item https://schema.org/ - schema.org have a vast collection of most common definable things in the universe.
+		\item http://thingschema.org/ - thingsschema.org has just initiated a motivation to define things (smart things) in the environment.
+		\item https://iot.schema.org/ - iot.schema.org defines the vocabulary list and relationships for IoT devices.
+		\item https://wiki.dbpedia.org/ - dbpedia.org have a collection of person record to identify each person information in the world uniquely.
+	\end{itemize}
+
+	As part of this research work, we are taking the initiative to prepare a set of vocabs for robots, sensors and its working environment. Then, we use the vocabularies to represent robot generated messages with more precise context so that any other robots in the world can understand each other even though different vendors are manufacturing them.
+	
+	\textbf{Compaction algorithm}
+	
+	Compaction algorithm takes two inputs, one is the real data object \ref{fig:jsonld_compaction_1} and the second is an object \ref{fig:jsonld_compaction_2} which has only context information and generates a human-readable final result \ref{fig:jsonld_compaction_3} which includes both data and context injected into it.
+	
+			\begin{figure}[!htbp] 
+		\begin{center}
+			\includegraphics[scale=0.1]{./images/png/jsonld/compaction_1}	
+			\caption{First input to the compaction algorithm}	
+			\label{fig:jsonld_compaction_1}	
+		\end{center}
+	\end{figure}
+	
+	\begin{figure}[!htbp] 
+		\begin{center}
+			\includegraphics[scale=0.1]{./images/png/jsonld/compaction_2}	
+			\caption{Second input to the compaction algorithm}	
+			\label{fig:jsonld_compaction_2}	
+		\end{center}
+	\end{figure}
+	
+
+	\begin{figure}[!htbp] 
+		\begin{center}
+			\includegraphics[scale=0.1]{./images/png/jsonld/compaction_3}	
+			\caption{Result produced by compaction algorithm}	
+			\label{fig:jsonld_compaction_3}	
+		\end{center}
+	\end{figure}	
+
+	As it is stated above, "@context" is injected into the real data object. Now the result object can contextually understandable by other robots.
 		
 		
 		\subsection{Why JSON -LD instead of JSON?}
