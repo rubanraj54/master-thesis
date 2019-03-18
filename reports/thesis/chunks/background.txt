@@ -1,0 +1,67 @@
+This section elaborately discusses the concepts which help the readers to understand the remaining parts of this research work.
+
+Data model
+"A data model is an abstract model that organizes elements of data and standardizes how they relate to one another and to properties of the real world entities. For instance, a data model may specify that the data element representing a car be composed of a number of other elements which, in turn, represent the color and size of the car and define its owner." [Data model - Wikipedia. https://en.wikipedia.org/wiki/Data_model]
+In Database Management Systems context, data model depicts the structure of data stored and obtained from the database. Different database systems follow different ways of how they store the data physically in the device, and the users may choose the database based on their application requirements. A good data model determines the overall performance of the application. 
+
+Well known data models:
+Relational data model is one of the traditional data models which represents the attributes as column names and the actual data in the form of rows.
+Graph data model is the newcomer in the market and solves many problems in social networking applications. It stores the data as properties in nodes as well as in the edges that connect two different nodes.
+Document data model is the competition for Relational data models since this data model does not stress uses to provide a valid data schema. So, users can store data like documents or semi-structured data. 
+Column family data model stores the data in individual column and columns that fall under the same category can be grouped as a column family.  
+Few databases in the market support a mixture of these existing data models and those databases are called as Multi-model databases.
+
+Database Schema
+The database schema is a formal language used to define "the blueprint of how a database is constructed" [https://en.wikipedia.org/wiki/Database_schema]. Schema definition differs from database to database and also based on the data model that the database uses. For example, in a relational data model database, schema includes the table, column names, column data types, views, packages, procedures, functions, and relationships. 
+
+
+Query language
+Query language is a mechanism to read or access the data stored in a database.  All databases provide their own query language implementation to let users execute the query and get results from the database. For example, MongoDB have MongoDB Command Line Interface based on javascript, MySQL have Structured Query Language, Cassandra have Cassandra Query Language.
+
+Federated database
+A federated database system acts as a meta-database management system which "maps different autonomous databases into a single federated database" [https://en.wikipedia.org/wiki/Federated_database_system].  Each independent homogeneous databases are located in different places and interconnected through the network connection. Federated database acts as a middle man between these databases regardless of how the data is stored and merge the results from all the databases. Federated databases allow users to use a unique querying platform and execute a single query to read and store the data from various types of databases even though the databases are heterogeneous. Federated database systems divide the single query into subqueries according to the underlying database systems and accumulate the result sets from each subquery and combine them into a single final response.  FDS internally have different types of wrappers to translate the subqueries to appropriate database query language.
+
+In FDBS architecture may consist of centralized or decentralized (distributed) databases where centralized system controls a single database instance, and decentralized system controls multiple dependent/independent database instances. An FDBS can be a nonfederated database system if any one of the databases is non-autonomous in the participating group. So it means that a system can be called as FDBS only if all the participating databases are entirely autonomous and should "allow partial and controlled sharing of their data"  [https://en.wikipedia.org/wiki/Federated_database_system].
+
+Loosely coupled FDBS:
+Loosely coupled federated systems define their own schema format that is used by everyone to access the databases involved in the federation. This approach forces the user to learn the federation schema to work with multi-databases.
+Tightly coupled FDBS:
+Tightly coupled federated systems have separate processes for every database involved in the federation to build and export integrated federated schema.
+
+Heterogeneity:
+There are significant factors that cause the heterogeneity in database systems such as semantics, structures, and the query language. 
+Semantic heterogeneities occur if there is a conflict between the meaning of attributes, how it can be interpreted, and how the consumes use the data. There are a few well-known conflicts mentioned below,
+Data representation conflict
+Data conflict (missing attributes)
+Metadata conflict
+Precision conflict
+Naming conflict
+Schema conflict
+
+Structural heterogeneities happen when there are different primitives between the two data models.
+
+
+Data Abstraction: 
+Data abstraction in the context of database systems hides crucial complexities through many levels, and it is vital for constructing a federated database system.
+Physical level abstraction is the lowest level of abstraction which handles the data storage in the real systems. 
+Logical level abstraction handles the type of data being stored in the database and the relationships between those data.
+View level abstraction is the highest level of abstraction which modularizes the big database system into smaller structures because users may not need to access complete information about the database, rather they interest in few parts of the database. 
+
+Abstraction image goes here [https://en.wikipedia.org/wiki/File:Data_abstraction_levels.png]
+
+@context
+@context in JSON-LD document used to map the terms to their original context. A term represents a key-value pair in a JSON document. With the help of context, a term can be expanded to a full URL.
+
+Node js
+Node.js is a cross-platform JavaScript run-time environment used to run JavaScript programs without a browser. JavaScript programs are meant to execute in the client side browser's JavaScript engine. NodeJS let the developers write and run JavaScript programs in an isolated environment called node which uses Google's V8 JavaScript engine.  It is used to develop command line tools and server-side scripting, and it overcomes the gap between client and server side programming since traditionally developers use two different languages on client and server side. In our research work, we develop the mediator component as a Node js application for various good reason, and it will be discussed in the mediator component implementation section.
+
+MongoDB
+MongoDB is a document database that provides high performance, high availability and automatic scaling. MongoDB stores data in the form of document and it consists of field and value pairs which are similar to JSON objects. The value may include other documents, arrays, and arrays of documents. A set of documents belongs to a collection.
+
+MySQL
+MySQL is a well-known Relational Database Management System. It stores data in tables and relations can be defined between tables using primary and foreign keys to represent the connection between data. It indexes data based on the primary key which improves the speed of reading query execution. Data model or schema should be defined before inserting data into tables. It provides ACID property to provide strong consistency on the data and it also available depends on the chosen configuration.
+
+Docker
+"Docker is an open source platform for developing, shipping and running applications". [https://docs.docker.com/engine/docker-overview/] Important components of docker are, images, and containers. Images are nothing but a software package or operating system like Ubuntu, Nginx, etc., Using docker platform, one can quickly combine images and necessary software packages to deploy a container. A container is an isolated component runs individually in the docker engine, and multiple
+containers can be connected and communicated with each other in the same network. Docker engine shares the host machines resources (CPU, Memory) with the running containers. We can write a new image file on top of other base image file to build our customized containers.
+
