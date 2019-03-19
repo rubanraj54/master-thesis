@@ -1,0 +1,82 @@
+This chapter briefly describes the implementation of the mediator component, tools involved in the mediator and their purpose, and the strategy followed to collect sensor observation data from different robots over the mediator. 
+
+Mediator design process:
+The mediator component is a complex and giant piece of software component comprises of various sub-components in it. Before start developing a software component, there are many standards and approaches have been defined in software engineering domain that should be followed by developers to achieve stable development process and at the end finish the project with a successful working product. Since this research work implements a software component, we decided to take up two well-known software development models called Feature driven development from Agile and Component Assembly Model. It is a heterogeneous development model as we take the useful features from two different models.
+
+Feature driven development was first introduced by the book "Java Modeling in Color with UML" [http://agilemodeling.com/essays/fdd.htm] and first used for a huge bank project. The core concept of FDD is initially developing an overall model and define all possible required features as a list. The overall model for this research work is, a mediator component operates between multiple database instances which runs in a centralized server or in the robot itself. Now the possible feature list for our mediator component is, 
+
+Finding the entities and define their attributes.
+Finding a suitable data structure which supports context.
+Schema registration for a new task, robots, and sensors.
+Creation of observation buckets and update GraphQL type definitions.
+Update GraphQL mutations and queries.
+
+Once the overall model and feature list are defined, we decompose the feature into smaller reusable components. These components are developed individually and combined later back to a single feature on the basis of Component Assembly model. For each feature in the list, a planning schedule is assigned to keep track of time and finish developing the feature on time. Before start implementing a feature, proper design is made to avoid changes in the mediator component in the future. After preparing the plan and design, the next step is building smaller components which form the individual feature. The complete process is repeated until the final mediator component meets the proposed mediator requirements. 
+
+After each release, the mediator is cross verified with the user story and tested on real use cases which are described in the later section [TBD]. Feedbacks are received from the user and improved the mediator stability and reliability on each version which is released on every week.
+
+Architecture:
+This section gives a brief overview of the mediator architecture and the components involved in it.
+The overall architecture is divided into three major sections, Consumer or Producer, Mediator, Data sources.
+
+Consumer or Producer:
+The first section includes any robots or tools which consumes the data from data sources or produces data to the data sources via the mediator component. In the research work, we are not investing the types of consumer/producer involved in the process since the mediator component is being developed to solve general heterogeneous data sources problem with a global audience in mind.
+
+Mediator:
+The essential section in the architecture is the mediator component considering it manages most of the interactions between consumer/producer and data sources. Mediator component again divided into subcomponents called Schema Registry and GraphQL mediation.  These two components are developed as individually isolated docker containers for modular and portability reasons. Each docker container runs on its own configuration and a small alpine Linux as the base image. The alpine base image is chosen for various reasons as follows, 
+1. Usually, Alpine flavored images are small in size which in turn shrinks the container size. For example, Fedora version 5 base image size is 231MB, CentOS 7 base image size is 193MB, Ubuntu 16.04 base image size is 118MB, and Alpine 3.6 base image size is only 3.98 MB [ref1]. We can see that the Alpine base image is more than 90% smaller than other flavors. 
+2. Contain only the basic functionalities without GUI components. 
+3. Faster container creation and boot time. For example, Debian based container creation took around 28 seconds and Alpine based container creation took only 5.6 seconds [ref1]. Note that, this comparison is performed without cache.
+4. Safe and secure. Fewer risks of attack if there are less number of packages and libraries available in the base system. A few years ago,  a severe vulnerability was exploited called "ShellShock" which give access to hackers to execute bash commands on the server over an HTTP request. Alpine is safe from "ShellShock" attack because it does not have bash installed by default [ref1].
+
+ref1: https://nickjanetakis.com/blog/the-3-biggest-wins-when-using-alpine-as-a-base-docker-image
+
+Schema registry:
+
+Schema registry is the entry point for registering the tasks, robots, and sensors as a relational model. This step is mandatory to let the mediator component knows the relationship between the entities and also the exact structure of sensor data. This structure of sensor data is represented in the form of JSON schema which is used for GraphQL schema transformation which is discussed in registering observation section. 
+Schema registry itself is an individual docker container which runs "express" server to provide the schema registration service. Express.js is a modular light-weight web application framework developed to run with Node.js platform. In the schema registry, the express server opens an endpoint for the entity and schema registration.
+
+Entity and schema registration is a sequential step by step process to store the task, robot and sensor registration, and creating new observation buckets in the real database. 
+Entity definition:
+Task - A task defines the experiment which is carried out with a set of robots and sensors.  
+table:
+name - Name of the task
+creator - Name or id of the person who created this task
+creationTime - Time of the task creation
+startTime - Time of the task that actually started
+endTime - Time of the task that actually ended
+
+Proposed architecture:
+
+Tools involved in the mediator:
+
+
+Two significant components of mediator:
+
+- Schema registry
+- GraphQL mediation
+
+Components description:
+
+Data modeling:
+http://softlang.uni-koblenz.de/LeinbergerThesis.pdf
+
+
+Vocab creation:
+
+Supported databases and how it is implemented
+what libraries are used in the mediator to make a connection with databases
+Describe the connection pool management
+
+The GraphQL mediation component is built with two major components, express server, and Apollo GraphQL wrapper.
+
+Project structure:
+How the project files are organized.
+
+Observation buckets overview
+
+JSON schema to graphql schema transformation
+
+
+Case study:
+

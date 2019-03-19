@@ -1,0 +1,129 @@
+%!TEX root = ../report.tex
+
+\begin{document}
+	\let\cleardoublepage\clearpage
+\chapter{Implementation}
+This chapter briefly describes the implementation of the mediator component, tools involved in the mediator and their purpose, and the strategy followed to collect sensor observation data from different robots over the mediator. 
+
+	\section{Mediator design process}
+	The mediator component is a complex and giant piece of software component comprises of various sub-components in it. Before start developing a software component, there are many standards and approaches have been defined in software engineering domain that should be followed by developers to achieve stable development process and at the end finish the project with a successful working product. Since this research work implements a software component, we decided to take up two well-known software development models called Feature driven development from Agile and Component Assembly Model. It is a heterogeneous development model as we take the useful features from two different models.
+	
+	Feature driven development was first introduced by the book "Java Modeling in Color with UML" \cite{misc15} and first used for a huge bank project. The core concept of FDD is initially developing an overall model and define all possible required features as a list. The overall model for this research work is, a mediator component operates between multiple database instances which runs in a centralized server or in the robot itself. Now the possible feature list for our mediator component is, 
+	
+	\begin{itemize}
+		\item Finding the entities and define their attributes.
+		\item Finding a suitable data structure which supports context.
+		\item Schema registration for a new task, robots, and sensors.
+		\item Creation of observation buckets and update GraphQL type definitions.
+		\item Update GraphQL mutations and queries.
+	\end{itemize}
+	
+	
+	
+	Once the overall model and feature list are defined, we decompose the feature into smaller reusable components. These components are developed individually and combined later back to a single feature on the basis of Component Assembly model. For each feature in the list, a planning schedule is assigned to keep track of time and finish developing the feature on time. Before start implementing a feature, proper design is made to avoid changes in the mediator component in the future. After preparing the plan and design, the next step is building smaller components which form the individual feature. The complete process is repeated until the final mediator component meets the proposed mediator requirements. 
+	
+	After each release, the mediator is cross verified with the user story and tested on real use cases which are described in the later section [TBD]. Feedbacks are received from the user and improved the mediator stability and reliability on each version which is released on every week.
+	
+	\section{Architecture} 
+	This section gives a brief overview of the mediator architecture and the components involved in it.
+	The overall architecture is divided into three major sections, Consumer or Producer, Mediator, Data sources.
+	
+	\subsection{Consumer/Producer}
+	
+	The first section includes any robots or tools which consumes the data from data sources or produces data to the data sources via the mediator component. In the research work, we are not investing the types of consumer/producer involved in the process since the mediator component is being developed to solve general heterogeneous data sources problem with a global audience in mind.
+	
+	\subsection{Mediator} 
+	The essential section in the architecture is the mediator component considering it manages most of the interactions between consumer/producer and data sources. Mediator component again divided into subcomponents called Schema Registry and GraphQL mediation.  These two components are developed as individually isolated docker containers for modular and portability reasons. Each docker container runs on its own configuration and a small alpine Linux as the base image. The alpine base image is chosen for various reasons as follows, 
+	
+	\begin{enumerate}
+		\item Usually, Alpine flavored images are small in size which in turn shrinks the container size. For example, Fedora version 5 base image size is 231MB, CentOS 7 base image size is 193MB, Ubuntu 16.04 base image size is 118MB and Alpine 3.6 base image size is only 3.98 MB \cite{misc16}. We can see that the Alpine base image is more than 90\% smaller than other flavors. 
+		\item Contain only the basic functionalities without GUI components. 
+		\item Faster container creation and boot time. For example, Debian based container creation took around 28 seconds and Alpine based container creation took only 5.6 seconds \cite{misc16}. Note that, this comparison is performed without cache.
+		\item Safe and secure. Fewer risks of attack if there are less number of packages and libraries available in the base system. A few years ago,  a severe vulnerability was exploited called "ShellShock" which give access to hackers to execute bash commands on the server over an HTTP request. Alpine is safe from "ShellShock" attack because it does not have bash installed by default \cite{misc16}.	
+	\end{enumerate}
+	
+	\textbf{Schema registry}
+	
+	Schema registry is the entry point for registering the tasks, robots, and sensors as a relational model. This step is mandatory to let the mediator component knows the relationship between the entities and also the exact structure of sensor data. This structure of sensor data is represented in the form of JSON schema which is used for GraphQL schema transformation which is discussed in registering observation section. 
+	
+	Schema registry itself is an individual docker container which runs "express" server to provide the schema registration service. Express.js is a modular light-weight web application framework developed to run with Node.js platform. In the schema registry, the express server opens an endpoint for the entity and schema registration.
+	
+	Entity and schema registration is a sequential step by step process to store the task, robot and sensor registration, and creating new observation buckets in the real database. All the entities and their attributes are defined as follows,
+	
+	\textbf{Task}- A task determines the experiment which is carried out with a set of robots and sensors. 
+	
+	\begin{table}[h!]
+		\begin{tabular}{|l|p{8cm}|}
+			\hline
+			\textbf{Attributes} & \textbf{Definitions} \\ \hline
+			
+			name &  Name of the task \\ \hline
+			@context &  Context for the attributes\\ \hline
+			creator &  Name or id of the person who created this task\\ \hline
+			creationTime &  Time of the task creation\\ \hline
+			startTime & Time of the task that started\\ \hline
+			endTime &  Time of the task that ended\\ \hline
+			
+		\end{tabular}
+		\caption{Task entity attributes description}
+		\label{tab:task_entity}
+	\end{table}
+
+	\textbf{Robot} - A robot entity holds the information of the robot.
+	
+	\begin{table}[h!]
+		\begin{tabular}{|l|p{8cm}|}
+			\hline
+			\textbf{Attributes} & \textbf{Definitions} \\ \hline
+			
+			name & Name of the robot \\ \hline
+			@context & Context for the attributes \\ \hline
+			type & Type of the robot \\ \hline
+			id & Unique identified for the robot \\ \hline
+			macAddress & Mac address of the robot \\ \hline
+			
+		\end{tabular}
+		\caption{Robot entity attributes description}
+		\label{tab:robot_entity}
+	\end{table}
+
+	\textbf{Sensor} - A sensor entity defines the details of the sensor used in the robot.
+
+	\begin{table}[h!]
+		\begin{tabular}{|l|p{12cm}|}
+			\hline
+			\textbf{Attributes} & \textbf{Definitions} \\ \hline
+			
+			name & Name of the sensor \\ \hline
+			@context & Context for the attributes \\ \hline
+			type & Type of the sensor \\ \hline
+			description & Short description of the sensor \\ \hline
+			measures & What physical characteristic that the sensor measures from the environment \\ \hline
+			valueSchema & A JSON Schema represents the structure of the data that this sensor will generate. \\ \hline
+			unit & Unit for the measured observation\\ \hline
+			meta & Meta attribute allow users to add any additional information about the sensor which is missing in the given attribute list.\\ \hline
+			
+		\end{tabular}
+		\caption{Sensor entity attributes description}
+		\label{tab:sensor_entity}
+	\end{table}
+
+	\textbf{TaskRobotSensor} - TaskRobotSensor entity doesn't store any information about other entities; instead it stores only the relationship between a task, robot, and senor. We introduce this pivot relation because we need a way to relate entities in non-relational databases too. This type of table is called a pivot table. Pivot tables can be used to represent the relationships between different entities stores in other tables/collections. Additionally, pivot tables can have their own attributes, and this TaskRobotSensor pivot entity has startTime and endTime as additional properties to identify at what time a robot has joined the task, or when a sensor is attached with this robot. 
+	
+	\begin{table}[h!]
+		\begin{tabular}{|l|p{12cm}|}
+			\hline
+			\textbf{Attributes} & \textbf{Definitions} \\ \hline
+			
+			task & Unique task id \\ \hline
+			robot & Unique robot id \\ \hline
+			sensor & Unique sensor id \\ \hline
+			startTime & Time shows when this relation has been made \\ \hline
+			endTime & Time shows when this relation has been ended (if this value is not provided, then the Task endTime will be considered as TaskRobotSensor endTime) \\ \hline
+			
+		\end{tabular}
+		\caption{TaskRobotSensor entity attributes description}
+		\label{tab:TaskRobotSensor}
+	\end{table}
+	
+\end{document}
