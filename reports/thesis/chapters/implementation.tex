@@ -32,7 +32,7 @@ This chapter briefly describes the implementation of the mediator component, too
 
 	\subsection{Consumer/Producer}
 	
-	The first section includes any robots or tools which consumes the data from data sources or produces data to the data sources via the mediator component. In the research work, we are not investing the types of consumer/producer involved in the process since the mediator component is being developed to solve general heterogeneous data sources problem with a global audience in mind.
+	The leftmost section in figure \ref{fig:architecture} includes any robots or tools which consumes the data from data sources or produces data to the data sources via the mediator component. In the research work, we are not investing the types of consumer/producer involved in the process since the mediator component is being developed to solve general heterogeneous data sources problem with a global audience in mind.
 	
 	\newpage
 	
@@ -268,4 +268,19 @@ This chapter briefly describes the implementation of the mediator component, too
 
 	In the end, GraphQL will consume the new updated file, and users/robots can write/read new sensor observations from different datasources.
 	
+	\subsubsection{GraphQL mediation}
+	Mediation component is a separate docker container which is built based on express server and Apollo GraphQL wrapper. Apollo GraphQL wrapper is implemented based on facebook GraphQL specification and designed their system as a wrapper to run on top of the express server. To run the Apollo GraphQL server, it requires four mandatory modules such as,
+	\begin{enumerate}
+		\item Type definitions - It consists of data type definition for all the entities which users are going to query or write into the database. In the context of our research work, this module consists of schemas for Task, Robot, Sensor, TaskRobotSensor and all type of Observations. Additionally, it may have the queries and mutations outline but not their definition.
+		\item Mutations - This module consists of required functions to receive the incoming data and write/update in the database.
+		\item Queries - This module includes necessary services to fetch data from the database.  
+		\item Model packages - This is a custom module which comprises of model definitions of each entity for all the supported databases. Currently GraphQL mediation component supports MongoDB and MySQL. The system uses two open-source libraries called "mongoose \footnote{ \url{https://github.com/Automattic/mongoose}}" and "sequelize \footnote{ \url{https://github.com/sequelize/sequelize}}" to make the connection and communication between the GraphQL mediation component and the respective databases. Both modules are designed to follow ORM (Object Relation Mapping) pattern to let developers write their code in a class structure which is convenient and easy to maintain the code base. The mongoose module targets only MongoDB and sequelize can be used to interact with Postgres, MySQL, MariaDB, SQLite, and Microsoft SQL Server.		
+	\end{enumerate}
+
+	\subsubsection{Connection pool management} 
+	Both the schema registry and GraphQL mediation components initiate their database connection pool before the server starts. The system creates different database connections based on the "db" configurations mentioned in the mediator config file. And this database connection pool is shared across the component such that other services like queries and mutations can use it to read or write data into databases.
+	
+	\subsection{Data sources} 
+	The rightmost block in the architecture \ref{fig:architecture} represents the data sources. A data source can be any databases, microservices, or an API endpoint. GraphQL component serves as a bridge between the robot and data sources. In the current work, we used only MongoDB and MySQL as data sources. However, the mediator can be extended to support other databases with little modifications in the GraphQL Queries and Mutations module.
+
 \end{document}
