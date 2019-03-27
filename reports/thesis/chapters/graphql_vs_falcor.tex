@@ -1,9 +1,9 @@
 %!TEX root = ../report.tex
 
 \begin{document}
-    \chapter{Comparison between GraphQL \& Falcor}
+    \section{Comparison between GraphQL \& Falcor} \label{sec:graphql_falcor}
 	In this section, we are going to analyze the potential features of GraphQL and Falcor, also the possibility of adapting these frameworks as a base for our mediator. Before getting into GraphQL and Falcor, we should know what REST API is and how it transformed the way of communication between systems for many years.
-    \section{REST API}
+    \subsection{REST API}
 	Primarily API stands for Application Programming Interface, and it allows any software to talk with each other. There are different types of API available, but here in the context of GraphQL and Falcor, we consider REST API (REpresentational State Transfer API).  Fundamentally, REST API works in the same way as how websites work. A client sends a request to the server over HTTP protocol, and the client gets an HTML page as a response and browser renders the page. In REST API, the server sends a JSON (Javascript Object Notation) response instead of HTML page. The JSON response might be unreadable to humans, but it is readable by machines. Then the client program parses the response and performs any actions on the data as they wish. 
 
 	This architecture looks perfect for fetching the data from the server but what are the limitations in this architecture that give space for the emergence of frameworks like GraphQL and Falcor?
@@ -16,8 +16,7 @@
 		\end{center}
 	\end{figure}
 	
-	\newpage
-	\subsection{Limitations}
+	\subsubsection{Limitations}
 	\begin{itemize}
 		\item The client has to make recurring round trips to the server to fetch the required data.
 		\item Various endpoints for different resources which make complication between developers and challenging to manage them on server and client side in big projects.
@@ -27,10 +26,10 @@
 
 	In the later sections, we see how GraphQL and Falcor address the limitations in their approach.
 	
-	\section{GraphQL}
+	\subsection{GraphQL}
 	GraphQL is a Query Language developed by Facebook to fetch the data from the database unlike the traditional way of making REST API requests. Technically, GraphQL replaces the use of REST API calls with a single endpoint on the server. Single endpoint architecture solves various communication difficulties between client and server side team members. 
 	
-	\subsection{Single roundtrip}
+	\subsubsection{Single roundtrip}
 	GraphQL helps to fetch all the data we required in a single request. For example, consider a scenario in the below figure where we need to get top 10 robots and sensors attached to it. 
 	
 	\begin{figure}[!htbp] 
@@ -44,8 +43,6 @@
    Figure \ref{fig:rest_roundtrip_1} shows the traditional REST approach, step 1 shows single GET request to fetch a piece of robot information and step 2 shows the JSON response that includes the robot information which is requested. Note that, server spits out all information regardless of what client is going to use in their application. 
    
    In figure \ref{fig:rest_roundtrip_2} step 3 shows the next GET request from the client to fetch all the sensor information belongs to the robot\_id which client received in step 2 response. In step 4, the server responds with all sensor details for the specified robot. 
-   
-   \newpage
 	
 	\begin{figure}[!htbp] 
 		\begin{center}
@@ -67,7 +64,7 @@
 		\end{center}
 	\end{figure}
 
-	\subsection{Declarative}
+	\subsubsection{Declarative}
 	The client decides the fields that should be available in the query response. GraphQL doesn't give less or more than what the client asks for.  Declarative approach solves the over fetching issue in REST API. Also, we can say that GraphQL follows under fetching approach. 
 	
 	Let's consider an example to see the variance between these two approaches. Think we have a database that contains a list of robot information such as name, description, mac\_address, context, manufacturer information, type, weight, etc. and we would like to query only for name and mac\_address of all the robots. 
@@ -84,7 +81,7 @@
 	Adding \$include=name,mac\_address queries along with the GET request might solve this issue. However, this is overburden in terms of often rewriting code in the server for every change from the client.   
 	
 	GraphQL solves this over fetching issue with zero configuration in the server side. In the below figure \ref{fig:graphql_declarative}, GraphQL client request for name and mac\_address of all robots exclusively, and GraphQL server automagically responds a list of robots only with name and mac\_address. In the end, it saves time on rewriting code on the server, and most importantly reduces the load on the network layer.
-	
+	\newpage
 	\begin{figure}[!htbp] 
 		\begin{center}
 			\includegraphics[trim={0 0 0 2cm},clip,scale=0.07]{./images/png/graphql_declarative}	
@@ -93,7 +90,7 @@
 		\end{center}
 	\end{figure}
 
-	\subsection{Single endpoint}
+	\subsubsection{Single endpoint}
 	
 	GraphQL exposes a single endpoint for all available services from the backend. This overcomes the REST API multiple routes and each exposes a single resource. For example, consider we need to get a list of robots and sensors in two different network calls. In typical REST API architecture, we would have two separate routes as shown below.
 	
@@ -101,13 +98,13 @@
 	
 	In GraphQL world, we define only one route, and we send the queries to the server over the single URL.
 	
-	\subsection{Strongly typed validation}
+	\subsubsection{Strongly typed validation}
 	Strong type system in GraphQL validates the incoming query for data types and prevent prematurely even before sending the queries to the database. Also, it makes sure that the client sends the right data and also the client can expect the data in the same way. 
 	
-	\subsection{Caching}
+	\subsubsection{Caching}
 	Usually, the browser caches the responses for different routes, and if the client makes a similar request, the browser gets the data locally. However, it is not possible directly since GraphQL uses single route endpoint. Without caching, GraphQL would be inefficient, but there are other libraries in the community which handles the caching in the client side. The popular libraries are Apollo and FlacheQL, and they store the requests and responses in the simple local storage in the form of a normalized map \cite{misc02}.
 	
-	\subsection{Multiple data sources}
+	\subsubsection{Multiple data sources}
 	GraphQL creates an abstraction layer between clients and the databases used in the backend as shown in the figure \ref{fig:multiple_db_support}. This feature allows the service provides to use any number of data sources and GraphQL fetches the relevant data from all data sources and returns the required fields to the client side. 
 	
 	This is one of the primary reason why we considered GraphQL as a base to our mediator system. Because it is always not sure how the robots store the sensor data and which database is used. In a typical scenario, multi robots might use various databases to store similar sensor entities.
@@ -120,7 +117,7 @@
 		\end{center}
 	\end{figure}
 
-	\section{Falcor}
+	\subsection{Falcor}
 	Falcor is a framework similar to GraphQL developed by Netflix for their internal use, and later they make it available as open source. Unlike GraphQL, Falcor doesn't emphasize users to provide a schema. Instead, Falcor generates a schema from the given data as a single Virtual JSON object \cite{misc03}. It uses "One Model Everywhere" \cite{misc03} policy to model all the backend data into a single JSON file.
 	
 	\begin{figure}[!htbp] 
@@ -150,6 +147,6 @@
 		\item Batching and Deduplication \cite{misc06}.
 	\end{itemize}
 
-	\section{Conclusion} \label{sec:graphql_falcor_conclusion}
+	\subsection{Conclusion} \label{sec:graphql_falcor_conclusion}
 	At the end of this research work, we develop a mediator component to interact with diverse databases running in multi-robot systems. For that, we need to decide to choose between GraphQL and Falcor as a base for the mediator component since they have the capabilities to fetch data from various data sources and return a single response over a single endpoint. However, for choosing one we have made a detailed comparison in the above sections based on their abilities and features. Most of the times, GraphQL supersede Falcor in case of flexibility, scalability, introspection, type validation, and more language support. So we conclude to use GraphQL as a base for our mediator component.
 \end{document}

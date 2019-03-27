@@ -27,10 +27,10 @@ This chapter briefly describes the implementation of the mediator component, too
 	
 	\section{Architecture} 
 	This section gives a brief overview of the mediator architecture and the components involved in it.
-	The overall architecture is divided into three major sections, Consumer or Producer, Mediator, Data sources.
+	The overall architecture is divided into three major sections, Producer or Consumer, Mediator, Data sources.
 	
 
-	\subsection{Consumer/Producer}
+	\subsection{Producer/Consumer}
 	
 	The leftmost section in figure \ref{fig:architecture} includes any robots or tools which consumes the data from data sources or produces data to the data sources via the mediator component. In the research work, we are not investing the types of consumer/producer involved in the process since the mediator component is being developed to solve general heterogeneous data sources problem with a global audience in mind.
 	
@@ -65,7 +65,7 @@ This chapter briefly describes the implementation of the mediator component, too
 	
 	\textbf{Task}- A task determines the experiment which is carried out with a set of robots and sensors. 
 	
-	\begin{table}[h!]
+	\begin{table}[!htbp]
 		\begin{tabular}{|l|p{8cm}|}
 			\hline
 			\textbf{Attributes} & \textbf{Definitions} \\ \hline
@@ -84,7 +84,7 @@ This chapter briefly describes the implementation of the mediator component, too
 
 	\textbf{Robot} - A robot entity holds the information of the robot.
 	
-	\begin{table}[h!]
+	\begin{table}[!htbp]
 		\begin{tabular}{|l|p{8cm}|}
 			\hline
 			\textbf{Attributes} & \textbf{Definitions} \\ \hline
@@ -102,7 +102,7 @@ This chapter briefly describes the implementation of the mediator component, too
 
 	\textbf{Sensor} - A sensor entity defines the details of the sensor used in the robot.
 
-	\begin{table}[h!]
+	\begin{table}[!htbp]
 		\begin{tabular}{|l|p{12cm}|}
 			\hline
 			\textbf{Attributes} & \textbf{Definitions} \\ \hline
@@ -120,10 +120,11 @@ This chapter briefly describes the implementation of the mediator component, too
 		\caption{Sensor entity attributes description}
 		\label{tab:sensor_entity}
 	\end{table}
-
+	
+	\newpage
 	\textbf{TaskRobotSensor} - TaskRobotSensor entity doesn't store any information about other entities; instead it stores only the relationship between a task, robot, and senor. We introduce this pivot relation because we need a way to relate entities in non-relational databases too. This type of table is called a pivot table. Pivot tables can be used to represent the relationships between different entities stores in other tables/collections. Additionally, pivot tables can have their own attributes, and this TaskRobotSensor pivot entity has startTime and endTime as additional properties to identify at what time a robot has joined the task, or when a sensor is attached with this robot. 
 	
-	\begin{table}[h!]
+	\begin{table}[!htbp]
 		\begin{tabular}{|l|p{12cm}|}
 			\hline
 			\textbf{Attributes} & \textbf{Definitions} \\ \hline
@@ -142,7 +143,7 @@ This chapter briefly describes the implementation of the mediator component, too
 
 	\textbf{Observation} - Observation is a generic entity, and it can be extended to any sensor that generates data. For each new sensor entity, a new observation bucket will be created in the name senor. The naming convention of each bucket should be unique to avoid conflicts, and the name is derived from the sensor name, and "Observation" keyword will be attached at the end. For example, consider we create a new observation bucket in MongoDB for the sensor "command velocity". Schema registry component will create a new collection in MongoDB in the name of "CommandVelocityObservation". Multiple robots are allowed to have observation buckets with the same name, but a single robot should not have duplicate observation buckets. Each observation contains the real observed data from the sensor and also the relations with the task, robot, and sensor.
 
-	\begin{table}[h!]
+	\begin{table}[!htbp]
 		\begin{tabular}{|l|p{12cm}|}
 			\hline
 			\textbf{Attributes} & \textbf{Definitions} \\ \hline
@@ -197,7 +198,7 @@ This chapter briefly describes the implementation of the mediator component, too
 		\caption{Decomposition of major entities creation work flow}
 		\label{fig:dummy}
 	\end{figure*}
-
+	\newpage
 	\subsubsection{Observation bucket creation workflow} \label{subsubsection:observation_bucket}
 	This module includes a series of actions that need to be performed to make sure the new observation buckets are available after the creation of the new sensor, in all possible databases/data-sources which is defined in mediator config file. The naming convention for new buckets is already discussed in the "Observation" topic under section \ref{subsubsection:schema_registry}. Once after successfully created the buckets, schema registry should update the changes to GraphQL mediation component (second docker container). Three things need to be updated in the GraphQL mediation component as follows,
 	
@@ -208,7 +209,7 @@ This chapter briefly describes the implementation of the mediator component, too
 		
 		\item GraphQL mutations - GraphQL mutation helps users to create new records in the database. But, it is not mandatory to create records via the GraphQL mediation component, because robots can generate the data and store them directly to their local database instances. Later the person who wants to make fault diagnosis or to debug, they can configure the DB's with the mediator and fetch data via GraphQL queries.
 	\end{enumerate}
-
+	\newpage
 	\begin{figure}[!htbp] 
 		\begin{center}
 			\includegraphics[scale=0.5]{./images/png/implementation/observation_creation}	
@@ -216,7 +217,7 @@ This chapter briefly describes the implementation of the mediator component, too
 			\label{fig:observation_creation}	
 		\end{center}
 	\end{figure}
-
+	
 	\subsubsection{Entity database mapping}
 	For creating new tasks, robots, and sensors data during schema registration, schema registry should have an idea where to create these records. We propose an entity database mapping strategy to identify the databases for each entity. To make it more flexible, we assign each entity to a database name, and the corresponding database configuration is described in the same config file under "db" attribute which is shown in figure \ref{fig:entity_db_mapping}. The "db" attribute contains a list of db configuration and the attributes in each db object is explained in table \ref{tab:db_attribute_desc}. 
 	
@@ -250,12 +251,12 @@ This chapter briefly describes the implementation of the mediator component, too
 
 	\subsubsection{JSON Schema to GraphQL Schema transformation} \label{subsubsection:jsonschema_graphqlschema}
 	
-	The mediator component is using GraphQL framework as a base to utilize the features [graphql features section] offered by GraphQL out of the box. GraphQL needs a type definition document to work on even before starting the server.  Through schema registration, user/robot provide a JSON Schema which represents how the sensor data would look like in the observation bucket.  JSON Schema[json schema ref] is a well known schematic representation for data, so we decided to use this as a generic data schema format to represent the sensor observation structure. Later the JSON Schema to GraphQL transformation module in "Schema registry" component translates the JSON Schema to GraphQL type definition through a series of steps as shown in the figure \ref{fig:jsonscema_to_graphql}. There are three steps involved in the transformation as follows,
+	The mediator component is using GraphQL framework as a base to utilize the features \ref{sec:graphql_falcor} offered by GraphQL out of the box. GraphQL needs a type definition document to work on even before starting the server.  Through schema registration, user/robot provide a JSON Schema which represents how the sensor data would look like in the observation bucket.  JSON Schema \ref{sec:json_schema} is a well known schematic representation for data, so we decided to use this as a generic data schema format to represent the sensor observation structure. Later the JSON Schema to GraphQL transformation module in "Schema registry" component translates the JSON Schema to GraphQL type definition through a series of steps as shown in the figure \ref{fig:jsonscema_to_graphql}. There are three steps involved in the transformation as follows,
 	
 	\begin{enumerate}
 		\item Get the JSON Schema from the valueSchema attribute in sensor object and validate the schema structure. After validation, pass the JSON Schema to the next step.
-		\item In this step, we use an open source library  "djvi \footnote{ \url{https://github.com/korzio/djvi}}" to generate the model template from the JSON Schema. This model template resembles precisely the same as the observation that will be generated by the sensor in the future.
-		\item Finally, based on this model template, the schema registry system creates an equivalent GraphQL schema (type definition), and the new schema is appended to the current GraphQL type definition file.
+		\item In this step, we use an open source library  "djvi \footnote{ \url{https://github.com/korzio/djvi}}" to generate the model prototype from the JSON Schema. This model prototype resembles precisely the same as the observation that will be generated by the sensor in the future.
+		\item Finally, based on this model prototype, the schema registry system creates an equivalent GraphQL schema (type definition), and the new schema is appended to the current GraphQL type definition file.
 	\end{enumerate}
 	
 	\begin{figure}[!htbp] 
@@ -278,9 +279,12 @@ This chapter briefly describes the implementation of the mediator component, too
 	\end{enumerate}
 
 	\subsubsection{Connection pool management} 
-	Both the schema registry and GraphQL mediation components initiate their database connection pool before the server starts. The system creates different database connections based on the "db" configurations mentioned in the mediator config file. And this database connection pool is shared across the component such that other services like queries and mutations can use it to read or write data into databases.
+	Both the schema registry and GraphQL mediation components initiate their database connection pool before the server starts. The system creates different database connections based on the "db" configurations mentioned in the mediator config file \ref{fig:entity_db_mapping} . And this database connection pool is shared across the component such that other services like queries and mutations can use it to read or write data into databases.
 	
 	\subsection{Data sources} 
 	The rightmost block in the architecture \ref{fig:architecture} represents the data sources. A data source can be any databases, microservices, or an API endpoint. GraphQL component serves as a bridge between the robot and data sources. In the current work, we used only MongoDB and MySQL as data sources. However, the mediator can be extended to support other databases with little modifications in the GraphQL Queries and Mutations module.
-
+	
+	\subsection{Summary}
+	In the above sections, the three major subdivisions of the mediator architecture and their responsibilities are explained elaborately. And the next section evaluates the current mediator design with the requirements and existing black box data storage design.
+	
 \end{document}

@@ -2,7 +2,7 @@
 
 \begin{document}
 	\let\cleardoublepage\clearpage
-    \chapter{Background}
+    \chapter{Background} \label{background}
     This section elaborately discusses the concepts which help the readers to understand the remaining parts of this research work.
     
     \section{Data model}
@@ -72,7 +72,7 @@
 		\item View level abstraction is the highest level of abstraction which modularizes the big database system into smaller structures because users may not need to access complete information about the database, rather they interest in few parts of the database. 		
 	\end{itemize}
 
- 	\section{JSON Schema}
+ 	\section{JSON Schema} \label{sec:json_schema}
 	
 	JSON Schema is extensively used in this research work for mapping possible sensor input data attributes and types with the GraphQL type definitions. JSON Schema is "a JSON based format for defining the JSON data" \cite{misc13}. It is a complete specification to define the types of each field in the data, restrictions for those fields,  and marks the required fields in the data. A simple example is illustrated in the figure \ref{fig:json_schema} which shows the JSON schema for a piece of robot information. 
 	

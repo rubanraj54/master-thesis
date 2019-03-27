@@ -1,0 +1,17 @@
+%!TEX root = ../report.tex
+
+\begin{document}
+	\let\cleardoublepage\clearpage
+\chapter{Conclusion}
+
+\section{Summary}
+
+The main objective of this thesis work is addressing the limitations of the existing black box system and developing a mediator component to make fault diagnosis convenient with multi-robot systems. Also, this mediator component gives additional advantages such as unique query language to communicate with various databases, declarative data fetching which is useful if the robots are working under low network access areas. The complete architectural design and descriptions for each component in the mediator are explained in section [implementation section]. Finally, proper data modeling has been done to identify the possible entities from the real-world scenario and relationships has been made between them. A list of vocabularies [ref from appendix] is created to define the context for each attribute specified in the entities such as Task, Robot, Sensor, and Observations.
+
+\section{Future work}
+There is still room for improvements in the proposed mediator architecture. 
+There are missing User and Location entities in the current entity eco-system to identify who initiated a specific task and what are the locations traveled by robots during the experiment.  With the current implementation, one can add these entities or more and create vocab contexts for them. This shows that the mediator system is dynamic and configurable to accept the changes at any time.
+
+JSON-LD provides @context system to give meaning for the heterogeneous data from different robots. But when we use GraphQL architecture as a base, heterogeneity problem is solved partially but not completely. Because GraphQL requires the structure and attributes of the data beforehand so that the user can send queries along with the attributes. But if there are two different attribute names are used for the same property, then GraphQL should know about both the name. However, to solve this we can introduce a view system to map all the differently named attributes into a single attribute name and use them in GraphQL type definition file. Object-oriented View Systems are already discussed elaborately in many research works. Most specifically, \citet{kaul1990viewsystem} proposed a technique to achieve combining heterogeneous information from different sources by using object-oriented views.
+
+\end{document}
