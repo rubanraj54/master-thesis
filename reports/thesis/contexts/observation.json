@@ -1,0 +1,27 @@
+{
+    "@context": {
+        "schema": "http://robot.schema.org/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "dataUrl": "http://data.mongodb.com/",
+        "id": "@id",
+        "type": "@type",
+        "name": "schema:name",
+        "featureOfInterest": "schema:featureOfInterest",
+        "value": {
+            "@id": "schema:value",
+            "@type": "xsd:float"
+        },
+        "sensor": {
+            "@id": "schema:sensor",
+            "@type": "@id"
+        },
+        "robot": {
+            "@id": "schema:robot",
+            "@type": "@id"
+        },
+        "unit": "schema:unit",
+        "meta": "schema:meta"
+    },
+    "phenomenonTime": "schema:DateTime",
+    "resultTime": "schema:DateTime"
+}

@@ -2,7 +2,7 @@
 
 \begin{document}
 	\let\cleardoublepage\clearpage
-\chapter{Implementation}
+\chapter{Implementation} \label{sec:implementation}
 This chapter briefly describes the implementation of the mediator component, tools involved in the mediator and their purpose, and the strategy followed to collect sensor observation data from different robots over the mediator. 
 
 	\section{Mediator design process}
@@ -156,7 +156,8 @@ This chapter briefly describes the implementation of the mediator component, too
 				task & Unique task UUID \\ \hline
 				robot & Unique robot UUID \\ \hline
 				sensor & Unique sensor UUID \\ \hline
-
+				phenomenonTime & Time of observation created by the sensor \\ \hline
+				resultTime & Time of observation stored in the database \\ \hline
 			
 		\end{tabular}
 		\caption{Generic observation entity attributes description}
@@ -173,7 +174,7 @@ This chapter briefly describes the implementation of the mediator component, too
 	\begin{figure}[!htbp] 
 		\begin{center}
 			\includegraphics[scale=0.5]{./images/png/implementation/schema_registration}	
-			\caption{Schema registration work flow}	
+			\caption{Detailed schema registration work flow}	
 			\label{fig:schema_registration}	
 		\end{center}
 	\end{figure}
@@ -184,15 +185,15 @@ This chapter briefly describes the implementation of the mediator component, too
 	The last subtask called registerSensors \ref{subfig-3:sensor_creation} follows the similar workflow like registerTask and registerRobot, however, after each successful sensor record creation, the system should carry out another major subtask called "Create observation bucket" which is explained in section \ref{subsubsection:observation_bucket}.
 	
 	\begin{figure*}[!htbp]
-     \subfloat[Task creation work flow\label{subfig-1:task_creation}]{%
+     \subfloat[Workflow that represents creation of new task entity during schema registration\label{subfig-1:task_creation}]{%
 			\includegraphics[scale=0.5]{./images/png/implementation/task_creation}
 		}
 		\hfill
-		\subfloat[Robot creation work flow\label{subfig-2:robot_creation}]{%
+		\subfloat[Workflow that represents creation of new robot entity during schema registration\label{subfig-2:robot_creation}]{%
 			\includegraphics[scale=0.5]{./images/png/implementation/robot_creation}
 		}
 			\hfill
-	\subfloat[Sensor creation work flow\label{subfig-3:sensor_creation}]{%
+	\subfloat[Workflow that represents creation of new sensor entity during schema registration\label{subfig-3:sensor_creation}]{%
 		\includegraphics[scale=0.5]{./images/png/implementation/sensor_creation}
 	}
 		\caption{Decomposition of major entities creation work flow}

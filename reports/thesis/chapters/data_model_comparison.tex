@@ -162,7 +162,7 @@
 	\end{figure}
 
 	\subsubsection{Conclusion}
-	OGC SensorThings API provide an open access to fetch all entities described above via HTTP network call, and it stores the data in a PostgreSQL relational database. Since their architecture supports only PostgreSQL we cannot use the complete component in our mediator. However, the standard given by OGC SensorThings makes a meaning relationship between entities in IoT systems. So, our proposed data model is designed based on the OGC SensorThings standards and it is explained in section \ref{subsubsection:schema_registry}. 
+	OGC SensorThings API provide an open access to fetch all entities described above via HTTP network call, and it stores the data in a PostgreSQL relational database. Since their architecture supports only PostgreSQL we cannot use the complete component in our mediator. However, the standard given by OGC SensorThings makes a meaning relationship between entities in IoT systems. So, our proposed data model is designed partially based on the OGC SensorThings standards and it is explained in section \ref{subsubsection:schema_registry}. 
 
 	\subsection{Resource Description Framework}
 
@@ -267,7 +267,7 @@
 		\subfloat[Transformed twist message created by robot two after applying expansion algorithm\label{subfig-2:jsonld_6}]{%
 			\includegraphics[scale=0.094]{./images/png/jsonld/6}
 		}
-		\caption{Twist messages from robot one and two}
+		\caption{Twist messages from robot one and two is same after applying JSON-LD expansion algorithm}
 		\label{fig:dummy}
 	\end{figure*}
 	Now both the messages in figure \ref{subfig-1:jsonld_5}, \ref{subfig-2:jsonld_6} look exactly the same without any difference in keys. This is the power of JSON-LD expansion algorithm. One can probably think now, who creates the common vocabulary list which can be understandable by all the robots. So far, there are many vocabulary lists has been created for common things in the universe but ain't one for robots ecosystem. For example,

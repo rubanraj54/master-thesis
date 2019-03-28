@@ -1,0 +1,19 @@
+{
+    "@context": {
+        "schema": "http://robot.schema.org/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "schemaUrl": "http://dataschema.com/",
+        "dataUrl": "http://data.mongodb.com/",
+        "id": "@id",
+        "type": "@type",
+        "name": "schema:name",
+        "description": "schema:description",
+        "creator": {
+            "@id": "schema:creator",
+            "@type": "@id"
+        },
+        "creationTime": "schema:DateTime",
+        "startTime": "schema:DateTime",
+        "endTime": "schema:DateTime"
+    }
+}
