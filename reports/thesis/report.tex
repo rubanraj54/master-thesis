@@ -11,7 +11,11 @@
 \usepackage{enumitem}
 \usepackage{setspace}
 \usepackage{nameref}
-\usepackage{hyperref}
+\usepackage[colorlinks = true,
+linkcolor = blue,
+urlcolor  = blue,
+citecolor = red,
+anchorcolor = red]{hyperref}
 \usepackage{pbox}
 \usepackage{subfig}
 \usepackage{titlesec}
@@ -55,9 +59,12 @@ Sebastian Blumenthal\\
 \subfile{chapters/abstract}
 \subfile{chapters/acknowledgment}
 \let\cleardoublepage\clearpage
-\tableofcontents
-\listoffigures
-\listoftables
+\begingroup
+	\hypersetup{hidelinks}
+	\tableofcontents
+	\listoffigures
+	\listoftables
+\endgroup
 
 %-------------------------------------------------------------------------------
 %	CONTENT CHAPTERS
