@@ -115,7 +115,7 @@
 	\end{figure}
 
 	\subsubsection{HistoricalLocation}
-	HistoricalLocation shows the thing to be in the location or vice versa, at a given timestamp. For example, consider a robot (thing) is running from one room to another room for a specific task. To make the relation between the robot (thing) and the room (location), we create HistoricalLocation data with the reference of the robot and the room along with a timestamp. Timestamp plays a significant role here because it shows the truthness of the thing to be present physically in any given location.
+	HistoricalLocation shows the thing to be in the location or vice versa, at a given timestamp. For example, consider a robot (thing) is moving from one room to another room for a specific task. To make the relation between the robot (thing) and the room (location), we create HistoricalLocation data with the reference of the robot and the room along with a timestamp. Timestamp plays a significant role here because it shows the truthness of the thing to be present physically in any given location.
 	
 	\begin{figure}[!htbp] 
 		\begin{center}
@@ -270,11 +270,10 @@
 		\caption{Twist messages from robot one and two is same after applying JSON-LD expansion algorithm}
 		\label{fig:dummy}
 	\end{figure*}
-	Now both the messages in figure \ref{subfig-1:jsonld_5}, \ref{subfig-2:jsonld_6} look exactly the same without any difference in keys. This is the power of JSON-LD expansion algorithm. One can probably think now, who creates the common vocabulary list which can be understandable by all the robots. So far, there are many vocabulary lists has been created for common things in the universe but ain't one for robots ecosystem. For example,
-	
+	Now both the messages in figure \ref{subfig-1:jsonld_5}, \ref{subfig-2:jsonld_6} look exactly the same without any difference in keys. This is the power of JSON-LD expansion algorithm. One can probably think now, who creates the common vocabulary list which can be understandable by all the robots. So far, there are many vocabulary lists which have been created for common things in the universe, but there is no vocabulary list composed for the robotic ecosystem.  For example,
 	
 	\begin{itemize}
-		\item https://schema.org/ - schema.org have a vast collection of most common definable things in the universe.
+		\item https://schema.org/ - schema.org has a vast collection of most common definable things in the universe.
 		\item http://thingschema.org/ - thingsschema.org has just initiated a motivation to define things (smart things) in the environment.
 		\item https://iot.schema.org/ - iot.schema.org defines the vocabulary list and relationships for IoT devices.
 		\item https://wiki.dbpedia.org/ - dbpedia.org have a collection of person record to identify each person information in the world uniquely.
