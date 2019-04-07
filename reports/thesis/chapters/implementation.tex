@@ -3,10 +3,10 @@
 \begin{document}
 	\let\cleardoublepage\clearpage
 \chapter{Implementation} \label{sec:implementation}
-This chapter briefly describes the implementation of the mediator component, tools involved in the mediator and their purpose, and the strategy followed to collect sensor observation data from different robots over the mediator. 
+This chapter describes the implementation of the mediator component, tools involved in the mediator and their purpose, and the strategy followed to collect sensor observation data from different robots over the mediator. 
 
 	\section{Mediator design process}
-	 The mediator is a sophisticated software component which comprises of various sub-components in it. Instead of directly start developing the complex mediator component we decided to find and set the standards for the development process. Many standards and approaches have been defined in the software engineering domain that should be followed by developers to achieve a stable development process and at the end finish the project with a successful working product. Since this research work implements a software component, we decided to take up two well-known software development models called Feature driven development from Agile and Component Assembly Model. It is a heterogeneous development model as we take the useful features from two different models.
+	 The mediator is a sophisticated software component which comprises various sub-components. Instead of directly start developing the complex mediator component we decided to find and set the standards for the development process. Many standards and approaches have been defined in the software engineering domain that should be followed by developers to achieve a stable development process and at the end finish the project with a successful working product. Since this research work implements a software component, we decided to take up two well-known software development models called Feature driven development from Agile and Component Assembly Model. It is a heterogeneous development model as we take the useful features from two different models.
 	
 	Feature driven development was first introduced by the book "Java Modeling in Color with UML" \cite{misc15} and first used for a huge bank project. The core concept of FDD is initially developing an overall model and define all possible required features as a list. The overall model for this research work is, a mediator component operates between multiple database instances which runs in a centralized server or in the robot itself. Now the possible feature list for our mediator component is, 
 	
@@ -22,7 +22,7 @@ This chapter briefly describes the implementation of the mediator component, too
 	
 	Once the overall model and feature list are defined, we decompose the feature into smaller reusable components. These components are developed individually and combined later back to a single feature on the basis of Component Assembly model. For each feature in the list, a planning schedule is assigned to keep track of time and finish developing the feature on time. Before start implementing a feature, proper design is made to avoid changes in the mediator component in the future. After preparing the plan and design, the next step is building smaller components which form the individual feature. The complete process is repeated until the final mediator component meets the proposed mediator requirements. 
 	
-	After each release, the mediator is cross verified with the user story and tested on real use cases which are described in the later section [TBD]. Feedbacks are received from the user and improved the mediator stability and reliability on each version which is released on every week.
+	After each release, the mediator is cross verified with the user story and tested on real use cases which are described in the later section. Feedbacks are received from the user and improved the mediator stability and reliability on each version which is released on every week.
 	
 	
 	\section{Architecture} 
@@ -59,11 +59,11 @@ This chapter briefly describes the implementation of the mediator component, too
 	
 	Schema registry is the entry point for registering the tasks, robots, and sensors as a relational model. This step is mandatory to let the mediator component knows the relationship between the entities and also the exact structure of sensor data. This structure of sensor data is represented in the form of JSON schema which is used for GraphQL schema transformation which is discussed in registering observation section. 
 	
-	Schema registry itself is an individual docker container which runs "express" server to provide the schema registration service. Express.js is a modular light-weight web application framework developed to run with Node.js platform. In the schema registry, the express server opens an endpoint for the entity and schema registration.
+	Schema registry itself is an individual docker container which runs "express\footnote{\href{https://github.com/expressjs/express}{https://github.com/expressjs/express}}" server to provide the schema registration service. Express.js is a modular light-weight web application framework developed to run with Node.js platform. In the schema registry, the express server opens an endpoint for the entity and schema registration.
 	
 	Entity and schema registration is a sequential step by step process to store the task, robot and sensor registration, and creating new observation buckets in the real database. All the entities and their attributes are defined as follows,
 	
-	\textbf{Task}- A task determines the experiment which is carried out with a set of robots and sensors. 
+	\textbf{Task}- A task defines the activity that needs to be performed by the robot.
 	
 	\begin{table}[!htbp]
 		\begin{tabular}{|l|p{8cm}|}
@@ -122,7 +122,7 @@ This chapter briefly describes the implementation of the mediator component, too
 	\end{table}
 	
 	\newpage
-	\textbf{TaskRobotSensor} - TaskRobotSensor entity doesn't store any information about other entities; instead it stores only the relationship between a task, robot, and senor. We introduce this pivot relation because we need a way to relate entities in non-relational databases too. This type of table is called a pivot table. Pivot tables can be used to represent the relationships between different entities stores in other tables/collections. Additionally, pivot tables can have their own attributes, and this TaskRobotSensor pivot entity has startTime and endTime as additional properties to identify at what time a robot has joined the task, or when a sensor is attached with this robot. 
+	\textbf{TaskRobotSensor} - TaskRobotSensor entity doesn't store any information about other entities; instead it stores only the relationship between a task, robot, and senor. We introduce this pivot relation because we need a way to relate entities in non-relational databases too. This type of table is called a pivot table. Pivot tables can be used to represent the relationships between different entities stores in other tables/collections. Additionally, pivot tables can have their own attributes, and this TaskRobotSensor pivot entity has startTime and endTime as additional properties to identify at what time a robot has joined the task, or when a sensor is attached with this robot because involved sensors and robots can change over time. 
 	
 	\begin{table}[!htbp]
 		\begin{tabular}{|l|p{12cm}|}
@@ -141,7 +141,7 @@ This chapter briefly describes the implementation of the mediator component, too
 		\label{tab:TaskRobotSensor}
 	\end{table}
 
-	\textbf{Observation} - Observation is a generic entity, and it can be extended to any sensor that generates data. For each new sensor entity, a new observation bucket will be created in the name senor. The naming convention of each bucket should be unique to avoid conflicts, and the name is derived from the sensor name, and "Observation" keyword will be attached at the end. For example, consider we create a new observation bucket in MongoDB for the sensor "command velocity". Schema registry component will create a new collection in MongoDB in the name of "CommandVelocityObservation". Multiple robots are allowed to have observation buckets with the same name, but a single robot should not have duplicate observation buckets. Each observation contains the real observed data from the sensor and also the relations with the task, robot, and sensor.
+	\textbf{Observation} - Observation is a generic entity, and it can be extended to any sensor that generates data. For each new sensor entity, a new observation bucket will be created in the name senor. The naming convention of each bucket should be unique to avoid conflicts, and the name is derived from the sensor name, and "Observation" keyword will be attached at the end. For example, consider we create a new observation bucket in MongoDB for the sensor "command velocity". Schema registry component will create a new collection in MongoDB in the name of "CommandVelocityObservation". Multiple robots are allowed to have observation buckets with the same name, but a single robot should not have duplicate observation buckets to avoid conflicts (By default, databases do not allow users to create tables/collections with the duplicate name). Each observation contains the real observed data from the sensor and also the relations with the task, robot, and sensor.
 
 	\begin{table}[!htbp]
 		\begin{tabular}{|l|p{12cm}|}
@@ -165,7 +165,7 @@ This chapter briefly describes the implementation of the mediator component, too
 	\end{table}
 
 	\subsubsection{Schema registration workflow}
-	Figure \ref{fig:schema_registration} shows the broad outline of schema registration workflow and also the essential subtasks such as registerTask,  registerRobot, and registerSensor. Schema registration endpoint "/schema-registry" allows users or robots to POST a complete schema registration over HTTP request and the schema configuration [footnote - schema configuration is included in the appendix] contains the task information, array of robot objects and each robot object consists of an array of sensor object. After the starting point in the flow chart, the parse schema config function starts parsing the given schema configuration and checks the validity of the configuration. If the configuration is valid, then execution moves to the next step and checks for a task configuration. If task config exists, then it proceeds to the very first subtask called registerTask and all the subtasks are briefly outlined in section [Workflow of subtasks]. If there is no task configuration or the task registration is unsuccessful, then the execution will be aborted.  After the successful task registration, the process starts iterating the robots array. 
+	Figure \ref{fig:schema_registration} shows the broad outline of schema registration workflow and also the essential subtasks such as registerTask,  registerRobot, and registerSensor. Registering schema with the mediator is a necessary process because initially, the mediator component has no prior assumptions on the used robots/sensors. Schema registration docker component exposes an endpoint "/schema-registry" that allows users or robots to send a complete schema registration over HTTP POST request and the schema configuration\footnote{Schema configuration is included in the appendix \ref{appendix}.} contains the task information, array of robot objects and each robot object consists of an array of sensor object. After the starting point in the flow chart, the \emph{parse schema config} function starts parsing the given schema configuration and checks the validity of the configuration. If the configuration is valid, then execution moves to the next step and checks for a task configuration. If task config exists, then it proceeds to the very first subtask called registerTask and all the subtasks are briefly outlined in section \ref{sec:workflow_subtasks}. If there is no task configuration or the task registration is unsuccessful, then the execution will be aborted.  After the successful task registration, the process starts iterating the robots array. 
 	
 	For each robot in the array, the system checks whether it is a new robot or existing one. For existing robots user gives the UUID of the robot, and for new robots, the system expects complete information about the robot as mentioned in the robot entity section. If the robot information is available, then the operation proceeds to the registerRobot subtask. If the subtask is not successful, then the system will abort the execution, else it starts iterates the sensor list which is attached to the robot information. Like new robot check, the system checks whether the given sensor contains an already registered UUID or new sensor information. If it is a new sensor, then the system proceeds to the last subtask called registerSensor. 
 	
@@ -179,7 +179,7 @@ This chapter briefly describes the implementation of the mediator component, too
 		\end{center}
 	\end{figure}
 
-	\subsubsection{Workflow of subtasks in schema registration}
+	\subsubsection{Workflow of subtasks in schema registration} \label{sec:workflow_subtasks}
 	
 	Major schema registration consists of three subtasks called registerTask, registerRobot, and registerSensor. registerTask \ref{subfig-1:task_creation} and registerRobot \ref{subfig-2:robot_creation} subtasks execution follows a similar workflow but for two different entities. At first, the system checks for the valid task/robot configuration and DB configuration respectively. If it fails, then the system aborts the execution, else system creates task/robot record in the appropriate databases. But, the system should identify the specific databases and additional information beforehand. This database entity mapping is done with the help of media config file, and it is explained in section [Entity database mapping].
 	The last subtask called registerSensors \ref{subfig-3:sensor_creation} follows the similar workflow like registerTask and registerRobot, however, after each successful sensor record creation, the system should carry out another major subtask called "Create observation bucket" which is explained in section \ref{subsubsection:observation_bucket}.
@@ -255,7 +255,7 @@ This chapter briefly describes the implementation of the mediator component, too
 	The mediator component is using GraphQL framework as a base to utilize the features \ref{sec:graphql_falcor} offered by GraphQL out of the box. GraphQL needs a type definition document to work on even before starting the server.  Through schema registration, user/robot provide a JSON Schema which represents how the sensor data would look like in the observation bucket.  JSON Schema \ref{sec:json_schema} is a well known schematic representation for data, so we decided to use this as a generic data schema format to represent the sensor observation structure. Later the JSON Schema to GraphQL transformation module in "Schema registry" component translates the JSON Schema to GraphQL type definition through a series of steps as shown in the figure \ref{fig:jsonscema_to_graphql}. There are three steps involved in the transformation as follows,
 	
 	\begin{enumerate}
-		\item Get the JSON Schema from the valueSchema attribute in sensor object and validate the schema structure. After validation, pass the JSON Schema to the next step.
+		\item Get the JSON Schema from the valueSchema attribute in sensor object and pass it to the next step.
 		\item In this step, we use an open source library  "djvi \footnote{ \url{https://github.com/korzio/djvi}}" to generate the model prototype from the JSON Schema. This model prototype resembles precisely the same as the observation that will be generated by the sensor in the future.
 		\item Finally, based on this model prototype, the schema registry system creates an equivalent GraphQL schema (type definition), and the new schema is appended to the current GraphQL type definition file.
 	\end{enumerate}

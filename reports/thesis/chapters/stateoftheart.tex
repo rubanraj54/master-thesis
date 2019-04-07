@@ -3,11 +3,18 @@
 \begin{document}
 	\chapter{State of the art analysis} \label{stateof}
 	
-	\section{Semantic Data models}
+	\section{Databases for Robotic applications}
+		\citet{article02} integrated a well known NoSQL database Cassandra with the Robotic Operating System(ROS) to handle the data in smart environments. Evaluated this approach in two scenarios, within a realistic robot exploration, and with randomly generated data. The final solution is compared with two other solutions that are commonly used in ROS applications(rosbag and mongo\_ros). The research results show that Cassandra can handle terabytes of data and their time-stamp mechanism allows querying and retrieving data without additional efforts. But this approach compared their results only with two other storage mechanisms. 
+		
+		\citet{article04} discussed the importance of memory recall mechanism for robots briefly. Also, implemented a two-level database layer in the centralized server, to store simple data(odometric values) in a graph database (Neo4j) and more considerable sensor data like RGB and depth image and laser scans in key-value store (MongoDB). With this architecture, they can achieve the sharing of workload between robot and database server. As a result, for executing this query server took between 10 to 100 milliseconds. In this work, they have given an initial motivation to the robotics community that using databases is possible and advisable, but the author didn't specify why  Neo4j and MongoDB for data storing even though there are a lot of database technologies available.
+		
+		\citet{article03} briefly explains the difficulties in handling the log messages from ROS(Robotic Operating System) and alternate ideas to store ROS logs for utilizing it in the future. To overcome the challenges in storing logs in a flat file system, they wanted to use the relational database or NoSQL database. So a benchmarking test has been conducted to evaluate and find which one is best. Three databases (MongoDB, PostgreSQL, SQLite3) from NoSQL and relational database family has been chosen for benchmarking. But in recent years, PostgreSQL and SQLite3 databases are little outdated, and MongoDB is not only the NoSQL database available. New NoSQL databases are emerging every month and might perform better than MongoDB. So these evaluation results are not useful to choose the best NoSQL database to store sensors logs and benchmarking only one NoSQL database is not an optimal choice.
+	
+	\section{Semantic Data models for sensors}
 	\citet{su2014connecting} highlights the interoperability issues in IoT sensor data and also says that these data should be useful for multiple applications rather than dependent on specific domain. To make the machines interpret the meaning of sensor data, author suggested to use Semantic Web technologies such as Resource Description Framework (RDF). Even though SenML is an evolving technique to model to sensor data, but it is lacking reasoning capabilities and interoperability with other devices. To overcome the issues in SenML generic model, author proposes a technique to represent IoT sensors as a Knowledge Based Systems by transforming SenML to Resource Description Framework. 
 	
 	As an advantage, the transformed data can be analyzed and helpful to take more meaningful actions. 
-	SenML is specially designed for resource constrained devices, hence additional information to contextually understand the data has be not excluded intentionally. Each entry of SenML data should have the sensor parameter name and other attributes such as time, value, etc. Also it supports custom attribute called Resource Type (rt) to let the users add their own attributes and this allow users to include contextual information.
+	SenML is specially designed for resource constrained devices, hence additional information to contextually understand the data has not been included intentionally. Each entry of SenML data should have the sensor parameter name and other attributes such as time, value, etc. Also it supports custom attribute called Resource Type (rt) to let the users add their own attributes and this allow users to include contextual information.
 	
 	With the help of transformation we could adopt RDF structure to model robot generated sensor data, But \citet{charpenay2018towards} points out that RDF data structure is not suitable for resource constrained devices like micro-controllers and also analyzed the issues in RDF such as verbosity and complexity in processing knowledge. To overcome this issues, author carried out an extensive analysis between RDF and JSON-LD structures. JSON-LD was published by W3C, and it serves as an alternative for RDF. Using JSON-LD one can represent the context for the data which is more important in robotics field such that other robots can understand the data based on context.
 	
@@ -25,11 +32,11 @@
 	
 	
 	Integrator module is built with two internal components called IAMOS\footnote{\label{amos}Integration Active Mediators Object System} and TAMOS\footnote{\label{amos}Translation Active Mediators Object System}. 
-	First Integration AMOS parse the query and send individual requests to Translational AMOS modules which are responsible for heterogeneous data source.
-	Then,all TAMOS modules return the individual results to IAMOS for integrating all the results. To query multi databases from IAMOS, IAMOS servers are mapped with TAMOS servers w+ith the help of Object-Oriented query language.
+	First "Integration AMOS (IAMOS)" parse the query and send individual requests to Translational AMOS modules which are responsible for heterogeneous data source.
+	Then, all TAMOS modules return the individual results to IAMOS for integrating all the results. To query multi databases from IAMOS, IAMOS servers are mapped with TAMOS servers with the help of Object-Oriented query language.
 	
 	
-	\citet{ahmed1991pegasus} developed a heterogeneous multi-database system called Pegasus that supports multiple heterogeneous database systems with various data bases models, query languages and services. Pegasus predefines its domain data models based on sobject oriented approach and also supports programming capabilities. These objects are created and mapped with the types and functions with the help of HOSQL\footnote{\label{myfootnote}Heterogeneous Object Structured Query Language} statements. HOSQL is a declarative object oriented query language which is used by Pegasus to manipulate data from multiple data sources.
+	\citet{ahmed1991pegasus} developed a system called Pegasus that supports multiple heterogeneous database systems with various data bases models, query languages and services. Pegasus predefines its domain data models based on sobject oriented approach and also supports programming capabilities. These objects are created and mapped with the types and functions with the help of HOSQL\footnote{\label{myfootnote}Heterogeneous Object Structured Query Language} statements. HOSQL is a declarative object oriented query language which is used by Pegasus to manipulate data from multiple data sources.
 	
 	
 	
@@ -59,10 +66,10 @@
 	
 	Their results reveal that Relay+GraphQL decreases the response time under parallel and sequential data flow. Furthermore, the response size is decreased when using the frameworks rather than REST API's. However, within the frameworks, Falcor response time and size is high compared to GraphQL. Ultimately, both the frameworks reduced the number of network calls to a single request.
 	
-	As a conclusion, \citet{cederlund2016performance} suggests to use custom REST endpoints since the frameworks increase the size of requests, but it still depends on the application requirement. In our application, Robots might work in the places where limited network access available, so we definitely use these frameworks as a base on our mediator to reduce the response size. Moreover, the observation data may have too many fields which are unnecessary for the other robots or tools to work on. Therefore only picking the necessary fields in the response profoundly reduce the response size as well as the response time.
+	As a conclusion, \citet{cederlund2016performance} suggests to use custom REST endpoints since the frameworks increase the size of requests, but it still depends on the application requirement. In our application, Robots might work in the places where limited network access available, so we definitely use these frameworks as a base on our mediator to reduce the response size. Moreover, the observation data may have too many information which are unnecessary for the other robots or tools to work on. Therefore only picking the necessary fields in the response profoundly reduce the response size as well as the response time.
 
 	
-	Many mediator systems developed in the past to support integrating heterogeneous information from different data sources. All of them built with different architectures, query language, and execution optimization. In our mediator approach we focus mainly on,
+	Many mediator systems have been developed in the past to support integrating heterogeneous information from different data sources. All of them built with different architectures, query language, and execution optimization. In our mediator approach we focus mainly on,
 	\begin{itemize}
 		\item How different type of robot generated data will be stored in multiple data sources?
 		\item A unique context based data model to represent the components attached with each robot and data generated by them.
