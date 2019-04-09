@@ -158,7 +158,7 @@ Supervised by\par
 
     \vskip -3pt
 
-    \leftline{\hspace{1.5cm} Date \hfill \@author \hspace{1.5cm}}
+    \leftline{\hspace{1.5cm} Date \hfill \@author \hspace{0.1cm}}
 
     \vskip 60pt
     \clearpage
@@ -201,6 +201,13 @@ Supervised by\par
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%
+% Abbreviations
+%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{abbreviations}{%
+	\chapter*{List of Abbreviations}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PAGE LAYOUT

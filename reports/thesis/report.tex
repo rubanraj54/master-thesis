@@ -11,15 +11,18 @@
 \usepackage{enumitem}
 \usepackage{setspace}
 \usepackage{nameref}
-\usepackage[colorlinks = true,
-linkcolor = blue,
-urlcolor  = blue,
-citecolor = red,
-anchorcolor = red]{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{pbox}
 \usepackage{subfig}
 \usepackage{titlesec}
 \usepackage{float}
+\usepackage{acronym}
+
+%\usepackage[colorlinks = true,
+%linkcolor = blue,
+%urlcolor  = blue,
+%citecolor = red,
+%anchorcolor = red]{hyperref}
 
 
 \setcounter{secnumdepth}{4}
@@ -64,6 +67,7 @@ Sebastian Blumenthal\\
 	\tableofcontents
 	\listoffigures
 	\listoftables
+	\subfile{chapters/abbreviations}
 \endgroup
 
 %-------------------------------------------------------------------------------
@@ -82,6 +86,7 @@ Sebastian Blumenthal\\
 \subfile{chapters/data_model_comparison}
 \subfile{chapters/graphql_vs_falcor}
 \subfile{chapters/implementation}
+\subfile{chapters/experiment}
 \subfile{chapters/evaluation}
 \subfile{chapters/conclusion}
 %\subfile{chapters/ch04_solution}
