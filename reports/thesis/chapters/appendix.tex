@@ -1,0 +1,23 @@
+%!TEX root = ../report.tex
+
+\begin{document}
+\let\cleardoublepage\clearpage
+    \chapter{Appendix} \label{appendix}
+
+	As part of this research work, we have created a vocab list for entities such as Task, Robot, Sensor, and Observation and made publicly available to refer the IRI in JSON-LD @context field. This vocab list is initially created for this research use case. However, this can be modified or extended according to other project specification. Current vocab list is available in the following links,
+	
+	\begin{itemize}
+		\item \url{https://github.com/rubanraj54/master-thesis/blob/develop/reports/thesis/contexts/task.json}
+		\item \url{https://github.com/rubanraj54/master-thesis/blob/develop/reports/thesis/contexts/robot.json}
+		\item \url{https://github.com/rubanraj54/master-thesis/blob/develop/reports/thesis/contexts/sensor.json}
+		\item \url{https://github.com/rubanraj54/master-thesis/blob/develop/reports/thesis/contexts/observation.json}
+								
+	\end{itemize}
+	
+    A sample schema registration configuration is provided here \url{https://github.com/rubanraj54/master-thesis/blob/master/mediator/schema_registry/toy_data/test.json} for testing purpose. This schema contains a simple test case with two robots, and each robot has two different sensors and its JSON Schema configuration.
+    
+    The queries used for experimentation are maintained in a separate folder in the repository \url{https://github.com/rubanraj54/master-thesis/tree/master/mediator/queries} .
+	
+	The source code and docker files to spin-up the mediator components is available under \url{https://github.com/rubanraj54/master-thesis/tree/develop/mediator} .
+\end{document}
+%

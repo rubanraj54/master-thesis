@@ -1,0 +1,118 @@
+%
+% LaTeX2e Style for MAS R&D and master thesis reports
+% Author: Argentina Ortega Sainz, Hochschule Bonn-Rhein-Sieg, Germany
+% Please feel free to send issues, suggestions or pull requests to:
+% https://github.com/mas-group/project-report
+% Based on the template created by Ronni Hartanto in 2003
+%
+
+\documentclass[thesis]{mas_report}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{nameref}
+\usepackage[hidelinks]{hyperref}
+\usepackage{pbox}
+\usepackage{subfig}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{acronym}
+
+%\usepackage[colorlinks = true,
+%linkcolor = blue,
+%urlcolor  = blue,
+%citecolor = red,
+%anchorcolor = red]{hyperref}
+
+
+\setcounter{secnumdepth}{4}
+
+
+\setlist{itemsep=5pt,parsep=0pt}
+% ****************************************************
+% THIS INFORMATION SHOULD BE UPDATED FOR YOUR REPORT
+% ****************************************************
+\author{Rubanraj Ravichandran}
+\title{A mediator system for querying heterogeneous data in robotic applications}
+\supervisors{%
+Prof. Dr. Erwin Prassler\\
+Prof. Dr. Manfred Kaul\\
+Nico Huebel\\
+Sebastian Blumenthal\\
+}
+\date{April 2019}
+
+
+% \thirdpartylogo{path/to/your/image}
+
+\begin{document}
+\frontmatter
+
+\begin{titlepage}
+    \maketitle
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	PREFACE
+%----------------------------------------------------------------------------------------
+\pagestyle{plain}
+\cleardoublepage
+\statementpage
+
+\subfile{chapters/abstract}
+\subfile{chapters/acknowledgment}
+\let\cleardoublepage\clearpage
+\begingroup
+	\hypersetup{hidelinks}
+	\tableofcontents
+	\listoffigures
+	\listoftables
+	\subfile{chapters/abbreviations}
+\endgroup
+
+%-------------------------------------------------------------------------------
+%	CONTENT CHAPTERS
+%-------------------------------------------------------------------------------
+\mainmatter % Begin numeric (1,2,3...) page numbering
+
+\pagestyle{mainmatter}
+
+\subfile{chapters/ch01_introduction}
+%\subfile{chapters/ch02_background}
+\subfile{chapters/background}
+\subfile{chapters/stateoftheart}
+\subfile{chapters/ch04_problem}
+\subfile{chapters/approach}
+\subfile{chapters/data_model_comparison}
+\subfile{chapters/graphql_vs_falcor}
+\subfile{chapters/implementation}
+\subfile{chapters/experiment}
+\subfile{chapters/evaluation}
+\subfile{chapters/conclusion}
+%\subfile{chapters/ch04_solution}
+%\subfile{chapters/ch05_methodology}
+%
+%\subfile{chapters/ch06_evaluation}
+%\subfile{chapters/ch07_results}
+%\subfile{chapters/ch08_conclusion}
+
+%-------------------------------------------------------------------------------
+%	APPENDICES
+%-------------------------------------------------------------------------------
+\begin{appendices}
+	\let\cleardoublepage\clearpage
+    \subfile{chapters/appendix}
+\end{appendices}
+\let\cleardoublepage\clearpage
+\backmatter
+\let\cleardoublepage\clearpage
+
+%-------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%-------------------------------------------------------------------------------  
+\addcontentsline{toc}{chapter}{References}
+\bibliographystyle{plainnat} % Use the plainnat bibliography style
+\bibliography{bibliography.bib} % Use the bibliography.bib file as the source of references
+
+% check the youtube video about falcor vs graphql ($ref in falcor solves loading duplicate values in the result)
+\end{document}

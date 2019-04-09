@@ -1,0 +1,11 @@
+{
+    "@context": {
+        "schema": "http://robot.schema.org/",
+        "dataUrl": "http://data.mongodb.com/",
+        "id" : "@id",
+        "type" : "@type",
+        "name": "schema:name",
+        "mac_address": "schema:mac_address"
+        
+    }
+}

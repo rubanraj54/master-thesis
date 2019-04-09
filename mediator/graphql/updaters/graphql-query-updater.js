@@ -9,12 +9,15 @@ module.exports = {
     updateGraphQlQuery(sensors) {
     
         let observationNames = [];
+        let observationbucketNames = [];
     
         sensors.forEach(sensor => {
-            observationNames.push(generateObservationName(sensor.name));
+            let observationName = generateObservationName(sensor.name);
+            observationNames.push(observationName);
+            observationbucketNames.push(`${observationName}Buckets`);
         });
     
-        let observationContexts = observationNames.join(',');
+        let observationContexts = observationbucketNames.join(',');
         console.log(observationContexts);
     
         let queries = [];
@@ -22,16 +25,25 @@ module.exports = {
         observationNames.forEach(observationName => {
             let query = `
                 all${observationName}s: async (parent, args, {Task, Robot, Sensor, MongoContext,Context,${observationContexts}}) => {
-                    let observations = null;
-                    if (observationDb == "mongodb") {
-                        observations = await ${observationName}.find(args);
-                    } else if (observationDb == "mysql") {
-                        observations = await ${observationName}.findAll({
-                            where: args,
-                            raw: true,
-                            nest: true
-                        });
-                    }
+                    let observationsFromAllBuckets = [];
+                    
+                    observationsFromAllBuckets = await Promise.all(${observationName}Buckets.map(async ${observationName}Bucket => {
+                        if (${observationName}Bucket.type == "mongodb") {
+                            return await ${observationName}Bucket.observation.find(args);
+                        } else if (${observationName}Bucket.type == "mysql") {
+                            return await ${observationName}Bucket.observation.findAll({
+                                where: args,
+                                raw: true,
+                                nest: true
+                            });
+                        } else {
+                            return [];
+                        }
+                    }));
+
+                    let observations = observationsFromAllBuckets.reduce((_observations,observationsFromSingleBucket) => {
+                        return _observations.concat(observationsFromSingleBucket);
+                    },[]);
                     
                     return await Promise.all(observations.map(async observation => {
                         if (taskDb == "mongodb") {
@@ -71,21 +83,19 @@ module.exports = {
             const mediatorConfigAdapter = new FileSync('mediatorconfig.json')
             const mediatorConfig = low(mediatorConfigAdapter)
             const dbConfigs = mediatorConfig.get('db').value();
+            const entityDBMapping = mediatorConfig.get('entityDBMapping').value();
             
-            const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "task") > -1);
-            const taskDb = taskDbConfig.name
+            const taskDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.task);
+            const taskDb = taskDbConfig.type
 
-            const robotDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "robot") > -1);
-            const robotDb = robotDbConfig.name
+            const robotDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.robot);
+            const robotDb = robotDbConfig.type
 
-            const sensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "sensor") > -1);
-            const sensorDb = sensorDbConfig.name
+            const sensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.sensor);
+            const sensorDb = sensorDbConfig.type
 
-            const taskrobotsensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "taskrobotsensor") > -1);
-            const taskrobotsensorDb = taskrobotsensorDbConfig.name
-
-            const observationDbConfig = dbConfigs.find((dbConfig) => dbConfig.entities.findIndex((entity) => entity === "observation") > -1);
-            const observationDb = observationDbConfig.name
+            const taskrobotsensorDbConfig = dbConfigs.find((dbConfig) => dbConfig.name === entityDBMapping.taskrobotsensor);
+            const taskrobotsensorDb = taskrobotsensorDbConfig.type
 
             export default {
             allRobots: async (parent, args, {Task, Robot,Sensor, MongoContext, Context, TaskRobotSensor }) => {

@@ -1,22 +1,41 @@
 {
     "db": [
         {
-            "name": "mongodb",
-            "entities": ["context","robot","task","sensor","taskrobotsensor"],
+            "name": "mongodb_central_server",
+            "type": "mongodb",
             "url": "localhost:27017",
             "dbName": "test",
             "userName": "",
             "password": ""
         },
         {
-            "name": "mysql",
-            "entities": ["observation"],
+            "name": "mongodb_blackboxone",
+            "type": "mongodb",
+            "url": "localhost:27018",
+            "dbName": "test",
+            "userName": "",
+            "password": ""
+        },
+        {
+            "name": "mysql_central_server",
+            "type": "mysql",
             "url": "localhost:3308",
             "dbName": "db",
             "userName": "root",
             "password": "password"
         }
     ],
+    "entityDBMapping" : {
+        "task": "mongodb_central_server",
+        "robot": "mongodb_blackboxone",
+        "sensor": "mongodb_central_server",
+        "taskrobotsensor": "mongodb_central_server",
+        "observations" : [
+            "mongodb_blackboxone",
+            "mongodb_central_server",
+            "mysql_central_server"
+        ]
+    },
     "format": "json-ld",
     "graphqli": true,
     "port": 3085,

@@ -1,0 +1,33 @@
+%!TEX root = ../report.tex
+
+\begin{document}
+	\let\cleardoublepage\clearpage
+\chapter{Experiment}\label{sec:experiment}
+
+To verify the workflow of the mediator component, we set up different docker containers with individual database instances. Since the current design support only MongoDB and SQL databases, we built the containers based on these databases. The scenarios are formulated from the current ROPOD black box system. During the robot experimentation, data loggers in black box continuously record various sensor information in its MongoDB. Later, a script dumps all the data into a centralized server.  For our experimentation, we collected the dumps from ROPOD team and analyzed what sensor data is being recorded and how it is stored. We found that the sensor data from ROS topics are flattened and stored in the database under different collections.  
+From the sample dumps, we selected four data collections such as command velocity, joint states, odometer, and scan front. These four variants are chosen based on their data types and complex nested object structure in the data. Note that not all four has a nested structure, only joint states and Scan front values hold nested objects. With this mixture of samples, we wanted to investigate the significant features of the mediator given below,
+\begin{itemize}
+	\item Schema registration workflow.
+	\item Translation of JSON schema that belongs to these sensor data to GraphQL schema.
+	\item Dynamic schema update in GraphQL component. 
+	\item Multiple database connection pool management.
+	\item Declarative data fetching the sensor data from different database docker containers using single GraphQL query language.
+\end{itemize}
+
+
+For the schema registration process, we prepared a sample schema config which defines a sample robot task conducted in an indoor environment with two robots, and each robot has two sensors. Odometer and Command velocity sensors are attached with robot one and Joint states and Scan front sensors are associated with robot two. Also, the robot information such as name, macAddress, and description are added to each robot object in the configuration. This schema config is sent to the schema registry component over HTTP POST request. Now schema registry creates the buckets if not available to store the sensor observations in the databases mentioned in the mediator configuration. In our mediator context, bucket means a space to store data from individual sensors. If the database is MySQL, then a "table" represented as a bucket, or if the database in MongoDB then a "collection" represented as a bucket. At the end of schema registration, the system transforms the JSON schema of each sensor to a GraphQL schema, and this transformation process is explained in section \ref{subsubsection:jsonschema_graphqlschema}. 
+
+After successful schema registration and buckets creation in databases, robots will receive the unique UUID that is created for the robot and sensor. Later robots add this UUID along with the observed values before storing them in the databases. 
+
+For quicker experimentation, we filled our buckets in all databases with data dumps which we collected from ROPOD team.  Consider each of our docker containers as a black-box/robot and each running with its own database. The database could be either MongoDB or MySQL. We executed various GraphQL queries against the mediator to fetch sensor data distributed in multiple systems. The relevant queries which we used are described below,
+\begin{itemize}
+	\item Get all robots involved in a specific task. This variant also includes fetching all sensors which are used in a particular robot, all tasks that the robots/sensors engaged.
+	\item Get all observations of type command velocity which returns the observed command velocity values from all black-boxes/robots.
+	\item On-demand context fetching for all the query via the mediator.
+	\item Declarative data fetching queries to fetch only the required fields from the query response.
+\end{itemize}
+
+
+All the queries executed for the experimentation is available in our source repository, and the links are given in appendix \ref{appendix}. The evaluation of the mediator system is presented in the next section.
+
+\end{document}

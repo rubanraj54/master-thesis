@@ -1,0 +1,75 @@
+GraphQL declarative examples:
+{
+"robots": [
+    {
+        "id" : "dataUrl:31fe3d42-4354-11e9-b210-d663bd873d93",
+        "name" : "Eva",
+        "description" : "Cleaning robot",
+        "mac_address" : "d3:3x:f9:8d",
+        "meta" : {
+          "manufacturer" : "yamaha",
+          "model" : 9342,
+          "year" : 2016
+        },
+        "context" : {
+           "schema": "http://robot.schema.org/",
+           "dataUrl": "http://data.mongodb.com/",
+           "id" : "@id",
+           "type" : "@type",
+           "name": "schema:name",
+           "description": "schema:description",
+           "mac_address": "schema:mac_address",
+           "meta" : "schema:mac_address"
+       }
+    },
+    ...
+    ...
+    ...
+  ]
+}
+
+
+{
+  "sensors" : [
+    {
+      "name" : "Laser Sensor"
+      "description": "Front side laser sensor"
+      "measures" : "Distance",
+      "unit" : "meter"
+    },
+    ...
+    ...
+  ]
+}
+
+
+
+{
+"robots": [
+    {
+        "name" : "Jenny",
+        "mac_address" : "C9-70-44-94-E1-E8",
+    },
+    {
+        "name" : "Volley",
+        "mac_address" : "66-D9-25-84-9B-B4",
+    },
+    ...
+    ...
+    ...
+  ]
+}
+
+{
+  allRobots {
+    name,
+    mac_address,
+    sensors {
+      name,
+      measures
+    }
+  }
+}
+
+
+

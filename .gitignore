@@ -16,3 +16,11 @@ reports/proposal/proposal\.pdf
 mediator/schema_registry\.json
 
 mediator/schema/schema_registry\.json
+
+mediator/\.vscode/
+
+reports/thesis/report\.lof
+
+reports/thesis/report\.lot
+
+reports/thesis/report\.toc
