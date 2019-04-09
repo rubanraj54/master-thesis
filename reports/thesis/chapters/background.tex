@@ -42,8 +42,7 @@
 	Tightly coupled federated systems have separate processes for every database involved in the federation to build and export integrated federated schema.
 	
 	\subsection{Heterogeneity}
-	There are significant factors that cause the heterogeneity in database systems such as semantics, structures, and the query language. 
-	Semantic heterogeneities occur if there is a conflict between the meaning of attributes, how it can be interpreted, and how the consumes use the data. There are a few well-known conflicts mentioned below,
+	There are significant factors that cause the heterogeneity in database systems such as semantics, structures, and the query language. Semantic heterogeneities occur if there is a conflict between the meaning of attributes, and there are a few well-known conflicts mentioned below,
 	\begin{itemize}
 		\item Data representation conflict
 		\item Data conflict (missing attributes)
@@ -102,7 +101,7 @@
 	MySQL is a well-known Relational Database Management System. It stores data in tables and relations can be defined between tables using primary and foreign keys to represent the connection between data. It indexes data based on the primary key which improves the speed of reading query execution. Data model or schema should be defined before inserting data into tables. It provides ACID property to provide strong consistency on the data and it also available depends on the chosen configuration.
 	
 	\section{Docker}
-	"Docker is an open source platform for developing, shipping and running applications" \cite{misc11}. Important components of docker are, images, and containers. Images are nothing but a software package or operating system like Ubuntu, Nginx, etc., Using docker platform, one can quickly combine images and necessary software packages to deploy a container. A container is an isolated component runs individually in the docker engine, and multiple containers can be connected and communicated with each other in the same network. Docker engine shares the host machines resources (CPU, Memory) with the running containers. We can write a new image file on top of other base image file to build our customized containers.
+	"Docker is an open source platform for developing, shipping and running applications" \cite{misc11}. Important components of docker are, images, and containers. Images are nothing but a software package or operating system like Ubuntu, Nginx, etc., Using docker platform, one can quickly combine images and necessary software packages to deploy a container. A container is an isolated component, which runs individually in the docker engine, and multiple containers can be connected and communicated with each other in the same network. Docker engine shares the host machines resources (CPU, Memory) with the running containers. We can write a new image file on top of other base image file to build our customized containers.
 	
 	\begin{figure}[!htbp] 
 		\begin{center}

@@ -25,9 +25,9 @@ This chapter describes the implementation of the mediator component, tools invol
 	After each release, the mediator is cross verified with the user story and tested on real use cases which are described in the later section. Feedbacks are received from the user and improved the mediator stability and reliability on each version which is released on every week.
 	
 	
-	\section{Architecture} 
-	This section gives a brief overview of the mediator architecture and the components involved in it.
-	The overall architecture is divided into three major sections, Producer or Consumer, Mediator, Data sources.
+	\section{Architecture} \label{sec:architecture}
+	This section gives an overview of the mediator architecture and the components involved in it.
+	The overall architecture is divided into three major sections, Producer or Consumer, Mediator, Data sources as shown in figure \ref{fig:architecture}.
 	
 
 	\subsection{Producer/Consumer}
@@ -46,7 +46,7 @@ This chapter describes the implementation of the mediator component, tools invol
 	
 	
 	\subsection{Mediator} 
-	The essential section in the architecture is the mediator component considering it manages most of the interactions between consumer/producer and data sources. Mediator component again divided into subcomponents called Schema Registry and GraphQL mediation.  These two components are developed as individually isolated docker containers for modular and portability reasons. Each docker container runs on its own configuration and a small alpine Linux as the base image. The alpine base image is chosen for various reasons as follows, 
+	The essential section in the architecture is the mediator component considering it manages most of the interactions between consumer/producer and data sources. Mediator component again divided into subcomponents called Schema Registry and GraphQL mediation.  These two components are developed as individually isolated docker containers for modular and portability reasons. Each docker container runs on its own configuration and a small alpine Linux as the base image. The alpine base image is chosen for the following reasons, 
 	
 	\begin{enumerate}
 		\item Usually, Alpine flavored images are small in size which in turn shrinks the container size. For example, Fedora version 5 base image size is 231MB, CentOS 7 base image size is 193MB, Ubuntu 16.04 base image size is 118MB and Alpine 3.6 base image size is only 3.98 MB \cite{misc16}. We can see that the Alpine base image is more than 90\% smaller than other flavors. 
@@ -57,7 +57,7 @@ This chapter describes the implementation of the mediator component, tools invol
 	
 	\subsubsection{Schema registry} \label{subsubsection:schema_registry}
 	
-	Schema registry is the entry point for registering the tasks, robots, and sensors as a relational model. This step is mandatory to let the mediator component knows the relationship between the entities and also the exact structure of sensor data. This structure of sensor data is represented in the form of JSON schema which is used for GraphQL schema transformation which is discussed in registering observation section. 
+	Schema registry is the entry point for registering the tasks, robots, and sensors as a relational model. This step is mandatory to let the mediator component know the relationship between the entities and also the exact structure of sensor data. This structure of sensor data is represented in the form of JSON schema which is used for GraphQL schema transformation which is discussed in registering observation section. 
 	
 	Schema registry itself is an individual docker container which runs "express\footnote{\href{https://github.com/expressjs/express}{https://github.com/expressjs/express}}" server to provide the schema registration service. Express.js is a modular light-weight web application framework developed to run with Node.js platform. In the schema registry, the express server opens an endpoint for the entity and schema registration.
 	
@@ -82,7 +82,7 @@ This chapter describes the implementation of the mediator component, tools invol
 		\label{tab:task_entity}
 	\end{table}
 
-	\textbf{Robot} - A robot entity holds the information of the robot.
+	\textbf{Robot} - A robot entity holds the digital twin of the robot.
 	
 	\begin{table}[!htbp]
 		\begin{tabular}{|l|p{8cm}|}
@@ -143,6 +143,8 @@ This chapter describes the implementation of the mediator component, tools invol
 
 	\textbf{Observation} - Observation is a generic entity, and it can be extended to any sensor that generates data. For each new sensor entity, a new observation bucket will be created in the name senor. The naming convention of each bucket should be unique to avoid conflicts, and the name is derived from the sensor name, and "Observation" keyword will be attached at the end. For example, consider we create a new observation bucket in MongoDB for the sensor "command velocity". Schema registry component will create a new collection in MongoDB in the name of "CommandVelocityObservation". Multiple robots are allowed to have observation buckets with the same name, but a single robot should not have duplicate observation buckets to avoid conflicts (By default, databases do not allow users to create tables/collections with the duplicate name). Each observation contains the real observed data from the sensor and also the relations with the task, robot, and sensor.
 
+	The attributes described in the entities table \ref{tab:task_entity}, \ref{tab:robot_entity}, \ref{tab:sensor_entity}, \ref{tab:TaskRobotSensor} can be modified based on the domain needs.
+	
 	\begin{table}[!htbp]
 		\begin{tabular}{|l|p{12cm}|}
 			\hline
@@ -165,7 +167,7 @@ This chapter describes the implementation of the mediator component, tools invol
 	\end{table}
 
 	\subsubsection{Schema registration workflow}
-	Figure \ref{fig:schema_registration} shows the broad outline of schema registration workflow and also the essential subtasks such as registerTask,  registerRobot, and registerSensor. Registering schema with the mediator is a necessary process because initially, the mediator component has no prior assumptions on the used robots/sensors. Schema registration docker component exposes an endpoint "/schema-registry" that allows users or robots to send a complete schema registration over HTTP POST request and the schema configuration\footnote{Schema configuration is included in the appendix \ref{appendix}.} contains the task information, array of robot objects and each robot object consists of an array of sensor object. After the starting point in the flow chart, the \emph{parse schema config} function starts parsing the given schema configuration and checks the validity of the configuration. If the configuration is valid, then execution moves to the next step and checks for a task configuration. If task config exists, then it proceeds to the very first subtask called registerTask and all the subtasks are briefly outlined in section \ref{sec:workflow_subtasks}. If there is no task configuration or the task registration is unsuccessful, then the execution will be aborted.  After the successful task registration, the process starts iterating the robots array. 
+	Figure \ref{fig:schema_registration} shows the broad outline of schema registration workflow and also the essential subtasks such as registerTask,  registerRobot, and registerSensor. Registering schema with the mediator is a necessary process because initially, the mediator component has no prior assumptions on the used robots/sensors. Schema registration docker component exposes an endpoint "/schema-registry" that allows users or robots to send a complete schema registration over HTTP POST request and the schema configuration \ref{appendix} contains the task information, array of robot objects and each robot object consists of an array of sensor object. After the starting point in the flow chart, the \emph{parse schema config} function starts parsing the given schema configuration and checks the validity of the configuration. If the configuration is valid, then execution moves to the next step and checks for a task configuration. If task config exists, then it proceeds to the very first subtask called registerTask and all the subtasks are outlined in section \ref{sec:workflow_subtasks}. If there is no task configuration or the task registration is unsuccessful, then the execution will be aborted.  After the successful task registration, the process starts iterating the robots array. 
 	
 	For each robot in the array, the system checks whether it is a new robot or existing one. For existing robots user gives the UUID of the robot, and for new robots, the system expects complete information about the robot as mentioned in the robot entity section. If the robot information is available, then the operation proceeds to the registerRobot subtask. If the subtask is not successful, then the system will abort the execution, else it starts iterates the sensor list which is attached to the robot information. Like new robot check, the system checks whether the given sensor contains an already registered UUID or new sensor information. If it is a new sensor, then the system proceeds to the last subtask called registerSensor. 
 	
@@ -181,7 +183,7 @@ This chapter describes the implementation of the mediator component, tools invol
 
 	\subsubsection{Workflow of subtasks in schema registration} \label{sec:workflow_subtasks}
 	
-	Major schema registration consists of three subtasks called registerTask, registerRobot, and registerSensor. registerTask \ref{subfig-1:task_creation} and registerRobot \ref{subfig-2:robot_creation} subtasks execution follows a similar workflow but for two different entities. At first, the system checks for the valid task/robot configuration and DB configuration respectively. If it fails, then the system aborts the execution, else system creates task/robot record in the appropriate databases. But, the system should identify the specific databases and additional information beforehand. This database entity mapping is done with the help of media config file, and it is explained in section [Entity database mapping].
+	Major schema registration consists of three subtasks called registerTask, registerRobot, and registerSensor. registerTask \ref{subfig-1:task_creation} and registerRobot \ref{subfig-2:robot_creation} subtasks execution follows a similar workflow but for two different entities. At first, the system checks for the valid task/robot configuration and DB configuration respectively. If it fails, then the system aborts the execution, else system creates task/robot record in the appropriate databases. But, the system should identify the specific databases and additional information beforehand. This database entity mapping is done with the help of media config file, and it is explained in section \ref{subsubsection:entity_database_mapping}.
 	The last subtask called registerSensors \ref{subfig-3:sensor_creation} follows the similar workflow like registerTask and registerRobot, however, after each successful sensor record creation, the system should carry out another major subtask called "Create observation bucket" which is explained in section \ref{subsubsection:observation_bucket}.
 	
 	\begin{figure*}[!htbp]
@@ -219,7 +221,7 @@ This chapter describes the implementation of the mediator component, tools invol
 		\end{center}
 	\end{figure}
 	
-	\subsubsection{Entity database mapping}
+	\subsubsection{Entity database mapping} \label{subsubsection:entity_database_mapping}
 	For creating new tasks, robots, and sensors data during schema registration, schema registry should have an idea where to create these records. We propose an entity database mapping strategy to identify the databases for each entity. To make it more flexible, we assign each entity to a database name, and the corresponding database configuration is described in the same config file under "db" attribute which is shown in figure \ref{fig:entity_db_mapping}. The "db" attribute contains a list of db configuration and the attributes in each db object is explained in table \ref{tab:db_attribute_desc}. 
 	
 	\begin{table}[h!]
