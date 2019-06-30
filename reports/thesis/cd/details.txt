@@ -1,0 +1,12 @@
+Author name : Rubanraj Ravichandran
+
+
+Supervisor1 : Prof. Dr. Erwin Prassler
+Supervisor2 : Prof. Dr. Manfred Kaul
+Supervisor3 : Sebastian Blumenthal
+
+Thesis title : A mediator system for querying heterogeneous data in robotic applications
+
+Abstract: 
+
+In robotic applications, sensor-generated data is often ignored after robots utilize the data for making decisions and sometimes save into persistent storage. Since these data are not adequately modeled and stored, it makes it hard for someone who wants to replay the experiments or to find faults in the sensor data.  It is even more difficult to debug this massive amount of data if there are multi-robots involved in a task. It is likely that different vendors/developers develop multi-robots with different database instances and attribute names to save data which introduces heterogeneity in the sensor data. Heterogeneity includes additional problems like interoperability issues when sharing data between other robots and also with fault diagnosis tools. One way to overcome these issues is by employing a mediator component as a middle man for all robots and even for humans. In our approach, we designed a mediator architecture which solves integrating sensor data from different databases which are deployed on different robots. Also, the data modeling issue from the EU ROPOD project's data logger system is addressed by creating an extendable generic data model for each critical entities in the robot system. Lastly, sensor observations interoperability issue is solved by adding meaningful contexts to all the entities, and it is achieved by using JSON-LD data representation. Overall mediator component is developed with GraphQL as a base framework and JSON-LD to represent the response data. This choice of GraphQL and JSON-LD provides further advantages to the system such as a single query language to fetch sensor data regardless of databases used in the robots and context-based data model.

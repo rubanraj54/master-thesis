@@ -1,0 +1,28 @@
+A mediator system for querying heterogeneous data in robotic applications
+
+Problem statement:
+
+Our previous work reveals that not all databases reacts similarly for heterogeneous data from robotic applications.
+
+Storing sensor data as a collection of logs without data modeling makes the consumer inability to execute meaning queries against the data.
+
+Note: Breifly explain an example (For example dev one logs the angular velocity data using the attribute names x,y,z and dev 2 stores the data using different attribute names ang_x,ang_y,ang_z)
+
+Missing global context and relationship for the entities involved in the data generation.
+
+Manual schema transformation in existing mediators.
+
+Challenges:
+
+Finding suitable databases for robotic applications.
+
+Finding potential entities and defining data models and relationships.
+
+Choosing the efficient method to define the contexts for the entities.
+
+Difficult in adopting existing mediators in the context of robotic applications and new databases.
+
+
+
+
+

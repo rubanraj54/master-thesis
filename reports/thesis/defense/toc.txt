@@ -1,0 +1,85 @@
+
+Introduction :
+
+ - What is this project about?
+
+ - What we are doing here?
+
+Motivation
+
+Problem statement
+
+Solution
+
+Background
+
+State of the art analysis
+
+Approach
+
+ - Analyzing existing sensor data model specifications
+
+ - Comparing graphql and falcor
+
+ - first talk about REST API and say why we need graphql and falcor. (limitations of REST)
+
+Mediator architecture
+
+ - explain each components
+
+ - Entity database mapping
+
+ - JSON schema to Graphql schema transformation
+
+ - connection pool management
+
+Experiment
+
+ - Evaluation through requirements
+
+ - Evaluation against existing systems
+
+Conclusion
+
+
+Challenges:
+
+Robots generate large amount of data from
+
+-> different sensors
+-> also from hardware components
+
+roughly two categories
+
+streams of raw sensor data
+Meta data (sensor data with information and knowledge required to interpret them)
+
+In our previous work we have conducted an extensive qualitative and quantitative analysis to find the better databases and architectures that stores and read the data efficiently.
+
+But results shows that single database is not suitable for all types of sensor data and critical usecases like storing raw laser sensor data.
+
+
+Also, a new architecture has been proposed by "author" in which two different databases used to store different sensor data based on its type. 
+
+Ok, we are using different databases to improve the read and write efficiency according to the data type.
+
+But what if someone/robot want to fetch data from multi databases? they would probably use different query languages to get the data.
+
+challenge 2 from ROPOD project:
+
+Current system support single database only. (mention the 3 problems in the current system)
+
+Solution :
+
+View multiple databases as a single federated database.
+
+What can we achieve?
+
+Learning single query language regardless of different databases used.
+
+
+Requirements to create a mediator :
+Well defined semantic data models
+Robust architecture
+Unique query language
+

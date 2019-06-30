@@ -1,0 +1,55 @@
+Approach
+
+Analyzing existing sensor data model specifications.
+
+ - SenML (sensor markup language)
+  - Encoding format to represent the sensor values 
+  - Show the SenML semantics used to build SenML message
+  - Show simple SenML observation structure
+  - Cons : Missing option to add contextual information with the observation. 
+ (But one can achieve this converting SenML observations to RDF format. But it's like adding one more process in the pipeline and moreover there are disadvantages for using RDF which I will explain in upcoming slides) 
+ 
+ - OGC SensorThings API
+  - Offers a unique way to connect sensors in IoT platform
+  - An entity based relationship model for handling data from heterogeneous sensors.
+  - Show relationship diagram of OGC
+  - Stores data in PostgreSQL relational database
+  - Cons: supports only PostgreSQL. (So we cannot utilize the complete component in our mediator architecture. However the standard given by OGC SensorThings makes a meaningful relationship between entities in IoT systems. so our proposed data model is designed partially based on the OGC SensorThings standards) 
+
+ - Resource Description Framework (RDF)
+  - well known unique model to represent any resources in the universe with subject, predicate and object pattern (like how humans communicate with each other)
+  - RDF structure consists of two major components called Document and Statement.
+  - Show pics of skeleton layout of document and statement and explain them. 
+  - Document is a root element and it may contain one or more statements in it.
+  - Statement is an individual building block to represent a single triple.
+  - Each statement can have either a reference to other RDF statement or a value. 
+
+  Adv : The primary advantage of adding semantics to the data is interoperability and easy to query them for a meaningful answer.
+
+  DisAdv :  RDF data structure is not suitable for resource constrained devices like micro-controllers. (because of their size). 
+
+JSON LD: 
+
+JSON-LD is an approach to structure the linked data and adding semantic contexts to data in the form of IRI (Internationalized Resource Identifier). 
+(An IRI is a unique and globally accessible link via web like URI)
+
+show twist message example along with expansion algorithm.
+
+
+Adv: - JSON-LD solves interoperability issues (as we seen the previous example).
+     - JSON-LD one can represent the context for the data which is more important in robotics field such that other robots can understand the data based on context.
+     - JSON-LD compaction coupled with EXI4-JSON or
+CBOR outperforms state-of-the-art (HDT) with 50 - 60 % [citation] compaction ratios.
+
+
+
+Qualitative analysis of recent querying techniques
+
+ - GraphQL
+ - Falcor
+
+Give a little explaination about these two frameworks.
+
+Designing robust and efficient mediator architecture.
+
+
