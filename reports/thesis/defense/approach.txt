@@ -45,11 +45,46 @@ CBOR outperforms state-of-the-art (HDT) with 50 - 60 % [citation] compaction rat
 
 Qualitative analysis of recent querying techniques
 
+ - REST API
+  - REpresentational State Transfer API is a traditional way to send and receive data in client-server systems.
+  - Image goes here
+  - Lim : Recurring round trips
+  - Lim : Various end points
+  - Lim : Over fetching
+  - Lim : No static type validation
+
  - GraphQL
+  - GraphQL is a Query Language developed by Facebook
+  - fetch the data from the database unlike the traditional way of making REST API requests
+  - Adv : Single round trip
+  - Adv : Declarative
+  - Adv : Single end point (Single endpoint architecture solves various communication difficulties between client
+and server side team members)
+  - Adv : Strongly typed validation
+  - Adv : Caching
+  - Adv : Multiple data sources
+
  - Falcor
+  - Falcor is a framework similar to GraphQL developed by Netflix.
+  - Falcor generates a schema from the given data as a single Virtual JSON object. (Unlike GraphQL, Falcor doesn’t
+emphasize users to provide a schema.)
+  - It uses "One Model Everywhere"[citation] policy to model all the backend data into a single JSON file.
+  - Falcor and GraphQL share many similarities (like data demand driven architecture, single endpoint, single roundtrip, and under fetching.)
+
+Limitations in Falcor:
+
+ - Falcor is not a query language like GraphQL.
+ - single colossal JSON model.
+ - No in-build type validation.
+ - Does not provide schema introspection.
+ - Less number of server implementations.
+ - Does not allow pass arguments to queries.
 
 Give a little explaination about these two frameworks.
 
-Designing robust and efficient mediator architecture.
+Conclusion:
+
+ - GraphQL supersede Falcor in case of flexibility in defining models, scalability, introspection, type
+validation, Query language, and more language support.
 
 

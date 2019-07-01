@@ -1,0 +1,26 @@
+Designing robust and efficient mediator architecture.
+
+Mediator architecture divided in to three sections:
+
+Producer / Consumer:
+
+  - Any robots or tools which consumes
+the data from data sources or produces data to the data sources via the mediator.
+
+component
+
+Mediator:
+
+ Consists of two major components:
+ Each component is developed as an individual isolated component for modular and portability.
+ - Schema registry
+  - Schema registration workflow
+  - Observation bucket creation workflow
+  - Entity database mapping
+  - JSON Schema to GraphQL Schema transformation
+ - GraphQL mediation
+  - Connection pool management
+
+Data sources:
+
+Summary:
