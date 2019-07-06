@@ -1,0 +1,76 @@
+Experiment:
+
+- Things to investigate:
+	Schema registration workflow
+	Translation of JSON schema
+	Dynamic schema update in GraphQL component
+	Multiple database connection pool management
+	Declarative data fetching
+	
+- setup:
+	Built multiple instances MongoDB and MySQL docker containers.
+	Each docker containers are considered as a black-box/robots with its own database.
+	Database could be either MongoDB or MySQL.
+	Sample data is collected from ROPOD team and filled the databases.
+	Selected four data collections such as command velocity, joint states, odometer, and scan front. (These four variants are chosen based on their data types and complex nested object structure in the data.)
+
+	
+- scenarios:
+
+	Scenarios are formulated based on the ROPOD black box system. [don't include this sentence]
+
+Get all robots involved in a specific task. This variant also includes fetching all
+sensors which are used in a particular robot, all tasks that the robots/sensors
+engaged.
+
+Get all observations of type command velocity which returns the observed
+command velocity values from all black-boxes/robots.
+
+On-demand context fetching for all the query via the mediator.
+
+Declarative data fetching queries to fetch only the required fields from the
+query response.
+
+
+
+may be include this in slide:
+
+In current black box system, 
+
+	data loggers continuously record various sensor data in MongoDB.
+	sensor data from ROS topics are flattend and stored in the database under different collections.
+	Scrips moves all the data into a centralized server.
+
+
+Evaluation:
+
+	Through requirements:
+		- Generic query language
+		- Type validation
+		- Scalability
+		- Configurable data format support
+		- Graphical user interface
+
+	Through existing system:
+		
+		Stored data in local MongoDB instance - With new meidator one can store in local and remote DB.
+		Senosor data is flattened and stored as documents without modelling. - With new system sensor data is modelled stored in databases.
+		Execute queries on single DB support - Execute queries on Multi DB support.
+		No context and relationship - Context and relationship between entities which solves interoperability issues.
+		Supports only MongoDB - Supports MongoDB and SQL databases, and can be extended to support other databases.
+
+
+Summary:
+
+Developed mediator component to make fault diagnosis convenient with multi-robot systems.
+Unique query language to communicate with various databases.
+declarative data fetching which is useful if the robots are working under low network access areas
+Identified the possible entities from the real-world scenario and relationships has been made between them.
+Created context based data-models.
+A list of vocabularies created to define the context.
+
+Limitations:
+
+supports only MongoDB and SQL but can be extended to additional databases
+Even though mediator makes parallel requests to fetch data from multiple data source, the responses will be slower if the tables are not indexed correctly.
+Lacking of undoing schema registry process if any error occurs.
