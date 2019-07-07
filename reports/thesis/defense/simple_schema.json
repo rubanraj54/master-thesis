@@ -1,0 +1,29 @@
+{
+    "task": { "name": "testone", "env": "house", "context": "5c4f6a3700c3d43fa87954ce"},
+    "robots": [
+      {
+            "name": "Robot2",
+            "type": "schema:robot",
+            "mac_address": "s3:34:fd:7f",
+            "context": "5c6bf2e7d80174002302ddca",
+            "sensors": [
+              {
+                "type": "schema:Sensor",
+                "name": "Odometer",
+                "description": "An instrument for measuring the distance travelled by a wheeled vehicle.",
+                "measures": "Distance",
+                "value_schema": {
+                    "$schema": "http://json-schema.org/draft-04/schema#",
+                    "type": "object",
+                    "properties": {
+                      "angular_x": {"type": "number"},
+                      "angular_y": {"type": "number"},
+                      "angular_z": {"type": "number"},
+                      "timestamp": {"type": "number"},...
+                    }
+                  },
+                "unit": "meter",
+                "meta": {"device_name": "max"}
+            },...]
+        },...]
+}
