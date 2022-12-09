@@ -10,7 +10,7 @@
   "license": "Mit",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "lodash": "^4.17.11",
     "lowdb": "^1.0.0",
     "mongoose": "^5.4.11",
